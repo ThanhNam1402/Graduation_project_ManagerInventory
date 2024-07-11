@@ -1,0 +1,11 @@
+{
+    "navbar" : {
+        "dashboard" : "Dash Board",
+        "products" : "Products",
+        "list-products" : "List Products",
+        "price-products" : "General price book",
+        "inventory-count" : "Inventory Count"
+
+
+    }
+}

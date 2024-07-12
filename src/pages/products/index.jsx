@@ -3,8 +3,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import ListProducts from "./ListProducts";
-import Categories from "./Categories";
-
+import Categories from "../fillters/category/Categories";
+import Inventory from "../fillters/inventory/Inventory";
+import Select from "../fillters/select/Select";
 function Products(props) {
   const [category, setCateGory] = useState(null);
   // const [kho, setKho] = useState(null)
@@ -24,10 +25,13 @@ function Products(props) {
         <Box
           sx={{
             minHeight: "100vh",
-            mr: 1,
+            mr: 3,
           }}
         >
           <Categories handleGetValue={setCateGory} />
+          <Inventory handleGetValue={setCateGory} />
+          <Select handleGetValue={setCateGory} />
+
         </Box>
 
         <Box

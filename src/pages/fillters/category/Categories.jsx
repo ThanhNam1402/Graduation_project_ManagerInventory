@@ -19,7 +19,7 @@ function Categories(props) {
   // }
 
   return (
-    <Paper elevation={12} sx={{ width: "228px" }}>
+    <Paper elevation={12} sx={{ width: "228px"}}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}

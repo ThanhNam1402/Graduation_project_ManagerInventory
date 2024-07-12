@@ -2,32 +2,29 @@ import React from "react";
 
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
+
 import ListProducts from "./ListProducts";
-import Categories from "./Categories";
+import ActionProduct from "./ActionProduct";
+import Suppliers from "../../components/filters/Suppliers";
+import ProductType from "../../components/filters/ProductType";
 
 function Products(props) {
-  const [category, setCateGory] = useState(null);
-  // const [kho, setKho] = useState(null)
-  // state filter,
+  const [categoryID, setCateGoryID] = useState(null);
+  const [supplierID, setSupplierID] = useState([]);
 
-  // const handleGetValue = (e, id) => {
-  //   console.log(e.target.value);
-  //   console.log(id);
-
-  // };
-
-  console.log(category);
+  console.log(categoryID, supplierID);
 
   return (
     <div>
-      <Box sx={{ display: "flex", p: 1 }}>
+      <Box sx={{ display: "flex", p: 2 }}>
         <Box
           sx={{
-            minHeight: "100vh",
-            mr: 1,
+            width: "248px",
+            mr: 3,
           }}
         >
-          <Categories handleGetValue={setCateGory} />
+          <ProductType handleGetValue={setCateGoryID} />
+          <Suppliers supplierID={supplierID} handleGetValue={setSupplierID} />
         </Box>
 
         <Box
@@ -35,7 +32,8 @@ function Products(props) {
             width: "100%",
           }}
         >
-          <ListProducts categoryId={category} />
+          <ActionProduct />
+          <ListProducts categoryID={categoryID} supplierID={supplierID} />
         </Box>
       </Box>
     </div>

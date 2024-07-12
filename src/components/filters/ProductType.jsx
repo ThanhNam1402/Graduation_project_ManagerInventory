@@ -10,16 +10,15 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 
-function Categories(props) {
-  console.log(props);
-  // const handleGetValue  = (e) => {
-  //   console.log(e.target.value);
-  // }
+import { useTranslation } from "react-i18next";
+
+function ProductType(props) {
+  const { t } = useTranslation("filter");
+  const { handleGetValue } = props;
 
   return (
-    <Paper elevation={12} sx={{ width: "228px" }}>
+    <Paper elevation={8} sx={{ width: "228px", mb: 2 }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -29,7 +28,7 @@ function Categories(props) {
             ".MuiAccordionSummary-content": { margin: 0 },
           }}
         >
-          Loại Hàng
+          {t("filter.product-type")}
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
@@ -37,7 +36,7 @@ function Categories(props) {
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="female"
               name="radio-buttons-group"
-              onChange={(e) => props.handleGetValue(e.target.value)}
+              onChange={(e) => handleGetValue(e.target.value)}
             >
               <FormControlLabel
                 value="0"
@@ -58,4 +57,4 @@ function Categories(props) {
   );
 }
 
-export default Categories;
+export default ProductType;

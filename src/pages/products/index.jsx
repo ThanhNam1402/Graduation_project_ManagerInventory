@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 
 import ListProducts from "./ListProducts";
-import Categories from "../../components/filters/Categories";
+// import Categories from "../../components/filters/Categories";
 import Inventory from "../../components/filters/Inventory";
 import Select from "../../components/filters/Select";
 import ActionProduct from "./ActionProduct";
@@ -27,10 +27,8 @@ function Products(props) {
           }}
         >
           <ProductType handleGetValue={setCateGoryID} />
-
           <Inventory handleGetValue={setCateGoryID} />
           <Suppliers supplierID={supplierID} handleGetValue={setSupplierID} />
-
           <Select handleGetValue={setCateGoryID} />
         </Box>
 

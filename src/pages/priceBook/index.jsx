@@ -3,9 +3,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import ListPriceBook from "./listPriceBook";
-import Categories from "../fillters/category/Categories";
-import Inventory from "../fillters/inventory/Inventory";
-import Price from "./../fillters/price/Price";
+import Inventory from "../../components/filters/Inventory";
+import Price from "../../components/filters/Price";
+import ProductType from "../../components/filters/ProductType";
 function PriceBook(props) {
   const [category, setCateGory] = useState(null);
 
@@ -20,9 +20,8 @@ function PriceBook(props) {
           }}
         >
           <Price handleGetValue={setCateGory} />
-          <Categories handleGetValue={setCateGory} />
+          <ProductType handleGetValue={setCateGory} />
           <Inventory handleGetValue={setCateGory} />
-
         </Box>
 
         <Box
@@ -31,7 +30,6 @@ function PriceBook(props) {
           }}
         >
           <ListPriceBook categoryId={category} />
-
         </Box>
       </Box>
     </div>

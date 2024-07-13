@@ -1,6 +1,6 @@
-// import React from "react";
+import React from "react";
 
-import { Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -11,13 +11,14 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 
-// import FormLabel from "@mui/material/FormLabel";
+import { useTranslation } from "react-i18next";
 
-function Select(props) {
+function ProductType(props) {
+  const { t } = useTranslation("filter");
   const { handleGetValue } = props;
 
   return (
-    <Paper elevation={12} sx={{ width: "228px" , mt: 3}} >
+    <Paper elevation={8} sx={{ width: "228px", mb: 2 }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -27,7 +28,7 @@ function Select(props) {
             ".MuiAccordionSummary-content": { margin: 0 },
           }}
         >
-          Lựa chọn hiển thị
+          {t("filter.product-type")}
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
@@ -40,17 +41,13 @@ function Select(props) {
               <FormControlLabel
                 value="0"
                 control={<Radio color="secondary" />}
-                label="Tất cả"
+                label="Hàng Hóa"
               />
-              <FormControlLabel
-                value="1"
-                control={<Radio />}
-                label="Hàng đang kinh doanh"
-              />
+              <FormControlLabel value="1" control={<Radio />} label="Dịch Vụ" />
               <FormControlLabel
                 value="2"
                 control={<Radio />}
-                label="Hàng ngừng kinh doanh"
+                label="Compo - Gói"
               />
             </RadioGroup>
           </FormControl>
@@ -60,4 +57,4 @@ function Select(props) {
   );
 }
 
-export default Select;
+export default ProductType;

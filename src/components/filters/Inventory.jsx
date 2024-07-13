@@ -1,6 +1,6 @@
-import React from "react";
+// import React from "react";
 
-import { Box, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -10,16 +10,14 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 
-function Categories(props) {
-  console.log(props);
-  // const handleGetValue  = (e) => {
-  //   console.log(e.target.value);
-  // }
+// import FormLabel from "@mui/material/FormLabel";
+
+function Inventory(props) {
+  const { handleGetValue } = props;
 
   return (
-    <Paper elevation={12} sx={{ width: "228px"}}>
+    <Paper elevation={12} sx={{ width: "228px", mb: 3 }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -29,7 +27,7 @@ function Categories(props) {
             ".MuiAccordionSummary-content": { margin: 0 },
           }}
         >
-          Loại Hàng
+          Tồn Kho
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
@@ -37,18 +35,37 @@ function Categories(props) {
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="female"
               name="radio-buttons-group"
-              onChange={(e) => props.handleGetValue(e.target.value)}
+              onChange={(e) => handleGetValue(e.target.value)}
             >
               <FormControlLabel
                 value="0"
                 control={<Radio color="secondary" />}
-                label="Hàng Hóa"
+                label="Tất cả"
               />
-              <FormControlLabel value="1" control={<Radio />} label="Dịch Vụ" />
+              <FormControlLabel
+                value="1"
+                control={<Radio />}
+                label="Dưới định mức tồn"
+              />
               <FormControlLabel
                 value="2"
                 control={<Radio />}
-                label="Compo - Gói"
+                label="Vượt định mức tồn"
+              />
+              <FormControlLabel
+                value="3"
+                control={<Radio />}
+                label="Còn hàng trong kho"
+              />
+              <FormControlLabel
+                value="4"
+                control={<Radio />}
+                label="Hết hàng trong kho"
+              />
+              <FormControlLabel
+                value="5"
+                control={<Radio />}
+                label="Lựa chọn khác"
               />
             </RadioGroup>
           </FormControl>
@@ -58,4 +75,4 @@ function Categories(props) {
   );
 }
 
-export default Categories;
+export default Inventory;

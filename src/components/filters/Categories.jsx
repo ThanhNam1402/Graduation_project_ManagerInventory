@@ -1,6 +1,6 @@
-// import React from "react";
+import React from "react";
 
-import { Paper } from "@mui/material";
+import { Box, Paper } from "@mui/material";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -11,13 +11,14 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 
-// import FormLabel from "@mui/material/FormLabel";
+import { useTranslation } from "react-i18next";
 
-function Inventory(props) {
+function ProductType(props) {
+  const { t } = useTranslation("filter");
   const { handleGetValue } = props;
 
   return (
-    <Paper elevation={12} sx={{ width: "228px" , mt: 3}} >
+    <Paper elevation={8} sx={{ width: "228px", mb: 3 }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -27,7 +28,7 @@ function Inventory(props) {
             ".MuiAccordionSummary-content": { margin: 0 },
           }}
         >
-          Tồn Kho
+          {t("filter.product-type")}
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
@@ -40,32 +41,13 @@ function Inventory(props) {
               <FormControlLabel
                 value="0"
                 control={<Radio color="secondary" />}
-                label="Tất cả"
+                label="Hàng Hóa"
               />
-              <FormControlLabel
-                value="1"
-                control={<Radio />}
-                label="Dưới định mức tồn"
-              />
+              <FormControlLabel value="1" control={<Radio />} label="Dịch Vụ" />
               <FormControlLabel
                 value="2"
                 control={<Radio />}
-                label="Vượt định mức tồn"
-              />
-              <FormControlLabel
-                value="3"
-                control={<Radio />}
-                label="Còn hàng trong kho"
-              />
-              <FormControlLabel
-                value="4"
-                control={<Radio />}
-                label="Hết hàng trong kho"
-              />
-              <FormControlLabel
-                value="5"
-                control={<Radio />}
-                label="Lựa chọn khác"
+                label="Compo - Gói"
               />
             </RadioGroup>
           </FormControl>
@@ -75,4 +57,4 @@ function Inventory(props) {
   );
 }
 
-export default Inventory;
+export default ProductType;

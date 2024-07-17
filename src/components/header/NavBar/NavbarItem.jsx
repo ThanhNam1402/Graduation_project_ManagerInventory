@@ -1,11 +1,11 @@
 import { path } from "../../../utils/constain";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AllInboxRoundedIcon from "@mui/icons-material/AllInboxRounded";
-
+import HandshakeIcon from "@mui/icons-material/Handshake";
 
 export const ListMenu = [
   {
-    title: 'navbar.dashboard',
+    title: "navbar.dashboard",
     link: path.SYSTEM,
     icon: <DashboardIcon />,
   },
@@ -31,7 +31,7 @@ export const ListMenu = [
     ],
   },
   {
-    title: "Categories",
-    icon: "",
+    title: "Category",
+    icon: <HandshakeIcon />,
   },
 ];

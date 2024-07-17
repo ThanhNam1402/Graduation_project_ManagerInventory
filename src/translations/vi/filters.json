@@ -1,5 +1,9 @@
 {
     "filter" : {
-        "product-type" : "Loại hàng"
+        "product-type" : "Loại hàng",
+        "suppliers" : "Nhà Cung Cấp",
+        "category" : "Danh Mục"
+
+
     }
 }

@@ -17,7 +17,7 @@ function Select(props) {
   const { handleGetValue } = props;
 
   return (
-    <Paper elevation={12} sx={{ width: "228px", mt: 3 }}>
+    <Paper elevation={2} sx={{ width: "100%", mt: 3 }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}

@@ -1,10 +1,10 @@
 import React from "react";
 
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography, Stack } from "@mui/material";
 
 import ListProducts from "./ListProducts";
-// import Categories from "../../components/filters/Categories";
+import Categories from "../../components/filters/Categories";
 import Inventory from "../../components/filters/Inventory";
 import Select from "../../components/filters/Select";
 import ActionProduct from "./ActionProduct";
@@ -19,19 +19,33 @@ function Products(props) {
 
   return (
     <div>
-      <Box sx={{ display: "flex", p: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+        }}
+      >
         <Box
           sx={{
-            minHeight: "100vh",
-            mr: 3,
+            mb: 2,
+            mr: 2,
+            p: 1,
+            height: "83vh",
+            width: "300px",
+            overflowY: "scroll",
           }}
         >
-          <ProductType handleGetValue={setCateGoryID} />
-          <Inventory handleGetValue={setCateGoryID} />
-          <Suppliers supplierID={supplierID} handleGetValue={setSupplierID} />
-          <Select handleGetValue={setCateGoryID} />
-        </Box>
+          <Box sx={{}}>
+            <Typography sx={{ mb: 3 }} variant="h5" component={"h5"}>
+              Hàng Hóa
+            </Typography>
 
+            <Categories handleGetValue={setCateGoryID} />
+            <ProductType handleGetValue={setCateGoryID} />
+            <Inventory handleGetValue={setCateGoryID} />
+            <Suppliers supplierID={supplierID} handleGetValue={setSupplierID} />
+            <Select handleGetValue={setCateGoryID} />
+          </Box>
+        </Box>
         <Box
           sx={{
             width: "100%",

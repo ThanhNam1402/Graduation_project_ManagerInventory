@@ -1,16 +1,36 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import { Checkbox } from "@mui/material";
+import {
+  Checkbox,
+  Collapse,
+  Box,
+  IconButton,
+  TableRow,
+  TableCell,
+  Tab,
+  Tabs,
+} from "@mui/material";
+
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+
+import TabPanelRowProduct from "./TabPanelRowProduct";
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 function RowProduct(props) {
   const { row, isItemSelected, handleClick, labelId } = props;
   const [open, setOpen] = React.useState(false);
 
-  console.log(props);
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
     <>
       <TableRow
@@ -21,8 +41,12 @@ function RowProduct(props) {
         key={row.id}
         selected={isItemSelected}
         sx={{ cursor: "pointer" }}
-        onClick={() => setOpen(!open)}
       >
+        <TableCell padding="checkbox" onClick={() => setOpen(!open)}>
+          <IconButton size="small">
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
@@ -43,12 +67,31 @@ function RowProduct(props) {
       </TableRow>
 
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Deltail
-              </Typography>
+            <Box>
+              <Box sx={{ width: "100%" }}>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="basic tabs"
+                  >
+                    <Tab label="Thông tin" {...a11yProps(0)} />
+                    <Tab label="Thẻ Kho" {...a11yProps(1)} />
+                    <Tab label="Tồn Kho" {...a11yProps(2)} />
+                  </Tabs>
+                </Box>
+                <TabPanelRowProduct value={value} index={0}>
+                  Item One
+                </TabPanelRowProduct>
+                <TabPanelRowProduct value={value} index={1}>
+                  Item Two
+                </TabPanelRowProduct>
+                <TabPanelRowProduct value={value} index={2}>
+                  Item Three
+                </TabPanelRowProduct>
+              </Box>
             </Box>
           </Collapse>
         </TableCell>

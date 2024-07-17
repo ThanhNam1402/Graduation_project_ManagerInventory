@@ -17,7 +17,7 @@ function Inventory(props) {
   const { handleGetValue } = props;
 
   return (
-    <Paper elevation={12} sx={{ width: "228px", mb: 3 }}>
+    <Paper elevation={2} sx={{ width: "100%", mb: 3 }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}

@@ -1,5 +1,7 @@
 {
     "filter" : {
-        "product-type" : "Product type"
+        "product-type" : "Product type",
+        "suppliers" : "Suppliers",
+        "category" : "Category"
     }
 }

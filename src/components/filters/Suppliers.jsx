@@ -15,6 +15,8 @@ import {
 import FormControl from "@mui/material/FormControl";
 import { ExpandMore } from "@mui/icons-material";
 
+import { useTranslation } from "react-i18next";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
@@ -45,6 +47,8 @@ function getStyles(name, supplierID, theme) {
 function Suppliers(props) {
   const theme = useTheme();
 
+  let { t } = useTranslation("filter");
+
   const { supplierID, handleGetValue } = props;
 
   const handleChange = (event) => {
@@ -56,7 +60,7 @@ function Suppliers(props) {
   };
 
   return (
-    <Paper elevation={8} sx={{ width: "228px" }}>
+    <Paper elevation={2} sx={{ width: "100%" }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMore />}
@@ -66,7 +70,7 @@ function Suppliers(props) {
             ".MuiAccordionSummary-content": { margin: 0 },
           }}
         >
-          Nhà Cung Cấp
+          {t("filter.suppliers")}
         </AccordionSummary>
         <AccordionDetails>
           <FormControl

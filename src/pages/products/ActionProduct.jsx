@@ -1,10 +1,98 @@
-import { Box, Button } from "@mui/material";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import {
+  Button,
+  Stack,
+  ListItemText,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
+
+import SearchProduct from "../../components/filters/SearchProduct";
 
 function ActionProduct(props) {
+  const { t } = useTranslation("action");
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
-    <Box sx={{mb : 2}}>
-      <Button variant="outlined">Thêm Mới</Button>
-    </Box>
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      spacing={2}
+      sx={{ mb: 2 }}
+    >
+      <SearchProduct />
+
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={1}
+      >
+        <Button variant="contained" startIcon={<AddRoundedIcon />}>
+          {t("new")}
+        </Button>
+
+        <div>
+          <Button
+            id="demo-positioned-button"
+            aria-controls={open ? "demo-positioned-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            variant="contained"
+            startIcon={<MoreVertIcon />}
+          >
+            {t("action")}
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              sx: {
+                mt: 1,
+                minWidth: 180,
+                p: 0,
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem>
+              <ListItemIcon>
+                <UploadFileOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Import </ListItemText>
+            </MenuItem>
+            <MenuItem>
+              <ListItemIcon>
+                <FileDownloadOutlinedIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Xuất File</ListItemText>
+            </MenuItem>
+          </Menu>
+        </div>
+      </Stack>
+    </Stack>
   );
 }
 

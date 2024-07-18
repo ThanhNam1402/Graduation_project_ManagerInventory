@@ -1,5 +1,10 @@
 module.exports = {
   root: true,
+  parserOptions: {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+
+  },
   env: { browser: true, es2020: true },
   extends: [
     'eslint:recommended',

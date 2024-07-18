@@ -59,7 +59,7 @@ function Price(props) {
             multiple
             value={personName}
             onChange={handleChange}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+            input={<OutlinedInput id="select-multiple-chip" label="Bảng giá" />}
             renderValue={(selected) => (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                 {selected.map((value) => (

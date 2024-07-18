@@ -49,7 +49,7 @@ function Price(props) {
     );
   };
   return (
-    <Paper elevation={12} sx={{ width: "228px", mb: 3 }}>
+    <Paper elevation={2} sx={{ width: "228px", mb: 3 }}>
       <Accordion defaultExpanded>
         <FormControl sx={{ m: 1, width: 215 }}>
           <InputLabel id="demo-multiple-chip-label">Bảng Giá</InputLabel>
@@ -59,7 +59,7 @@ function Price(props) {
             multiple
             value={personName}
             onChange={handleChange}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+            input={<OutlinedInput id="select-multiple-chip" label="Bảng giá" />}
             renderValue={(selected) => (
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                 {selected.map((value) => (

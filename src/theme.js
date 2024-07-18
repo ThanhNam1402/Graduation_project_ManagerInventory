@@ -8,7 +8,7 @@ const theme = extendTheme({
                 primary: {
                     main: '#2196f3',
                     light: '#fff',
-                    dark: '#ccc',
+                    dark: '#333',
                     contrastText: '#fff',
                 },
                 // secondary: {

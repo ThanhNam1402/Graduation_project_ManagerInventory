@@ -19,11 +19,7 @@ function Products(props) {
 
   return (
     <div>
-      <Box
-        sx={{
-          display: "flex",
-        }}
-      >
+      <Stack direction="row">
         <Box
           sx={{
             mb: 2,
@@ -34,7 +30,7 @@ function Products(props) {
             overflowY: "scroll",
           }}
         >
-          <Box sx={{}}>
+          <Box>
             <Typography sx={{ mb: 3 }} variant="h5" component={"h5"}>
               Hàng Hóa
             </Typography>
@@ -54,7 +50,7 @@ function Products(props) {
           <ActionProduct />
           <ListProducts categoryID={categoryID} supplierID={supplierID} />
         </Box>
-      </Box>
+      </Stack>
     </div>
   );
 }

@@ -4,7 +4,10 @@
         "products" : "Sản Phẩm",
         "list-products" : "Danh Sách Hàng Hóa",
         "price-products" : "Thiết Lập Giá",
-        "inventory-count" : "Kiểm Kho"
+        "inventory-count" : "Kiểm Kho",
+        "partner" : "Đối Tác",
+        "customer" : "Khách hàng",
+        "supplier" : "Nhà Cung Cấp"
 
 
 

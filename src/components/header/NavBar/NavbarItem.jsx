@@ -31,7 +31,20 @@ export const ListMenu = [
     ],
   },
   {
-    title: "Category",
+    title: "navbar.partner",
     icon: <HandshakeIcon />,
+
+    children: [
+      {
+        title: "navbar.customer",
+        icon: <HandshakeIcon />,
+        link: path.SYSTEM + "/customer",
+      },
+      {
+        title: "navbar.supplier",
+        icon: <HandshakeIcon />,
+        link: path.SYSTEM + "/supplier",
+      },
+    ],
   },
 ];

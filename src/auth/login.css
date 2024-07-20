@@ -1,18 +1,5 @@
-@use postcss-preset-env {
-  stage: 0;
-}
-
-:root {
-  --color-background: #000119;
-  --stroke-width: calc(1em / 16);
-  --font-size: 30vmin;
-  --font-weight: 700;
-  --letter-spacing: calc(1em / 8);
-}
-
 .card {
   border: none;
-  border-radius: 10px;
   overflow: hidden;
 }
 
@@ -85,11 +72,6 @@
   100% {
     background-position: 0% 50%;
   }
-}
-
-@font-palette-values --Mint {
-  font-family: Rocher;
-  base-palette: 7;
 }
 
 .mint {

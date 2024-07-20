@@ -10,7 +10,7 @@ function PriceBook(props) {
   const [category, setCateGory] = useState(null);
 
   return (
-    <div>
+    <Box>
       thiết lập giá
       <Box sx={{ display: "flex", p: 1 }}>
         <Box
@@ -32,7 +32,7 @@ function PriceBook(props) {
           <ListPriceBook categoryId={category} />
         </Box>
       </Box>
-    </div>
+    </Box>
   );
 }
 

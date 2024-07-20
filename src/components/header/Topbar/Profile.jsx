@@ -6,13 +6,18 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import { googleLogout } from "@react-oauth/google";
+import { useState, useEffect } from "react";
+import { useNavigate  } from "react-router-dom";
+
+
 
 export default function Profile() {
+  const [users, SetUsers] = useState([]);
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -21,6 +26,23 @@ export default function Profile() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  /*----------------------logout------------------------*/ 
+  useEffect(() => {
+    // Get locostore
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      SetUsers(JSON.parse(storedUser));
+    }
+  }, []);
+
+   const handleLogout = () => {
+    googleLogout();
+    SetUsers([]);
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   return (
     <>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
@@ -35,7 +57,7 @@ export default function Profile() {
             <Avatar
               sx={{ width: 28, height: 28 }}
               alt="Remy Sharp"
-              src="https://i.pinimg.com/736x/e8/a1/e0/e8a1e0a8ae54e4a54039e8177d0b1a32.jpg"
+              src={users.picture}
             ></Avatar>
           </IconButton>
         </Tooltip>
@@ -79,9 +101,9 @@ export default function Profile() {
           <Avatar
             sx={{ width: 28, height: 28 }}
             alt="Remy Sharp"
-            src="https://i.pinimg.com/736x/e8/a1/e0/e8a1e0a8ae54e4a54039e8177d0b1a32.jpg"
+            src={users.picture ?? ""}
           />
-          Thanh Nam cute
+          {users.name ?? users.email}
         </MenuItem>
 
         <Divider />
@@ -92,7 +114,7 @@ export default function Profile() {
           </ListItemIcon>
           Cài Đặt
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogout}> 
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

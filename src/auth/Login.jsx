@@ -3,36 +3,27 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { TextField, Button, Grid, Box, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { GoogleLogin, googleLogout } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate  } from "react-router-dom";
 
 import "./login.css";
 
 function Login() {
-  const [users, SetUsers] = useState(null);
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      SetUsers(JSON.parse(storedUser));
-    }
-  }, []);
+  const [users, SetUsers] = useState([]);
+  const navigate = useNavigate();
 
   const handleLoginSuccess = (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse?.credential);
     console.log(decoded);
     SetUsers(decoded);
     localStorage.setItem("user", JSON.stringify(decoded));
+    navigate("/system");
   };
 
   const handleLoginError = () => {
     console.log("Login Failed");
   };
-
-  // const handleLogout = () => {
-  //   googleLogout();
-  //   SetUsers(null);
-  //   localStorage.removeItem("user");
-  // };
 
   const {
     register,
@@ -41,12 +32,18 @@ function Login() {
   } = useForm();
 
   const onSubmit = (data) => {
-    try {
-      SetUsers(data);
-    } catch (error) {
-      console.log(error);
-    }
+    SetUsers(data);
+    localStorage.setItem("user", JSON.stringify(data));
+    navigate("/system");
   };
+
+  useEffect(() => {
+    if (users) {
+      console.log(users);
+    
+    }
+  }, [users]);
+
   return (
     <>
       <Box
@@ -60,7 +57,13 @@ function Login() {
       >
         <Box
           onSubmit={handleSubmit(onSubmit)}
-          sx={{ mt: 4, p: 4, textAlign: "center" }}
+          sx={{
+            mt: 4,
+            p: 4,
+            textAlign: "center",
+            borderRadius: "15px",
+            boxShadow: "0px 3px 10px rgba(0, 0, 0, 10)",
+          }}
           component={"form"}
           className="box-form"
         >
@@ -172,16 +175,6 @@ function Login() {
             </Grid>
           </Grid>
         </Box>
-        {/* <div className="container">
-          {users && (
-            <div>
-              <h3>
-                Welcome, {users.name} && {users.email}
-              </h3>
-              <button onClick={handleLogout}>Logout</button>
-            </div>
-          )}
-        </div> */}
       </Box>
     </>
   );

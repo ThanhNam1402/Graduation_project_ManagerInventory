@@ -1,0 +1,23 @@
+.tableContainer {
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
+  .tableHead {
+    background-color: #f5f5f5;
+  }
+  
+  .tableCell {
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .inputCell {
+    padding: 4px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .textField .MuiInputBase-root {
+    background-color: #fff;
+  }
+  

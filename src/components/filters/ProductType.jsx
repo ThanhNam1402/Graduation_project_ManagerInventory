@@ -40,7 +40,7 @@ function ProductType(props) {
             >
               <FormControlLabel
                 value="0"
-                control={<Radio color="secondary" />}
+                control={<Radio />}
                 label="Hàng Hóa"
               />
               <FormControlLabel value="1" control={<Radio />} label="Dịch Vụ" />

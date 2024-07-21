@@ -7,6 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
 import WorkIcon from "@mui/icons-material/Work";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
+import { Typography } from "@mui/material";
 
 function Recent_activities() {
   return (
@@ -22,7 +23,8 @@ function Recent_activities() {
         }}
       >
         <ListSubheader component="div" id="nested-list-subheader">
-          <h3>RECENT ACTIVITIES</h3>
+          <Typography variant="h6" component={"h6"}>RECENT ACTIVITIES</Typography>
+
         </ListSubheader>
         <hr />
         <ListItem>

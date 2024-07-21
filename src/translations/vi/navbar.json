@@ -2,14 +2,14 @@
     "navbar" : {
         "dashboard" : "Tổng Quan",
         "products" : "Sản Phẩm",
+        "transaction": "Giao Dịch",
         "list-products" : "Danh Sách Hàng Hóa",
         "price-products" : "Thiết Lập Giá",
         "inventory-count" : "Kiểm Kho",
         "partner" : "Đối Tác",
         "customer" : "Khách hàng",
-        "supplier" : "Nhà Cung Cấp"
-
-
+        "supplier" : "Nhà Cung Cấp",
+        "orders": "Đơn Hàng"
 
     }
 }

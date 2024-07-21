@@ -7,8 +7,10 @@
         "inventory-count" : "Inventory Count",
         "partner" : "Partner",
         "customer" : "Customer",
-        "supplier" : "Supplier"
-
+        "supplier" : "Supplier",
+        "orders": "Orders",
+        "transaction": "Transaction"
 
     }
 }
+ 

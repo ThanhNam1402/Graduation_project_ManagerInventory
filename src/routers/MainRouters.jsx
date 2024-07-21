@@ -8,6 +8,7 @@ import DashBoard from "../pages/dashboard/DashBoard";
 import Product from "../pages/products/index";
 import PriceBook from "../pages/priceBook";
 import InventoryCount from "../pages/inventoryCount";
+import Transaction from "../pages/transaction";
 
 function MainRouters(props) {
 
@@ -15,13 +16,13 @@ function MainRouters(props) {
   return (
     <div>
       <Header />
-
       <Container maxWidth="xl">
         <Routes>
           <Route path="/" Component={DashBoard} />
           <Route path="/products" Component={Product} />
           <Route path="/pricebook" Component={PriceBook} />
           <Route path="/inventorycount" Component={InventoryCount} />
+          <Route path="/orders" Component={Transaction} />
         </Routes>
       </Container>
     </div>

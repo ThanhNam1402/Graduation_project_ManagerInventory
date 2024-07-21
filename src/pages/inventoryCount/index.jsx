@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import ListInventoryCount from "./ListInventoryCount";
 import Time from "../../components/filters/Time";
 import Status from "../../components/filters/Status";
@@ -12,7 +12,6 @@ function InventoryCount() {
   return (
     <>
       <Box>
-        Kiểm kho
         <Box sx={{ display: "flex", p: 1 }}>
           <Box
             sx={{
@@ -20,6 +19,9 @@ function InventoryCount() {
               mr: 3,
             }}
           >
+            <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
+              Kiểm kho
+            </Typography>
             <Time />
             <Status />
           </Box>
@@ -28,7 +30,7 @@ function InventoryCount() {
               width: "100%",
             }}
           >
-            <Action selectedCount={selectedCount}/>
+            <Action selectedCount={selectedCount} />
             <ListInventoryCount onSelectionChange={setSelectedCount} />
           </Box>
         </Box>

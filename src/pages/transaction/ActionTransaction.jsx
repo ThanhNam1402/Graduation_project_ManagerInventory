@@ -1,8 +1,11 @@
 import { Box, Typography, Paper } from "@mui/material";
 import Search from "./Search";
+
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Button from "@mui/material/Button";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+
+import CsSearch from "../../components/filters/SearchProduct";
 
 function ActionTransaction({ selectedCount }) {
   const handleSearch = (query) => {
@@ -12,11 +15,11 @@ function ActionTransaction({ selectedCount }) {
 
   return (
     <>
-      <Box sx={{display: "flex", alignItems: "center"}} component={Paper} >
+      <Box sx={{ display: "flex", alignItems: "center" }} component={Paper}>
         <Box
           sx={{ display: "flex", alignItems: "center", gap: 2, flexGrow: 1 }}
         >
-          <Search onSearch={handleSearch} />
+          <CsSearch />
           {selectedCount > 0 && (
             <Typography component="p" variant="p">
               Số sản phẩm đã chọn: {selectedCount}

@@ -21,9 +21,9 @@ function Pay() {
 
   return (
     <>
-      <Paper elevation={12} sx={{ width: "228px", mb: 3 }}>
+      <Paper elevation={2} sx={{ width: "228px", mb: 3 }}>
         <Accordion defaultExpanded>
-        <AccordionSummary
+          <AccordionSummary
             defaultExpanded
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel3-content"

@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 
 import SearchIcon from "@mui/icons-material/Search";
 
-function SearchProduct(props) {
+function CsSearch(props) {
   return (
     <div>
       <TextField
@@ -24,4 +24,4 @@ function SearchProduct(props) {
   );
 }
 
-export default SearchProduct;
+export default CsSearch;

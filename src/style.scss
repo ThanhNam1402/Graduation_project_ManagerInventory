@@ -6,6 +6,16 @@ html {
     font-weight: 500;
 }
 
+a {
+    text-decoration: none;
+    color: inherit
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
 
 /* width */
 ::-webkit-scrollbar {

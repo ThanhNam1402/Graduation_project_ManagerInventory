@@ -1,17 +1,23 @@
 import React from "react";
 
 import { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+
+
+
 import ListPriceBook from "./listPriceBook";
-import Inventory from "../../components/filters/Inventory";
 import Price from "../../components/filters/Price";
-import ProductType from "../../components/filters/ProductType";
+import FilterRadio from "../../components/filters/FilterRadio";
+import { ListProductTypes, ListOnHands } from "../../utils/constain";
+
 function PriceBook(props) {
   const [category, setCateGory] = useState(null);
 
+  const handleSetFilter = (value, id) => {
+    console.log(id, value);
+  };
   return (
     <Box>
-      thiết lập giá
       <Box sx={{ display: "flex", p: 1 }}>
         <Box
           sx={{
@@ -19,9 +25,26 @@ function PriceBook(props) {
             mr: 3,
           }}
         >
+          <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
+            Thiết Lập Giá
+          </Typography>
+
+          {/* product type */}
+          <FilterRadio
+            data={ListProductTypes}
+            handleGetValue={handleSetFilter}
+            keyFilter={"productType"}
+          />
+
           <Price handleGetValue={setCateGory} />
-          <ProductType handleGetValue={setCateGory} />
-          <Inventory handleGetValue={setCateGory} />
+
+          {/* onHands */}
+
+          <FilterRadio
+            data={ListOnHands}
+            handleGetValue={handleSetFilter}
+            keyFilter={"onHand"}
+          />
         </Box>
 
         <Box

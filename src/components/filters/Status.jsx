@@ -14,7 +14,7 @@ function Status() {
   return (
     <>
 
-      <Paper elevation={8} sx={{ width: "228px", mb: 2 }}>
+      <Paper elevation={2} sx={{ width: "228px", mb: 2 }}>
       <Accordion defaultExpanded>
         <AccordionSummary defaultExpanded
           expandIcon={<ExpandMoreIcon />}

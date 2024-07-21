@@ -44,23 +44,26 @@ function getStyles(name, supplierID, theme) {
   };
 }
 
-function Suppliers(props) {
+function FilterSuppliers(props) {
   const theme = useTheme();
 
   let { t } = useTranslation("filter");
 
-  const { supplierID, handleGetValue } = props;
+  const { supplierIDs, handleGetValue } = props;
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
 
-    handleGetValue(typeof value === "string" ? value.split(",") : value);
+    handleGetValue(
+      typeof value === "string" ? value.split(",") : value,
+      "supplierIDs"
+    );
   };
 
   return (
-    <Paper elevation={2} sx={{ width: "100%" }}>
+    <Paper elevation={2} sx={{ width: "100%", my: 2 }}>
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMore />}
@@ -82,7 +85,7 @@ function Suppliers(props) {
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple
-              value={supplierID}
+              value={supplierIDs}
               onChange={handleChange}
               renderValue={(selected) => (
                 <Box
@@ -103,7 +106,7 @@ function Suppliers(props) {
                 <MenuItem
                   key={index}
                   value={item}
-                  style={getStyles(item.name, supplierID, theme)}
+                  style={getStyles(item.name, supplierIDs, theme)}
                 >
                   {item.name}
                 </MenuItem>
@@ -116,4 +119,4 @@ function Suppliers(props) {
   );
 }
 
-export default Suppliers;
+export default FilterSuppliers;

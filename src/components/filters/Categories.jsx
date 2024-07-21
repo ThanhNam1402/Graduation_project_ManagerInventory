@@ -23,7 +23,7 @@ const listCate = [
   { id: 1, name: "Thời Trang Nam" },
 ];
 
-function ProductType(props) {
+function Categories(props) {
   const { t } = useTranslation("filter");
 
   const { handleGetValue } = props;
@@ -72,7 +72,7 @@ function ProductType(props) {
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="0"
               name="radio-buttons-group"
-              onChange={(e) => handleGetValue(e.target.value)}
+              onChange={(e) => handleGetValue(e.target.value, "category")}
             >
               {listCate &&
                 listCate.length > 0 &&
@@ -94,4 +94,4 @@ function ProductType(props) {
   );
 }
 
-export default ProductType;
+export default Categories;

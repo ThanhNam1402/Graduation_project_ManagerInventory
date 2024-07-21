@@ -14,6 +14,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import TabPanelRowProduct from "./TabPanelRowProduct";
+import TabInfomation from "./TabInfomatoin";
 
 function a11yProps(index) {
   return {
@@ -83,7 +84,7 @@ function RowProduct(props) {
                   </Tabs>
                 </Box>
                 <TabPanelRowProduct value={value} index={0}>
-                  Item One
+                  <TabInfomation item={row} />
                 </TabPanelRowProduct>
                 <TabPanelRowProduct value={value} index={1}>
                   Item Two

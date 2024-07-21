@@ -252,7 +252,7 @@ export default function ListProducts(props) {
       <TableContainer sx={{ maxHeight: "60vh" }}>
         <Table
           stickyHeader
-          sx={{ width: "100%"}}
+          sx={{ width: "100%" }}
           aria-labelledby="tableTitle"
           size={"medium"}
         >

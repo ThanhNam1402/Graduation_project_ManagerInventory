@@ -9,7 +9,9 @@
         "customer" : "Customer",
         "supplier" : "Supplier",
         "orders": "Orders",
-        "transaction": "Transaction"
+        "transaction": "Transaction",
+        "invoices" : "Invoices",
+        "purchase-order" : "Purchase Order"
 
     }
 }

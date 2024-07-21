@@ -22,7 +22,7 @@ function DeliveryTime() {
 
   const columns = [
     { title: "Theo ngày", rows: ["Hôm nay", "Hôm qua", "Ngày mai"] },
-    { title: "Theo tuần", rows: ["Tuần này",  "tuần trước", "Tuân sau"] },
+    { title: "Theo tuần", rows: ["Tuần này", "tuần trước", "Tuân sau"] },
     { title: "Theo tháng", rows: ["Tháng này", "Tháng trước", "Tháng tới"] },
     { title: "Theo quý", rows: ["Quý này", "Quý trước", "Quý sau"] },
     { title: "Theo năm", rows: ["Toàn thời gian"] },
@@ -46,49 +46,49 @@ function DeliveryTime() {
 
   return (
     <>
-      <Paper elevation={8} sx={{ width: "228px", mb: 2 }}>
-        <Accordion defaultExpanded> 
-        <AccordionSummary defaultExpanded
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3-content"
-          id="panel3-header"
-          sx={{
-            ".MuiAccordionSummary-content": { margin: 0 },
-          }}
-        >
-           Thời gian giao hàng
-        </AccordionSummary>
-        <AccordionDetails>
-          <FormControl>
-            
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={value}
-              onChange={handleChange}
-            >
-              <FormControlLabel
-                value="female"
-                control={<Radio />}
-                label={
-                  <Typography component="p" variant="p">
-                    Tháng này
-                    <UnfoldMoreOutlinedIcon
-                      style={{ verticalAlign: "middle", marginLeft: 65 }}
-                      onClick={handleClick}
-                    />
-                  </Typography>
-                }
-              />
+      <Paper elevation={2} sx={{ width: "228px", mb: 2 }}>
+        <Accordion defaultExpanded>
+          <AccordionSummary
+            defaultExpanded
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel3-content"
+            id="panel3-header"
+            sx={{
+              ".MuiAccordionSummary-content": { margin: 0 },
+            }}
+          >
+            Thời gian giao hàng
+          </AccordionSummary>
+          <AccordionDetails>
+            <FormControl>
+              <RadioGroup
+                aria-labelledby="demo-controlled-radio-buttons-group"
+                name="controlled-radio-buttons-group"
+                value={value}
+                onChange={handleChange}
+              >
+                <FormControlLabel
+                  value="female"
+                  control={<Radio />}
+                  label={
+                    <Typography component="p" variant="p">
+                      Tháng này
+                      <UnfoldMoreOutlinedIcon
+                        style={{ verticalAlign: "middle", marginLeft: 65 }}
+                        onClick={handleClick}
+                      />
+                    </Typography>
+                  }
+                />
 
-              <FormControlLabel
-                value="male"
-                control={<Radio />}
-                label="Lựa chọn khác"
-              />
-            </RadioGroup>
-          </FormControl>
-        </AccordionDetails>
+                <FormControlLabel
+                  value="male"
+                  control={<Radio />}
+                  label="Lựa chọn khác"
+                />
+              </RadioGroup>
+            </FormControl>
+          </AccordionDetails>
         </Accordion>
       </Paper>
 

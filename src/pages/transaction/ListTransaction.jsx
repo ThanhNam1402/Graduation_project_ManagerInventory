@@ -18,7 +18,7 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import {TextareaAutosize as Textarea}  from "@mui/material";
+import { TextareaAutosize as Textarea } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
@@ -27,7 +27,7 @@ import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlin
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import RecyclingOutlinedIcon from "@mui/icons-material/RecyclingOutlined";
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 
 function ListTransaction({ onSelectionChange }) {
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -255,18 +255,10 @@ function ListTransaction({ onSelectionChange }) {
                                           <TableRow>
                                             <TableCell>{row.MaDH}</TableCell>
                                             <TableCell>{row.TenHang}</TableCell>
-                                            <TableCell>
-                                              {row.SL}
-                                            </TableCell>
-                                            <TableCell>
-                                              {row.DonGia}
-                                            </TableCell>
-                                            <TableCell>
-                                              {row.GiamGia}
-                                            </TableCell>
-                                            <TableCell>
-                                              {row.GiaBan}
-                                            </TableCell>
+                                            <TableCell>{row.SL}</TableCell>
+                                            <TableCell>{row.DonGia}</TableCell>
+                                            <TableCell>{row.GiamGia}</TableCell>
+                                            <TableCell>{row.GiaBan}</TableCell>
                                             <TableCell>
                                               {row.GiaBan * row.SL}
                                             </TableCell>
@@ -299,13 +291,17 @@ function ListTransaction({ onSelectionChange }) {
                                                 Tổng số lượng: {row.SL}
                                               </Typography>
                                               <Typography sx={{ mb: 1 }}>
-                                                Tổng tiền hàng: {row.SL * row.GiaBan}
+                                                Tổng tiền hàng:{" "}
+                                                {row.SL * row.GiaBan}
                                               </Typography>
                                               <Typography sx={{ mb: 1 }}>
-                                               Giảm giá phiếu đặt: {row.GiamGia}
+                                                Giảm giá phiếu đặt:{" "}
+                                                {row.GiamGia}
                                               </Typography>
                                               <Typography sx={{ mb: 1 }}>
-                                                Tổng cộng: {(row.SL * row.GiaBan) - row.GiamGia}
+                                                Tổng cộng:{" "}
+                                                {row.SL * row.GiaBan -
+                                                  row.GiamGia}
                                               </Typography>
                                               <Typography sx={{ mb: 1 }}>
                                                 Khách trả: 0
@@ -329,7 +325,6 @@ function ListTransaction({ onSelectionChange }) {
                                         </Box>
                                       </Grid>
 
-                                     
                                       <Box
                                         sx={{
                                           mt: 2,
@@ -337,11 +332,13 @@ function ListTransaction({ onSelectionChange }) {
                                           justifyContent: "flex-end",
                                         }}
                                       >
-                                         <Button
+                                        <Button
                                           variant="contained"
                                           color="success"
                                           sx={{ mt: 2, mr: 2 }}
-                                          startIcon={<CheckCircleOutlineOutlinedIcon />}
+                                          startIcon={
+                                            <CheckCircleOutlineOutlinedIcon />
+                                          }
                                         >
                                           Kết thúc
                                         </Button>
@@ -414,7 +411,6 @@ function ListTransaction({ onSelectionChange }) {
                                         >
                                           Hủy bỏ
                                         </Button>
-
                                       </Box>
                                     </Grid>
                                   </Grid>
@@ -492,10 +488,14 @@ function ListTransaction({ onSelectionChange }) {
                                             {/* Phiếu kiểm kho được tạo tự động khi
                                             thêm mới Hàng hóa: {row.MaDH} */}
                                             {/* đang code ở đây */}
-                                             <Textarea aria-label="minimum height" minRows={3} placeholder="Ghi chú" />
+                                            <Textarea
+                                              aria-label="minimum height"
+                                              minRows={3}
+                                              placeholder="Ghi chú"
+                                            />
                                           </Typography>
                                           <Typography sx={{ p: 1 }}>
-                                           Kênh bán:  bán trực tiếp
+                                            Kênh bán: bán trực tiếp
                                           </Typography>
                                         </Grid>
 
@@ -506,26 +506,26 @@ function ListTransaction({ onSelectionChange }) {
                                           <Table>
                                             <TableHead>
                                               <TableRow>
-                                              <TableCell>Mã hàng</TableCell>
-                                              <TableCell>Tên hàng</TableCell>
-                                              <TableCell>Số lượng</TableCell>
-                                              <TableCell>Đơn giá</TableCell>
-                                              <TableCell>Giảm giá</TableCell>
-                                              <TableCell>Giá bán</TableCell>
-                                              <TableCell>Thành tiền</TableCell>
+                                                <TableCell>Mã hàng</TableCell>
+                                                <TableCell>Tên hàng</TableCell>
+                                                <TableCell>Số lượng</TableCell>
+                                                <TableCell>Đơn giá</TableCell>
+                                                <TableCell>Giảm giá</TableCell>
+                                                <TableCell>Giá bán</TableCell>
+                                                <TableCell>
+                                                  Thành tiền
+                                                </TableCell>
                                               </TableRow>
                                             </TableHead>
                                             <TableBody>
-                                              Dữ liệu hàng hóa
-                                              {/* Đang code ở đây */}
                                               <TableRow>
                                                 <TableCell>
                                                   {row.MaDH}
                                                 </TableCell>
-                                                <TableCell>{row.TenHang}</TableCell>
                                                 <TableCell>
-                                                  {row.SL}
+                                                  {row.TenHang}
                                                 </TableCell>
+                                                <TableCell>{row.SL}</TableCell>
                                                 <TableCell>
                                                   {row.DonGia}
                                                 </TableCell>
@@ -564,19 +564,23 @@ function ListTransaction({ onSelectionChange }) {
                                               >
                                                 <Grid item xs={6}>
                                                   <Typography sx={{ mb: 1 }}>
-                                                   Tổng số lượng: {row.SL}
+                                                    Tổng số lượng: {row.SL}
                                                   </Typography>
                                                   <Typography sx={{ mb: 1 }}>
-                                                    Tổng tiền hàng: {row.GiaBan * row.SL}
+                                                    Tổng tiền hàng:{" "}
+                                                    {row.GiaBan * row.SL}
                                                   </Typography>
                                                   <Typography sx={{ mb: 1 }}>
-                                                    Giảm gía phiếu đặt: {row.GiamGia}
+                                                    Giảm gía phiếu đặt:{" "}
+                                                    {row.GiamGia}
                                                   </Typography>
                                                   <Typography sx={{ mb: 1 }}>
-                                                   Tổng cộng: {row.GiaBan * row.SL}
+                                                    Tổng cộng:{" "}
+                                                    {row.GiaBan * row.SL}
                                                   </Typography>
                                                   <Typography sx={{ mb: 1 }}>
-                                                  Khách trả: {row.GiaBan * row.SL}
+                                                    Khách trả:{" "}
+                                                    {row.GiaBan * row.SL}
                                                   </Typography>
                                                 </Grid>
                                                 <Grid item xs={6}>
@@ -682,15 +686,19 @@ function ListTransaction({ onSelectionChange }) {
                                           <TableBody>
                                             <TableRow>
                                               <TableCell>{row.MaHD}</TableCell>
-                                              <TableCell>{row.ThoiGian}</TableCell>
                                               <TableCell>
-                                                {row.NguoiTao}  
+                                                {row.ThoiGian}
+                                              </TableCell>
+                                              <TableCell>
+                                                {row.NguoiTao}
                                               </TableCell>
                                               <TableCell>
                                                 {row.SL * row.GiaBan}
                                               </TableCell>
                                               <TableCell>
-                                                {row.TrangThai == 0 ? "Phiếu tạm" : "Hoàn thành"}
+                                                {row.TrangThai == 0
+                                                  ? "Phiếu tạm"
+                                                  : "Hoàn thành"}
                                               </TableCell>
                                             </TableRow>
                                           </TableBody>
@@ -708,26 +716,38 @@ function ListTransaction({ onSelectionChange }) {
                                         <Table>
                                           <TableHead>
                                             <TableRow>
-                                              <TableCell>Mã phiếu thu</TableCell>
+                                              <TableCell>
+                                                Mã phiếu thu
+                                              </TableCell>
                                               <TableCell>Thời gian</TableCell>
                                               <TableCell>Người tạo</TableCell>
                                               <TableCell>Phương thức</TableCell>
                                               <TableCell>Trạng thái</TableCell>
-                                              <TableCell>Tiền thu/chi</TableCell>
+                                              <TableCell>
+                                                Tiền thu/chi
+                                              </TableCell>
                                             </TableRow>
                                           </TableHead>
                                           <TableBody>
                                             <TableRow>
-                                              <TableCell>{row.MaPhieuThu}</TableCell>
-                                              <TableCell>{row.ThoiGian}</TableCell>
+                                              <TableCell>
+                                                {row.MaPhieuThu}
+                                              </TableCell>
+                                              <TableCell>
+                                                {row.ThoiGian}
+                                              </TableCell>
                                               <TableCell>
                                                 {row.NguoiTao}
                                               </TableCell>
                                               <TableCell>
-                                                {row.Phuongthuc == 0 ? "Tiền mặt" : "Chuyển khoản"}
+                                                {row.Phuongthuc == 0
+                                                  ? "Tiền mặt"
+                                                  : "Chuyển khoản"}
                                               </TableCell>
                                               <TableCell>
-                                                {row.TrangThai == 0 ? "Phiếu tạm" : "Đã thanh toán"}
+                                                {row.TrangThai == 0
+                                                  ? "Phiếu tạm"
+                                                  : "Đã thanh toán"}
                                               </TableCell>
                                               <TableCell>
                                                 {row.SL * row.GiaBan}

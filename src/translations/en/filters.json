@@ -2,6 +2,11 @@
     "filter" : {
         "product-type" : "Product type",
         "suppliers" : "Suppliers",
-        "category" : "Category"
+        "category" : "Category",
+        "display-option" : "Display option",
+        "on-hand" : "OnHand",
+        "gender" : "Gender",
+        "status" : "Status",
+        "customer-type" : "Customer type"
     }
 }

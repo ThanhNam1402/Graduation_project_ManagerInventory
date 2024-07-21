@@ -18,11 +18,11 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
-import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
-import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 function ListInventoryCount({ onSelectionChange }) {
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -318,12 +318,18 @@ function ListInventoryCount({ onSelectionChange }) {
                                 </Box>
                               </Grid>
                             </Grid>
-                            <Box sx={{ mt: 2 , display: "flex", justifyContent: "flex-end"}}>
+                            <Box
+                              sx={{
+                                mt: 2,
+                                display: "flex",
+                                justifyContent: "flex-end",
+                              }}
+                            >
                               <Button
                                 variant="contained"
                                 color="primary"
                                 sx={{ mr: 1 }}
-                                startIcon={<SaveOutlinedIcon/>}
+                                startIcon={<SaveOutlinedIcon />}
                               >
                                 Lưu
                               </Button>
@@ -331,15 +337,15 @@ function ListInventoryCount({ onSelectionChange }) {
                                 variant="contained"
                                 // color="secondary"
                                 sx={{ mr: 1, backgroundColor: "gray" }}
-                                startIcon={<LocalPrintshopOutlinedIcon/>}
+                                startIcon={<LocalPrintshopOutlinedIcon />}
                               >
                                 In
                               </Button>
                               <Button
                                 variant="contained"
                                 color="warning"
-                                sx={{ mr: 1, backgroundColor: 'gray' }}
-                                startIcon={<FileDownloadOutlinedIcon/>}
+                                sx={{ mr: 1, backgroundColor: "gray" }}
+                                startIcon={<FileDownloadOutlinedIcon />}
                               >
                                 Xuất file
                               </Button>
@@ -347,7 +353,7 @@ function ListInventoryCount({ onSelectionChange }) {
                                 variant="contained"
                                 color="success"
                                 sx={{ mr: 1 }}
-                                startIcon={<ContentCopyOutlinedIcon/>}
+                                startIcon={<ContentCopyOutlinedIcon />}
                               >
                                 Sao chép
                               </Button>
@@ -355,7 +361,7 @@ function ListInventoryCount({ onSelectionChange }) {
                                 variant="contained"
                                 color="error"
                                 sx={{ mr: 1 }}
-                                startIcon={<DeleteForeverOutlinedIcon/>}
+                                startIcon={<DeleteForeverOutlinedIcon />}
                               >
                                 Hủy bỏ
                               </Button>

@@ -20,7 +20,7 @@ import {
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import NotInterestedOutlinedIcon from "@mui/icons-material/NotInterestedOutlined";
 
-import "./listPriceBook.css";
+import "./listPriceBook.scss";
 
 function ListPriceBooks(props) {
   const [anchorEl, setAnchorEl] = useState(null);

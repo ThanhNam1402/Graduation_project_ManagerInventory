@@ -5,7 +5,7 @@ import { TextField, Button, Grid, Box, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "./login.css";
 
@@ -40,7 +40,6 @@ function Login() {
   useEffect(() => {
     if (users) {
       console.log(users);
-    
     }
   }, [users]);
 
@@ -170,6 +169,18 @@ function Login() {
                       className="Login row"
                     />
                   </Box>
+                  <Typography
+                    component="a"
+                    variant="a"
+                    sx={{ mt: 2 }}
+                    style={{
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    }}
+                    onClick={() => navigate("/register")}
+                  >
+                    Bạn chưa có tài khoản?
+                  </Typography>
                 </Typography>
               </Box>
             </Grid>

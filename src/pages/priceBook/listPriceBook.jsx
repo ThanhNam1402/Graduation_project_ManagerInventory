@@ -15,11 +15,10 @@ import {
   Button,
   Snackbar,
   Alert,
-  Popover
+  Popover,
 } from "@mui/material";
-import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
-import NotInterestedOutlinedIcon from '@mui/icons-material/NotInterestedOutlined';
-
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
+import NotInterestedOutlinedIcon from "@mui/icons-material/NotInterestedOutlined";
 
 import "./listPriceBook.css";
 
@@ -96,10 +95,10 @@ function ListPriceBooks(props) {
               </TableRow>
               <TableRow>
                 <TableCell>
-                  <TextField fullWidth placeholder="Tìm mã hàng" />
+                  <TextField size="small" placeholder="Tìm mã hàng" />
                 </TableCell>
                 <TableCell>
-                  <TextField fullWidth placeholder="Tìm tên hàng" />
+                  <TextField size="small" placeholder="Tìm tên hàng" />
                 </TableCell>
                 <TableCell />
                 <TableCell />
@@ -115,9 +114,11 @@ function ListPriceBooks(props) {
                   <TableCell>{row.giaNhapCuoi}</TableCell>
                   <TableCell>
                     <TextField
-                      fullWidth
+                      size="small"
                       value={row.giaChung}
-                      onClick={(event) => handleOpenPopover(event, row.id, row.giaChung)}
+                      onClick={(event) =>
+                        handleOpenPopover(event, row.id, row.giaChung)
+                      }
                       onChange={(event) => handleInputChange(row.id, event)}
                       InputProps={{
                         readOnly: true,
@@ -137,24 +138,25 @@ function ListPriceBooks(props) {
         anchorEl={anchorEl}
         onClose={handleClosePopover}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
+          vertical: "bottom",
+          horizontal: "center",
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
-        sx={{mt: 1}}
+        sx={{ mt: 1 }}
       >
         <Box sx={{ p: 2 }}>
           <TextField
+            size="small"
             fullWidth
             value={inputValue}
             onChange={(event) => setInputValue(event.target.value)}
           />
           <Button
             variant="contained"
-           color="success"
+            color="success"
             onClick={handleChange}
             style={{ marginTop: "16px" }}
             startIcon={<CheckBoxOutlinedIcon />}
@@ -164,8 +166,12 @@ function ListPriceBooks(props) {
           <Button
             variant="contained"
             onClick={handleClosePopover}
-            sx={{ marginTop: "16px", marginLeft: "8px", backgroundColor: "gray" }}
-            startIcon={<NotInterestedOutlinedIcon/>}
+            sx={{
+              marginTop: "16px",
+              marginLeft: "8px",
+              backgroundColor: "gray",
+            }}
+            startIcon={<NotInterestedOutlinedIcon />}
           >
             Bỏ qua
           </Button>
@@ -187,7 +193,7 @@ function ListPriceBooks(props) {
         <Alert
           onClose={() => setOpenSnackbar(false)}
           severity="success"
-          sx={{ width: 400 , fontSize: 16}}
+          sx={{ width: 400, fontSize: 16 }}
         >
           Cập nhật thành công
         </Alert>

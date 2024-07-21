@@ -1,6 +1,8 @@
 import { path } from "../../../utils/constain";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AllInboxRoundedIcon from "@mui/icons-material/AllInboxRounded";
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import AddCardOutlinedIcon from '@mui/icons-material/AddCardOutlined';
 
 
 export const ListMenu = [
@@ -33,5 +35,16 @@ export const ListMenu = [
   {
     title: "Categories",
     icon: "",
+  },
+  {
+    title: "navbar.transaction",
+    icon: <SwapHorizIcon/>,
+    children: [
+      {
+        title: "navbar.orders",
+        link: path.SYSTEM + "/orders",
+        icon: <AddCardOutlinedIcon/>,
+      }
+    ],
   },
 ];

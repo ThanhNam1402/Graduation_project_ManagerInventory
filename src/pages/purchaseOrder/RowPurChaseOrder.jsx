@@ -79,18 +79,10 @@ function RowProduct(props) {
                     aria-label="basic tabs"
                   >
                     <Tab label="Thông tin" {...a11yProps(0)} />
-                    <Tab label="Thẻ Kho" {...a11yProps(1)} />
-                    <Tab label="Tồn Kho" {...a11yProps(2)} />
                   </Tabs>
                 </Box>
                 <TabPanelRowProduct value={value} index={0}>
                   <TabInfomation item={row} />
-                </TabPanelRowProduct>
-                <TabPanelRowProduct value={value} index={1}>
-                  Item Two
-                </TabPanelRowProduct>
-                <TabPanelRowProduct value={value} index={2}>
-                  Item Three
                 </TabPanelRowProduct>
               </Box>
             </Box>

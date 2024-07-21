@@ -18,7 +18,7 @@ import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 
 import SearchProduct from "../../components/filters/SearchProduct";
 
-function ActionProduct(props) {
+function Actioninvoice(props) {
   const { t } = useTranslation("action");
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -113,4 +113,4 @@ function ActionProduct(props) {
   );
 }
 
-export default ActionProduct;
+export default Actioninvoice;

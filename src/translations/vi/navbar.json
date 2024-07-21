@@ -7,9 +7,10 @@
         "inventory-count" : "Kiểm Kho",
         "partner" : "Đối Tác",
         "customer" : "Khách hàng",
-        "supplier" : "Nhà Cung Cấp"
-
-
+        "supplier" : "Nhà Cung Cấp",
+        "transaction" : "Giao Dịch",
+        "invoices" : "Hóa Đơn",
+        "purchase-order" : "Đặt Hàng"
 
     }
 }

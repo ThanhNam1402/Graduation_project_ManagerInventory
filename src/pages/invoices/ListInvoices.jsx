@@ -11,8 +11,8 @@ import {
 
 import CsUsePagination from "../../hook/CsUsePagination";
 import CsPagination from "../../components/CsPagination";
-import RowProduct from "./RowProduct";
-import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListProduct";
+import RowProduct from "./RowInvoice";
+import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListInvoice";
 
 // data list
 const rows = [
@@ -182,7 +182,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ListProducts(props) {
+export default function ListInvoices(props) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);

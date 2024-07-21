@@ -25,9 +25,9 @@ function TabInfomation(props) {
               variant="subtitle2"
               component={"p"}
             >
-              Mã hàng
+              Mã Khách Hàng
             </Typography>
-            <p>{item.name}</p>
+            <p>MKH001</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -35,7 +35,7 @@ function TabInfomation(props) {
               variant="subtitle2"
               component={"p"}
             >
-              Mã vạch
+              Email
             </Typography>
           </Stack>
           <Stack mt={2} direction="row">
@@ -44,9 +44,9 @@ function TabInfomation(props) {
               variant="subtitle2"
               component={"p"}
             >
-              Danh Mục
+              Facebook
             </Typography>
-            <p>Thoi trang nam</p>
+            <p></p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -54,44 +54,29 @@ function TabInfomation(props) {
               variant="subtitle2"
               component={"p"}
             >
-              Loại hàng
+              Phone number
             </Typography>
-            <p>Hang Hoa</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
-              sx={{ width: "110px" }}
+              sx={{ minWidth: "110px" }}
               variant="subtitle2"
               component={"p"}
             >
-              Giá bán
+              Address
             </Typography>
-            <p>150.000</p>
-          </Stack>
-          <Stack mt={2} direction="row">
-            <Typography
-              sx={{ width: "110px" }}
-              variant="subtitle2"
-              component={"p"}
-            >
-              Giá vốn
-            </Typography>
-            <p>120.000</p>
-          </Stack>
-          <Stack mt={2} direction="row">
-            <Typography
-              sx={{ width: "110px" }}
-              variant="subtitle2"
-              component={"p"}
-            >
-              Trọng lượng
-            </Typography>
+            <p>
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam
+              architecto fuga quod, ex quam, itaque eligendi optio atque
+              expedita quasi aliquid velit deserunt alias, veniam asperiores
+              reprehenderit repellat! Consequuntur, harum.
+            </p>
           </Stack>
         </div>
         <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
           <Button variant="contained">Cập Nhật</Button>
           <Button variant="contained" color="warning">
-            Ngừng Kinh Doanh
+            Ngừng Hoạt Động
           </Button>
           <Button variant="contained" color="error">
             Xóa

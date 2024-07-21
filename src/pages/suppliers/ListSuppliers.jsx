@@ -11,8 +11,8 @@ import {
 
 import CsUsePagination from "../../hook/CsUsePagination";
 import CsPagination from "../../components/CsPagination";
-import RowProduct from "./RowProduct";
-import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListProduct";
+import RowSupplier from "./RowSupplier";
+import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListSupplier";
 
 // data list
 const rows = [
@@ -23,134 +23,8 @@ const rows = [
     fat: 1,
     carbs: 1,
     protein: 1,
-  },
-  {
-    id: 12,
-    name: "namcute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 100,
-    name: "nam1cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10414140,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 104141410,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10314110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 313131,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10102121313,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 1010,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101212121310,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 1021210,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 11212010,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101111110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10111110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10120,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
+    total: 1,
+    totalFindal: 1,
   },
 ];
 
@@ -182,7 +56,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ListProducts(props) {
+export default function ListSuppliers(props) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
@@ -271,7 +145,7 @@ export default function ListProducts(props) {
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
-                <RowProduct
+                <RowSupplier
                   labelId={labelId}
                   key={index}
                   row={row}

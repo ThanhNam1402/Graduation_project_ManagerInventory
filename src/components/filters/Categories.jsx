@@ -72,7 +72,7 @@ function ProductType(props) {
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="0"
               name="radio-buttons-group"
-              onChange={(e) => handleGetValue(e.target.value)}
+              onChange={(e) => handleGetValue(e.target.value, "category")}
             >
               {listCate &&
                 listCate.length > 0 &&

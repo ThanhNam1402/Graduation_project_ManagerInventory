@@ -23,7 +23,7 @@ function a11yProps(index) {
   };
 }
 
-function RowProduct(props) {
+function RowSupplier(props) {
   const { row, isItemSelected, handleClick, labelId } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -64,7 +64,8 @@ function RowProduct(props) {
         <TableCell align="right">{row.calories}</TableCell>
         <TableCell align="right">{row.fat}</TableCell>
         <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell align="right">{row.total}</TableCell>
+        <TableCell align="right">{row.totalFindal}</TableCell>
       </TableRow>
 
       <TableRow>
@@ -79,18 +80,10 @@ function RowProduct(props) {
                     aria-label="basic tabs"
                   >
                     <Tab label="Thông tin" {...a11yProps(0)} />
-                    <Tab label="Thẻ Kho" {...a11yProps(1)} />
-                    <Tab label="Tồn Kho" {...a11yProps(2)} />
                   </Tabs>
                 </Box>
                 <TabPanelRowProduct value={value} index={0}>
                   <TabInfomation item={row} />
-                </TabPanelRowProduct>
-                <TabPanelRowProduct value={value} index={1}>
-                  Item Two
-                </TabPanelRowProduct>
-                <TabPanelRowProduct value={value} index={2}>
-                  Item Three
                 </TabPanelRowProduct>
               </Box>
             </Box>
@@ -101,4 +94,4 @@ function RowProduct(props) {
   );
 }
 
-export default RowProduct;
+export default RowSupplier;

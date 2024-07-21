@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Link } from "react-router-dom";
 import {
   Button,
   Stack,
@@ -15,10 +14,11 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
+import { Link } from "react-router-dom";
 
 import SearchProduct from "../../components/filters/SearchProduct";
 
-function ActionProduct(props) {
+function ActionCustomer(props) {
   const { t } = useTranslation("action");
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -29,16 +29,6 @@ function ActionProduct(props) {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const [openFormAdd, setOpenFormAdd] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpenFormAdd(true);
-  };
-
-  const handleCloseFormAdd = () => {
-    setOpenFormAdd(false);
   };
 
   return (
@@ -61,11 +51,10 @@ function ActionProduct(props) {
           component={Link}
           variant="contained"
           startIcon={<AddRoundedIcon />}
-          to="new"
+          to="add"
         >
           {t("new")}
         </Button>
-
         <div>
           <Button
             id="demo-positioned-button"
@@ -113,4 +102,4 @@ function ActionProduct(props) {
   );
 }
 
-export default ActionProduct;
+export default ActionCustomer;

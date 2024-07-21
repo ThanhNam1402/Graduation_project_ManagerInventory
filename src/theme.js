@@ -11,10 +11,13 @@ const theme = extendTheme({
                     dark: '#333',
                     contrastText: '#fff',
                 },
-                // secondary: {
-                //     // main: '#333',
+                warning: {
+                    main: '#76ff03',
+                    light: '#ccff90',
+                    dark: '#ccff90',
+                    contrastText: '#333',
 
-                // }
+                }
             }
         },
         dark: {

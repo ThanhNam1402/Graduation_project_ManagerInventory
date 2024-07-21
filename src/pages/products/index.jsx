@@ -5,18 +5,58 @@ import { Box, Typography, Stack } from "@mui/material";
 
 import ListProducts from "./ListProducts";
 import Categories from "../../components/filters/Categories";
-import Inventory from "../../components/filters/Inventory";
-import Select from "../../components/filters/Select";
 import ActionProduct from "./ActionProduct";
-import Suppliers from "../../components/filters/Suppliers";
-import ProductType from "../../components/filters/ProductType";
+import FilterSuppliers from "../../components/filters/FilterSuppliers";
+import { useTranslation } from "react-i18next";
+
+import {
+  ListProductTypes,
+  ListDisplayOption,
+  ListOnHands,
+} from "../../utils/constain";
+
+import FilterRadio from "../../components/filters/FilterRadio";
 
 function Products(props) {
-  const [categoryID, setCateGoryID] = useState(null);
-  const [supplierID, setSupplierID] = useState([]);
+  const { t } = useTranslation("product");
 
-  console.log(categoryID, supplierID);
+  const [categoryID, setCateGoryID] = useState(0);
+  const [supplierIDs, setSupplierIDs] = useState([]);
+  const [productType, setProductType] = useState(0);
+  const [displayOption, setDisplayOption] = useState(0);
+  const [onHand, setOnHand] = useState(0);
 
+  const handleSetFilter = (value, id) => {
+    console.log(id, value);
+    switch (id) {
+      case "category":
+        setCateGoryID(value);
+        break;
+      case "supplierIDs":
+        setSupplierIDs(value);
+        break;
+      case "productType":
+        setProductType(value);
+        break;
+      case "displayOption":
+        setDisplayOption(value);
+        break;
+      case "onHand":
+        setOnHand(value);
+        break;
+    }
+  };
+
+  console.log(
+    "categoryID",
+    categoryID,
+    supplierIDs,
+    productType,
+    "displayOption",
+    displayOption,
+    "onHand",
+    onHand
+  );
   return (
     <div>
       <Stack direction="row">
@@ -31,15 +71,38 @@ function Products(props) {
           }}
         >
           <Box>
-            <Typography sx={{ mb: 3 }} variant="h5" component={"h5"}>
-              Hàng Hóa
+            <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
+              {t("title")}
             </Typography>
 
-            <Categories handleGetValue={setCateGoryID} />
-            <ProductType handleGetValue={setCateGoryID} />
-            <Inventory handleGetValue={setCateGoryID} />
-            <Suppliers supplierID={supplierID} handleGetValue={setSupplierID} />
-            <Select handleGetValue={setCateGoryID} />
+            {/* product type */}
+            <FilterRadio
+              data={ListProductTypes}
+              handleGetValue={handleSetFilter}
+              keyFilter={"productType"}
+            />
+
+            <Categories handleGetValue={handleSetFilter} />
+
+            <FilterSuppliers
+              supplierIDs={supplierIDs}
+              handleGetValue={handleSetFilter}
+            />
+
+            {/* onHands */}
+
+            <FilterRadio
+              data={ListOnHands}
+              handleGetValue={handleSetFilter}
+              keyFilter={"onHand"}
+            />
+            {/* optionDisplay */}
+
+            <FilterRadio
+              data={ListDisplayOption}
+              handleGetValue={handleSetFilter}
+              keyFilter={"displayOption"}
+            />
           </Box>
         </Box>
         <Box
@@ -48,7 +111,7 @@ function Products(props) {
           }}
         >
           <ActionProduct />
-          <ListProducts categoryID={categoryID} supplierID={supplierID} />
+          <ListProducts categoryID={categoryID} supplierID={supplierIDs} />
         </Box>
       </Stack>
     </div>

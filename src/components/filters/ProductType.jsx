@@ -36,7 +36,7 @@ function ProductType(props) {
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="female"
               name="radio-buttons-group"
-              onChange={(e) => handleGetValue(e.target.value)}
+              onChange={(e) => handleGetValue(e.target.value, "productType")}
             >
               <FormControlLabel
                 value="0"

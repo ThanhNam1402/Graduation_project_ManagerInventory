@@ -50,7 +50,6 @@ export default function ListProducts(props) {
       }
     } catch (err) {
       console.log(err);
-      setError(err);
     }
   };
 

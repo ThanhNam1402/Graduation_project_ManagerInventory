@@ -167,13 +167,13 @@ export default function ListCustomers(props) {
         </Table>
       </TableContainer>
 
-      <CsPagination
+      {/* <CsPagination
         totalPage={totalPage}
         limitPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      /> */}
     </Paper>
   );
 }

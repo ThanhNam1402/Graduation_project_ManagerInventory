@@ -1,5 +1,5 @@
 import { Box, Typography, Paper } from "@mui/material";
-import Search from "./Search";
+import { useNavigate } from "react-router-dom";
 
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import Button from "@mui/material/Button";
@@ -11,6 +11,12 @@ function ActionTransaction({ selectedCount }) {
   const handleSearch = (query) => {
     console.log("Tìm kiếm:", query);
     // Nghiệp vụ Search ở đây!
+  };
+
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate('/system/orders/add');
   };
 
   return (
@@ -33,8 +39,9 @@ function ActionTransaction({ selectedCount }) {
             variant="contained"
             color="success"
             startIcon={<AddOutlinedIcon />}
+            onClick={()=> handleButtonClick()}
           >
-            Kiểm kho
+            Đặt hàng
           </Button>
           <Button
             variant="contained"

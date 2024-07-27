@@ -4,7 +4,6 @@ export const path = {
     SYSTEM: '/system'
 };
 
-
 export const ListProductTypes = {
     title: "filter.product-type",
     data: [
@@ -31,6 +30,7 @@ export const ListOnHands = {
         { value: 2, name: "Còn Hàng" }
     ]
 }
+
 export const ListGender = {
     title: "filter.gender",
     data: [
@@ -39,6 +39,7 @@ export const ListGender = {
         { value: 2, name: "Nữ" }
     ]
 }
+
 export const ListCustomersType = {
     title: "filter.customer-type",
     data: [
@@ -47,6 +48,7 @@ export const ListCustomersType = {
         { value: 2, name: "Công Ty" }
     ]
 }
+
 export const ListStatus = {
     title: "filter.status",
     data: [
@@ -55,6 +57,7 @@ export const ListStatus = {
         { value: 2, name: "Ngừng Hoạt Động" }
     ]
 }
+
 export const ListStatusPurchaseOrder = {
     title: "filter.status",
     data: [
@@ -62,6 +65,7 @@ export const ListStatusPurchaseOrder = {
         { value: 2, name: "Đã nhập hàng" }
     ]
 }
+
 export const ListStatusInvoice = {
     title: "filter.status",
     data: [

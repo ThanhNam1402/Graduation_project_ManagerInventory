@@ -1,10 +1,9 @@
 import { useState } from "react";
 
-function CsUsePagination(curentPage, limit, total) {
+function CsUsePagination(curentPage, limit) {
   // pagination
   const [page, setPage] = useState(curentPage); // current page
   const [rowsPerPage, setRowsPerPage] = useState(limit); // limit = 10
-  const [totalPage, setTotalPage] = useState(total); // count
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -16,9 +15,10 @@ function CsUsePagination(curentPage, limit, total) {
   };
 
   return {
-    page,
-    rowsPerPage,
-    totalPage,
+    pagination: {
+      page,
+      rowsPerPage,
+    },
     handleChangePage,
     handleChangeRowsPerPage,
   };

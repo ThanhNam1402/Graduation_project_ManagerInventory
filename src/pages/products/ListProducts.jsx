@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import {
   Paper,
@@ -11,191 +11,48 @@ import {
 
 import CsUsePagination from "../../hook/CsUsePagination";
 import CsPagination from "../../components/CsPagination";
+import csUseQueryString from "../../hook/csUseQueryString";
+import { productService } from "../../services/product.service";
 import RowProduct from "./RowProduct";
 import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListProduct";
-
-// data list
-const rows = [
-  {
-    id: 1,
-    name: "namcute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 12,
-    name: "namcute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 100,
-    name: "nam1cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10414140,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 104141410,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10314110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 313131,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10102121313,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 1010,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101212121310,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 1021210,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 11212010,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101111110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10111110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10120,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-];
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+import { stableSort, getComparator } from "../../utils/func";
 
 export default function ListProducts(props) {
+  const [data, setData] = useState([]);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
+  const [totalPage, setTotalPage] = useState(500); // total page
+
   const [selected, setSelected] = useState([]);
 
-  console.log(props);
+  const { pagination, handleChangePage, handleChangeRowsPerPage } =
+    CsUsePagination(0, 10);
 
-  let {
-    page,
-    rowsPerPage,
-    totalPage,
-    handleChangePage,
-    handleChangeRowsPerPage,
-  } = CsUsePagination(0, 10, 4);
+  let { filters } = props;
+
+  console.log(filters);
+
+  console.log(pagination.page, pagination.rowsPerPage);
+  let filterParmas = csUseQueryString({ ...filters });
+
+  console.log(filterParmas);
+
+  useEffect(() => {
+    fetchData();
+  }, [filters, order, orderBy, pagination.page, pagination.rowsPerPage]);
+
+  const fetchData = async () => {
+    try {
+      const response = await productService.handleGetAllProduct(filterParmas);
+
+      if (response && response.success === true) {
+        setData(response.data);
+      }
+    } catch (err) {
+      console.log(err);
+      setError(err);
+    }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -205,8 +62,7 @@ export default function ListProducts(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      console.log(rows);
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = data.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -235,71 +91,81 @@ export default function ListProducts(props) {
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    pagination.page > 0
+      ? Math.max(
+          0,
+          (1 + pagination.page) * pagination.rowsPerPage - data.length
+        )
+      : 0;
 
-  const visibleRows = useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
-  );
+  // phan trang
+  // console.log();
+  // const visibleRows = useMemo(
+  //   () =>
+  //     stableSort(data?.data, getComparator(order, orderBy)).slice(
+  //       page * rowsPerPage,
+  //       page * rowsPerPage + rowsPerPage
+  //     ),
+  //   [order, orderBy, page, rowsPerPage]
+  // );
 
   return (
-    <Paper sx={{ width: "100%", mb: 2 }}>
-      <EnhancedTableToolbar numSelected={selected.length} />
-      <TableContainer sx={{ maxHeight: "60vh" }}>
-        <Table
-          stickyHeader
-          sx={{ width: "100%" }}
-          aria-labelledby="tableTitle"
-          size={"medium"}
-        >
-          <EnhancedTableHead
-            numSelected={selected.length}
-            order={order}
-            orderBy={orderBy}
-            onSelectAllClick={handleSelectAllClick}
-            onRequestSort={handleRequestSort}
-            rowCount={rows.length}
-          />
+    <>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <EnhancedTableToolbar numSelected={selected.length} />
+        <TableContainer sx={{ maxHeight: "60vh" }}>
+          <Table
+            stickyHeader
+            sx={{ width: "100%" }}
+            aria-labelledby="tableTitle"
+            size={"medium"}
+          >
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={data.length}
+            />
+            <TableBody sx={{ width: "100%" }}>
+              {data &&
+                data.length > 0 &&
+                data.map((row, index) => {
+                  const isItemSelected = isSelected(row.id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-          <TableBody sx={{ width: "100%" }}>
-            {visibleRows.map((row, index) => {
-              const isItemSelected = isSelected(row.id);
-              const labelId = `enhanced-table-checkbox-${index}`;
+                  return (
+                    <RowProduct
+                      labelId={labelId}
+                      key={index}
+                      row={row}
+                      handleClick={handleSelectRow}
+                      isItemSelected={isItemSelected}
+                    />
+                  );
+                })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: 53 * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-              return (
-                <RowProduct
-                  labelId={labelId}
-                  key={index}
-                  row={row}
-                  handleClick={handleSelectRow}
-                  isItemSelected={isItemSelected}
-                />
-              );
-            })}
-            {emptyRows > 0 && (
-              <TableRow
-                style={{
-                  height: 53 * emptyRows,
-                }}
-              >
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <CsPagination
-        totalPage={totalPage}
-        limitPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+        <CsPagination
+          totalPage={totalPage}
+          limitPage={pagination.rowsPerPage}
+          page={pagination.page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </>
   );
 }

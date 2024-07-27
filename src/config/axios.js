@@ -2,35 +2,30 @@
 
 
 import axios from 'axios';
-import store from './redux';
+import { REACT_APP_BACKEND_URL } from './config';
 
-import { REACT_APP_BACKEND_URL } from './services/config';
-
-// import actionTypes from './store/actions/actionTypes';
-// import * as actions from "./store/actions"
-
-const instance = axios.create({
+const api = axios.create({
     baseURL: REACT_APP_BACKEND_URL,
     withCredentials: true
 });
 
-instance.interceptors.request.use((config) => {
+// api.interceptors.request.use((config) => {
 
-    const currentState = store.getState()
-    const token = currentState.user?.userInfo?.token?.token ?? '';
+//     const currentState = store.getState()
+//     const token = currentState.user?.userInfo?.token?.token ?? '';
 
-    if (!config.headers["Authorization"]) {
-        config.headers["Authorization"] = `Bearer ${token}`;
-    }
+//     if (!config.headers["Authorization"]) {
+//         config.headers["Authorization"] = `Bearer ${token}`;
+//     }
 
-    return config;
+//     return config;
 
-}, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-});
+// }, function (error) {
+//     // Do something with request error
+//     return Promise.reject(error);
+// });
 
-instance.interceptors.response.use(
+api.interceptors.response.use(
     (response) => {
 
         return response.data;
@@ -108,4 +103,4 @@ instance.interceptors.response.use(
     }
 );
 
-export default instance;
+export default api;

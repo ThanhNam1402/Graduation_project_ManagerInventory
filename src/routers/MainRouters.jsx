@@ -21,18 +21,18 @@ function MainRouters(props) {
       <Header />
       <Container maxWidth="xl">
         <Routes>
-          <Route path="/" Component={DashBoard} />
-          <Route path="/products" Component={Product} />
-          <Route path="/products/new" Component={AddProduct} />
-          <Route path="/pricebook" Component={PriceBook} />
-          <Route path="/inventorycount" Component={InventoryCount} />
-          
-          <Route path="/orders" Component={Transaction} />
+          <Route index element={<DashBoard />} />
+          <Route path="products" element={<Product />} />
+          <Route path="products/new" element={<AddProduct />} />
+          <Route path="pricebook" element={<PriceBook />} />
+          <Route path="inventorycount" element={<InventoryCount />} />
 
-          <Route path="/customers" Component={Customers} />
-          <Route path="/suppliers" Component={Suppliers} />
-          <Route path="/invoices" Component={Invoices} />
-          <Route path="/purchaseOrder" Component={PurchaseOrrder} />
+          <Route path="/orders" element={<Transaction />} />
+
+          <Route path="customers" element={<Customers />} />
+          <Route path="suppliers" element={<Suppliers />} />
+          <Route path="invoices" element={<Invoices />} />
+          <Route path="purchaseOrder" element={<PurchaseOrrder />} />
         </Routes>
       </Container>
     </div>

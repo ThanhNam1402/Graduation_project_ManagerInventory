@@ -20,43 +20,52 @@ import FilterRadio from "../../components/filters/FilterRadio";
 function Products(props) {
   const { t } = useTranslation("product");
 
-  const [categoryID, setCateGoryID] = useState(0);
-  const [supplierIDs, setSupplierIDs] = useState([]);
-  const [productType, setProductType] = useState(0);
-  const [displayOption, setDisplayOption] = useState(0);
-  const [onHand, setOnHand] = useState(0);
+  const [filters, setFilters] = useState({
+    categoryID: 0,
+    supplierIDs: [],
+    productTypeID: 0,
+    displayOption: 0,
+    onHand: 0,
+  });
 
   const handleSetFilter = (value, id) => {
-    console.log(id, value);
+    console.log(id, value, typeof value);
+
     switch (id) {
       case "category":
-        setCateGoryID(value);
+        setFilters((state) => ({
+          ...state,
+          categoryID: value,
+        }));
+
         break;
       case "supplierIDs":
-        setSupplierIDs(value);
-        break;
-      case "productType":
-        setProductType(value);
+        console.log(value);
+
+        value.map((item) => {
+          console.log(item);
+        });
+        setFilters((state) => ({
+          ...state,
+          supplierIDs: value,
+        }));
         break;
       case "displayOption":
-        setDisplayOption(value);
+        setFilters((state) => ({
+          ...state,
+          displayOption: value,
+        }));
+
         break;
       case "onHand":
-        setOnHand(value);
+        setFilters((state) => ({
+          ...state,
+          onHand: value,
+        }));
         break;
     }
   };
 
-  console.log(
-    "categoryID",
-    categoryID,
-    supplierIDs,
-    productType,
-    "displayOption",
-    displayOption,
-    "onHand",
-    onHand
-  );
   return (
     <div>
       <Stack direction="row">
@@ -75,17 +84,10 @@ function Products(props) {
               {t("title")}
             </Typography>
 
-            {/* product type */}
-            <FilterRadio
-              data={ListProductTypes}
-              handleGetValue={handleSetFilter}
-              keyFilter={"productType"}
-            />
-
             <Categories handleGetValue={handleSetFilter} />
 
             <FilterSuppliers
-              supplierIDs={supplierIDs}
+              supplierIDs={filters.supplierIDs}
               handleGetValue={handleSetFilter}
             />
 
@@ -111,7 +113,7 @@ function Products(props) {
           }}
         >
           <ActionProduct />
-          <ListProducts categoryID={categoryID} supplierID={supplierIDs} />
+          <ListProducts filters={filters} />
         </Box>
       </Stack>
     </div>

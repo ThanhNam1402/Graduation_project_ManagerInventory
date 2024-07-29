@@ -19,6 +19,7 @@ function CsUsePagination(curentPage, limit) {
       page,
       rowsPerPage,
     },
+    setPage,
     handleChangePage,
     handleChangeRowsPerPage,
   };

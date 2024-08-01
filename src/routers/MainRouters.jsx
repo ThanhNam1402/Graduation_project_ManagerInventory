@@ -5,8 +5,11 @@ import { Routes, Route } from "react-router-dom";
 
 import Header from "../components/header/Header";
 import DashBoard from "../pages/dashboard/DashBoard";
+
 import Product from "../pages/products/index";
 import AddProduct from "../pages/products/AddProduct";
+import UpdateProduct from "../pages/products/ProductDetail";
+
 import PriceBook from "../pages/priceBook";
 import InventoryCount from "../pages/inventoryCount";
 import AddInventoryCount from "../pages/inventoryCount/addinventoryCount";
@@ -27,9 +30,10 @@ function MainRouters(props) {
 
           <Route path="products" element={<Product />} />
           <Route path="products/new" element={<AddProduct />} />
+          <Route path="products/:id" element={<UpdateProduct />} />
 
           <Route path="pricebook" element={<PriceBook />} />
-          
+
           <Route path="inventorycount" element={<InventoryCount />} />
           <Route path="/inventorycount/add" element={<AddInventoryCount />} />
 

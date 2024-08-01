@@ -4,10 +4,15 @@ import Grid from "@mui/material/Grid";
 import { Stack, Typography, Button } from "@mui/material";
 
 function TabInfomation(props) {
-  let { item } = props;
+  console.log(props);
+  let { item, handleDelProduct } = props;
+
+  const handelDelItem = (id) => {
+    handleDelProduct(id);
+  };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={4}>
       <Grid item xs={3}>
         <img
           src="https://i.pinimg.com/564x/b0/91/5f/b0915f3c86472ea1ad3d1472cebd6c15.jpg"
@@ -17,7 +22,7 @@ function TabInfomation(props) {
       <Grid item xs={9}>
         <div>
           <Typography variant="h6" component={"h6"}>
-            {item.name}
+            {item?.name}
           </Typography>
           <Stack mt={2} direction="row">
             <Typography
@@ -27,7 +32,7 @@ function TabInfomation(props) {
             >
               Mã hàng
             </Typography>
-            <p>{item.name}</p>
+            <p>{item?.code}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -46,17 +51,7 @@ function TabInfomation(props) {
             >
               Danh Mục
             </Typography>
-            <p>Thoi trang nam</p>
-          </Stack>
-          <Stack mt={2} direction="row">
-            <Typography
-              sx={{ width: "110px" }}
-              variant="subtitle2"
-              component={"p"}
-            >
-              Loại hàng
-            </Typography>
-            <p>Hang Hoa</p>
+            <p>{item?.category_id}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -66,7 +61,7 @@ function TabInfomation(props) {
             >
               Giá bán
             </Typography>
-            <p>150.000</p>
+            <p>{item?.sale_price}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -76,7 +71,7 @@ function TabInfomation(props) {
             >
               Giá vốn
             </Typography>
-            <p>120.000</p>
+            <p>{item?.price}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -88,16 +83,31 @@ function TabInfomation(props) {
             </Typography>
           </Stack>
         </div>
-        <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
-          <Button variant="contained">Cập Nhật</Button>
-          <Button variant="contained" color="warning">
-            Ngừng Kinh Doanh
-          </Button>
-          <Button variant="contained" color="error">
-            Xóa
-          </Button>
-        </Stack>
       </Grid>
+
+      <Stack
+        justifyContent="flex-end"
+        direction="row"
+        spacing={2}
+        sx={{
+          width: "100%",
+        }}
+        mt={3}
+      >
+        <Button variant="contained" color="success">
+          Cập Nhật
+        </Button>
+        <Button variant="text" color="warning">
+          Ngừng Kinh Doanh
+        </Button>
+        <Button
+          onClick={() => handelDelItem(item.id)}
+          variant="contained"
+          color="error"
+        >
+          Xóa
+        </Button>
+      </Stack>
     </Grid>
   );
 }

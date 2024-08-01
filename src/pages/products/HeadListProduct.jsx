@@ -28,36 +28,35 @@ import { alpha } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
- 
   {
-    id: "nam31131e",
+    id: "code",
     numeric: false,
     disablePadding: true,
     label: "Mã Hàng",
   },
   {
-    id: "cal3131ories",
+    id: "name",
     numeric: true,
     disablePadding: false,
-    label: "Tên hàng",
+    label: "Tên Hàng",
   },
   {
-    id: "fat",
+    id: "category",
     numeric: true,
     disablePadding: false,
-    label: "Giá bán",
+    label: "Nhóm Hàng",
   },
   {
-    id: "carbs",
+    id: "price",
     numeric: true,
     disablePadding: false,
-    label: "Giá vốn",
+    label: "Giá",
   },
   {
-    id: "protein",
+    id: "status",
     numeric: true,
     disablePadding: false,
-    label: "Tồn kho",
+    label: "Trạng Thái",
   },
 ];
 
@@ -73,6 +72,8 @@ export function EnhancedTableHead(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+
+  console.log(order, orderBy);
 
   return (
     <TableHead>
@@ -142,8 +143,6 @@ export function EnhancedTableToolbar(props) {
     setAnchorEl(null);
   };
   const { numSelected } = props;
-
-  console.log(numSelected);
 
   return (
     <Toolbar

@@ -6,18 +6,36 @@ import { Box, Typography, Stack } from "@mui/material";
 import FilterRadio from "../../components/filters/FilterRadio";
 import ListSuppliers from "./ListSuppliers";
 import ActionCustomer from "./ActionSupplier";
-import {
-  ListStatus,
-} from "../../utils/constain";
+import { ListStatus } from "../../utils/constain";
+
+import CsUsePagination from "../../hook/CsUsePagination";
 
 function Suppliers(props) {
-  const [gender, setGender] = useState(0);
-  const [customerType, setCustomerType] = useState(0);
-  const [status, setStatus] = useState(0);
+  const [filters, setFilters] = useState({
+    status: 0,
+  });
+  const [keyWord, setKeyWord] = useState("");
+
+  const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
+    CsUsePagination(0, 5);
+
+  const handleSearch = (value) => {
+    console.log("value", value);
+    setPage(0);
+
+    setKeyWord(value);
+  };
 
   const handleSetFilter = (value, id) => {
-    console.log(id, value);
-    // swtich case
+    setPage(0);
+    switch (id) {
+      case "status":
+        setFilters((state) => ({
+          ...state,
+          status: value,
+        }));
+        break;
+    }
   };
 
   return (
@@ -35,7 +53,7 @@ function Suppliers(props) {
         >
           <Box>
             <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
-              Khách Hàng
+              Nhà Cung Cấp
             </Typography>
 
             {/* Status */}
@@ -51,8 +69,14 @@ function Suppliers(props) {
             width: "100%",
           }}
         >
-          <ActionCustomer />
-          <ListSuppliers />
+          <ActionCustomer handleSearch={handleSearch} />
+          <ListSuppliers
+            keyWord={keyWord}
+            filters={filters}
+            pagination={pagination}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+          />
         </Box>
       </Stack>
     </div>

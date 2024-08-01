@@ -26,9 +26,9 @@ function App() {
       <Routes>
         <Route index element={<Login />} />
         <Route path={path.LOGIN} element={<Login />} />
-        {isAuthenticated && (
-          <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
-        )}
+        {/* {isAuthenticated && ( */}
+        <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
+        {/* )} */}
       </Routes>
 
       <ToastContainer />

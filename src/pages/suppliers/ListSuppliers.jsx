@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import {
   Paper,
@@ -9,67 +9,60 @@ import {
   TableContainer,
 } from "@mui/material";
 
-import CsUsePagination from "../../hook/CsUsePagination";
+import csUseQueryString from "../../hook/csUseQueryString";
 import CsPagination from "../../components/CsPagination";
 import RowSupplier from "./RowSupplier";
 import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListSupplier";
 
-// data list
-const rows = [
-  {
-    id: 1,
-    name: "namcute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-    total: 1,
-    totalFindal: 1,
-  },
-];
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+import { supplierService } from "../../services/supplier.service";
 
 export default function ListSuppliers(props) {
+  
+  const [data, setData] = useState([]);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
+  const [total, setTotalPage] = useState([]);
+
+  let {
+    filters,
+    pagination,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    keyWord,
+  } = props;
 
   console.log(props);
 
-  let {
-    page,
-    rowsPerPage,
-    totalPage,
-    handleChangePage,
-    handleChangeRowsPerPage,
-  } = CsUsePagination(0, 10, 4);
+  useEffect(() => {
+    fetchData();
+  }, [
+    filters,
+    order,
+    orderBy,
+    pagination?.page,
+    pagination?.rowsPerPage,
+    keyWord,
+  ]);
+
+  const fetchData = async () => {
+    try {
+      let filterParmas = csUseQueryString({
+        ...filters,
+        ...pagination,
+        keyWord,
+      });
+      const response = await supplierService.handleGetAllSuppliers(
+        filterParmas
+      );
+      if (response && response.success === true) {
+        setData(response.data);
+        setTotalPage(response?.pagination?.total);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -108,18 +101,6 @@ export default function ListSuppliers(props) {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const visibleRows = useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
-  );
-
   return (
     <Paper sx={{ width: "100%", mb: 2 }}>
       <EnhancedTableToolbar numSelected={selected.length} />
@@ -136,41 +117,34 @@ export default function ListSuppliers(props) {
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
-            rowCount={rows.length}
+            rowCount={100}
           />
 
           <TableBody sx={{ width: "100%" }}>
-            {visibleRows.map((row, index) => {
-              const isItemSelected = isSelected(row.id);
-              const labelId = `enhanced-table-checkbox-${index}`;
+            {data &&
+              data.length > 0 &&
+              data.map((row, index) => {
+                const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-              return (
-                <RowSupplier
-                  labelId={labelId}
-                  key={index}
-                  row={row}
-                  handleClick={handleSelectRow}
-                  isItemSelected={isItemSelected}
-                />
-              );
-            })}
-            {emptyRows > 0 && (
-              <TableRow
-                style={{
-                  height: 53 * emptyRows,
-                }}
-              >
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
+                return (
+                  <RowSupplier
+                    labelId={labelId}
+                    key={index}
+                    row={row}
+                    handleClick={handleSelectRow}
+                    isItemSelected={isItemSelected}
+                  />
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>
 
       <CsPagination
-        totalPage={totalPage}
-        limitPage={rowsPerPage}
-        page={page}
+        totalPage={total}
+        limitPage={pagination.rowsPerPage}
+        page={pagination.page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

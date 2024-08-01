@@ -7,56 +7,74 @@ import {
   TableCell,
   TableRow,
   TableContainer,
+  Typography,
 } from "@mui/material";
 
-import CsUsePagination from "../../hook/CsUsePagination";
 import CsPagination from "../../components/CsPagination";
 import csUseQueryString from "../../hook/csUseQueryString";
 import { productService } from "../../services/product.service";
 import RowProduct from "./RowProduct";
 import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListProduct";
-import { stableSort, getComparator } from "../../utils/func";
+import { toast } from "react-toastify";
 
 export default function ListProducts(props) {
+  let {
+    filters,
+    sort,
+    keyWord,
+    pagination,
+    handleChangeRowsPerPage,
+    handleChangePage,
+    handleRequestSort,
+  } = props;
+
+  console.log(props);
+
   const [data, setData] = useState([]);
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
-  const [totalPage, setTotalPage] = useState(500); // total page
 
+  const [totalPage, setTotalPage] = useState(0); // total page
   const [selected, setSelected] = useState([]);
-
-  const { pagination, handleChangePage, handleChangeRowsPerPage } =
-    CsUsePagination(0, 10);
-
-  let { filters } = props;
-
-  console.log(filters);
-
-  console.log(pagination.page, pagination.rowsPerPage);
-  let filterParmas = csUseQueryString({ ...filters });
-
-  console.log(filterParmas);
 
   useEffect(() => {
     fetchData();
-  }, [filters, order, orderBy, pagination.page, pagination.rowsPerPage]);
+  }, [filters, sort, pagination?.page, pagination?.rowsPerPage, keyWord]);
+
+  console.log(props);
 
   const fetchData = async () => {
     try {
-      const response = await productService.handleGetAllProduct(filterParmas);
+      let filterParmas = csUseQueryString({
+        ...filters,
+        ...pagination,
+        ...sort,
+        keyWord,
+      });
 
+      console.log(filterParmas);
+
+      const response = await productService.handleGetAllProduct(filterParmas);
       if (response && response.success === true) {
         setData(response.data);
+        setTotalPage(response?.pagination?.total);
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+  const handleDelProduct = async (id) => {
+    try {
+      let res = await productService.handleDelProducts(id);
+
+      console.log(res);
+
+      if (res && res.success === true) {
+        toast.success(res.message);
+        fetchData();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSelectAllClick = (event) => {
@@ -89,25 +107,6 @@ export default function ListProducts(props) {
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
-  const emptyRows =
-    pagination.page > 0
-      ? Math.max(
-          0,
-          (1 + pagination.page) * pagination.rowsPerPage - data.length
-        )
-      : 0;
-
-  // phan trang
-  // console.log();
-  // const visibleRows = useMemo(
-  //   () =>
-  //     stableSort(data?.data, getComparator(order, orderBy)).slice(
-  //       page * rowsPerPage,
-  //       page * rowsPerPage + rowsPerPage
-  //     ),
-  //   [order, orderBy, page, rowsPerPage]
-  // );
-
   return (
     <>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -121,15 +120,14 @@ export default function ListProducts(props) {
           >
             <EnhancedTableHead
               numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
+              order={sort.order}
+              orderBy={sort.orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={data.length}
             />
             <TableBody sx={{ width: "100%" }}>
-              {data &&
-                data.length > 0 &&
+              {data && data.length > 0 ? (
                 data.map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -140,18 +138,19 @@ export default function ListProducts(props) {
                       key={index}
                       row={row}
                       handleClick={handleSelectRow}
+                      handleDelProduct={handleDelProduct}
                       isItemSelected={isItemSelected}
                     />
                   );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
+                })
+              ) : (
+                <>
+                  <TableRow>
+                    <TableCell style={{ p: 1 }} colSpan={6} align="center">
+                      <Typography>nodata</Typography>
+                    </TableCell>
+                  </TableRow>
+                </>
               )}
             </TableBody>
           </Table>
@@ -159,8 +158,8 @@ export default function ListProducts(props) {
 
         <CsPagination
           totalPage={totalPage}
-          limitPage={pagination.rowsPerPage}
-          page={pagination.page}
+          limitPage={pagination?.rowsPerPage}
+          page={pagination?.page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />

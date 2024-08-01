@@ -13,8 +13,8 @@ import {
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
-import TabPanelRowProduct from "./TabPanelRowProduct";
 import TabInfomation from "./TabInfomatoin";
+import TabPanelRow from "../../components/TabPanelRow";
 
 function a11yProps(index) {
   return {
@@ -24,7 +24,7 @@ function a11yProps(index) {
 }
 
 function RowProduct(props) {
-  const { row, isItemSelected, handleClick, labelId } = props;
+  const { row, isItemSelected, handleClick, labelId, handleDelProduct } = props;
   const [open, setOpen] = React.useState(false);
 
   const [value, setValue] = React.useState(0);
@@ -59,12 +59,12 @@ function RowProduct(props) {
           />
         </TableCell>
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          {row.name}
+          {row?.code}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell align="right">{row?.name}</TableCell>
+        <TableCell align="right">{row?.category_id}</TableCell>
+        <TableCell align="right">{row?.price}</TableCell>
+        <TableCell align="right">{row?.status}</TableCell>
       </TableRow>
 
       <TableRow>
@@ -83,15 +83,18 @@ function RowProduct(props) {
                     <Tab label="Tồn Kho" {...a11yProps(2)} />
                   </Tabs>
                 </Box>
-                <TabPanelRowProduct value={value} index={0}>
-                  <TabInfomation item={row} />
-                </TabPanelRowProduct>
-                <TabPanelRowProduct value={value} index={1}>
+                <TabPanelRow value={value} index={0}>
+                  <TabInfomation
+                    item={row}
+                    handleDelProduct={handleDelProduct}
+                  />
+                </TabPanelRow>
+                <TabPanelRow value={value} index={1}>
                   Item Two
-                </TabPanelRowProduct>
-                <TabPanelRowProduct value={value} index={2}>
+                </TabPanelRow>
+                <TabPanelRow value={value} index={2}>
                   Item Three
-                </TabPanelRowProduct>
+                </TabPanelRow>
               </Box>
             </Box>
           </Collapse>

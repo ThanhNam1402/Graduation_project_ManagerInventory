@@ -19,13 +19,22 @@ import { toast } from "react-toastify";
 
 import Previews from "../../../components/PreviewImg";
 import { productService } from "../../../services/product.service";
+import { useParams } from "react-router-dom";
 
-function AddProduct(props) {
+export default function UpdateProduct(props) {
+  let { id } = useParams();
+
+  console.log(id);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({});
+
+  const handleGetOneProduct = async () => {
+    let res = await productService.handleGetOneProduct(id);
+  };
 
   const _onSubmit = async (data) => {
     console.log(data);
@@ -58,7 +67,7 @@ function AddProduct(props) {
             alignItems="center"
             justifyContent={"space-between"}
           >
-            <Typography variant="h5">Thêm Mới Sản Phẩm</Typography>
+            <Typography variant="h5">Chỉnh Sửa Sản Phẩm</Typography>
 
             <Stack spacing={2} direction={"row"} alignItems={"center"}>
               <Button component={Link} to="/system/products" variant="outlined">
@@ -215,32 +224,32 @@ function AddProduct(props) {
               <Previews />
 
               {/* <Stack my={2} spacing={2} direction="row" alignItems="center">
-                <img
-                  width="120px"
-                  src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
-                  alt=""
-                />
-                <img
-                  width="120px"
-                  src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
-                  alt=""
-                />
-                <img
-                  width="120px"
-                  src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
-                  alt=""
-                />
-                <img
-                  width="120px"
-                  src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
-                  alt=""
-                />
-                <img
-                  width="120px"
-                  src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
-                  alt=""
-                />
-              </Stack> */}
+                  <img
+                    width="120px"
+                    src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
+                    alt=""
+                  />
+                  <img
+                    width="120px"
+                    src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
+                    alt=""
+                  />
+                  <img
+                    width="120px"
+                    src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
+                    alt=""
+                  />
+                  <img
+                    width="120px"
+                    src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
+                    alt=""
+                  />
+                  <img
+                    width="120px"
+                    src="https://media.istockphoto.com/id/1409329028/tr/vekt%C3%B6r/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=DoUsTCubI4BWxm_piyvsAB7I10pJlPTEmtb5Pc5O-TE="
+                    alt=""
+                  />
+                </Stack> */}
             </Paper>
             <Paper elevation={2} sx={{ p: 2 }}>
               <Typography
@@ -298,5 +307,3 @@ function AddProduct(props) {
     </Container>
   );
 }
-
-export default AddProduct;

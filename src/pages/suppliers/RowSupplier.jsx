@@ -61,11 +61,11 @@ function RowSupplier(props) {
         <TableCell component="th" id={labelId} scope="row" padding="none">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.total}</TableCell>
-        <TableCell align="right">{row.totalFindal}</TableCell>
+        <TableCell align="right">{row.code}</TableCell>
+        <TableCell align="right">{row?.phone}</TableCell>
+        <TableCell align="right">{row.email}</TableCell>
+        <TableCell align="right">{row.name}</TableCell>
+        <TableCell align="right">{row.status}</TableCell>
       </TableRow>
 
       <TableRow>

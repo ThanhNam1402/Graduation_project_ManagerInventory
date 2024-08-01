@@ -21,6 +21,8 @@ import SearchProduct from "../../components/filters/SearchProduct";
 function ActionCustomer(props) {
   const { t } = useTranslation("action");
 
+  let { handleSearch } = props;
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
@@ -39,7 +41,7 @@ function ActionCustomer(props) {
       spacing={2}
       sx={{ mb: 2 }}
     >
-      <SearchProduct />
+      <SearchProduct handleSearch={handleSearch} />
 
       <Stack
         direction="row"

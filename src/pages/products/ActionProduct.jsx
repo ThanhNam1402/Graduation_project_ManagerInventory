@@ -20,25 +20,15 @@ import SearchProduct from "../../components/filters/SearchProduct";
 
 function ActionProduct(props) {
   const { t } = useTranslation("action");
+  let { handleSearch } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
-
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const [openFormAdd, setOpenFormAdd] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpenFormAdd(true);
-  };
-
-  const handleCloseFormAdd = () => {
-    setOpenFormAdd(false);
   };
 
   return (
@@ -49,7 +39,7 @@ function ActionProduct(props) {
       spacing={2}
       sx={{ mb: 2 }}
     >
-      <SearchProduct />
+      <SearchProduct handleSearch={handleSearch} />
 
       <Stack
         direction="row"
@@ -62,6 +52,7 @@ function ActionProduct(props) {
           variant="contained"
           startIcon={<AddRoundedIcon />}
           to="new"
+          color="success"
         >
           {t("new")}
         </Button>

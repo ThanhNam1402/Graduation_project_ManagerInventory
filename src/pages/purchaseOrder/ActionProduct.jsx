@@ -19,6 +19,7 @@ import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 import SearchProduct from "../../components/filters/SearchProduct";
 
 function ActionProduct(props) {
+  let { handleSearch } = props;
   const { t } = useTranslation("action");
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -31,16 +32,6 @@ function ActionProduct(props) {
     setAnchorEl(null);
   };
 
-  const [openFormAdd, setOpenFormAdd] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpenFormAdd(true);
-  };
-
-  const handleCloseFormAdd = () => {
-    setOpenFormAdd(false);
-  };
-
   return (
     <Stack
       direction="row"
@@ -49,7 +40,7 @@ function ActionProduct(props) {
       spacing={2}
       sx={{ mb: 2 }}
     >
-      <SearchProduct />
+      <SearchProduct handleSearch={handleSearch} />
 
       <Stack
         direction="row"

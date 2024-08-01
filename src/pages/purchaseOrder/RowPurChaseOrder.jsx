@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Checkbox,
   Collapse,
@@ -26,12 +26,27 @@ function a11yProps(index) {
 function RowProduct(props) {
   const { row, isItemSelected, handleClick, labelId } = props;
   const [open, setOpen] = React.useState(false);
+  const [listProducts, setListProducts] = React.useState([]);
 
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    console.log("set");
+  }, []);
+  
+  useEffect(() => {
+    console.log("set");
+
+    if (open) {
+      setListProducts([{ id: 1 }]);
+      console.log(listProducts);
+    }
+  }, [listProducts]);
+
   return (
     <>
       <TableRow
@@ -59,7 +74,7 @@ function RowProduct(props) {
           />
         </TableCell>
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          {row.name}
+          {row.code}
         </TableCell>
         <TableCell align="right">{row.calories}</TableCell>
         <TableCell align="right">{row.fat}</TableCell>
@@ -67,28 +82,30 @@ function RowProduct(props) {
         <TableCell align="right">{row.protein}</TableCell>
       </TableRow>
 
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box>
-              <Box sx={{ width: "100%" }}>
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                  <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="basic tabs"
-                  >
-                    <Tab label="Thông tin" {...a11yProps(0)} />
-                  </Tabs>
+      {open && (
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Box>
+                <Box sx={{ width: "100%" }}>
+                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Tabs
+                      value={value}
+                      onChange={handleChange}
+                      aria-label="basic tabs"
+                    >
+                      <Tab label="Thông tin" {...a11yProps(0)} />
+                    </Tabs>
+                  </Box>
+                  <TabPanelRowProduct value={value} index={0}>
+                    <TabInfomation item={row} />
+                  </TabPanelRowProduct>
                 </Box>
-                <TabPanelRowProduct value={value} index={0}>
-                  <TabInfomation item={row} />
-                </TabPanelRowProduct>
               </Box>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      )}
     </>
   );
 }

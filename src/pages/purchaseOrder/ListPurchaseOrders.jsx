@@ -1,201 +1,31 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  TableContainer,
-} from "@mui/material";
+import { Paper, Table, TableBody, TableContainer } from "@mui/material";
 
-import CsUsePagination from "../../hook/CsUsePagination";
+import csUseQueryString from "../../hook/csUseQueryString";
 import CsPagination from "../../components/CsPagination";
 import RowProduct from "./RowPurChaseOrder";
-import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListPurChaseOrder";
+import {
+  EnhancedTableToolbar,
+  EnhancedTableHead,
+} from "./HeadListPurChaseOrder";
 
-// data list
-const rows = [
-  {
-    id: 1,
-    name: "namcute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 12,
-    name: "namcute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 100,
-    name: "nam1cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10414140,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 104141410,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10314110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 313131,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10102121313,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 1010,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101212121310,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 1021210,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 11212010,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101111110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10111110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 10120,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-  {
-    id: 101110,
-    name: "nam2cute",
-    calories: 305,
-    fat: 1,
-    carbs: 1,
-    protein: 1,
-  },
-];
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+import { purchaseOrderService } from "../../services/purchaseOrder.service";
 
 export default function ListPurchaseOrders(props) {
+  let {
+    filters,
+    keyWord,
+    pagination,
+    handleChangeRowsPerPage,
+    handleChangePage,
+  } = props;
+
+  const [data, setData] = useState([]);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
-
-  console.log(props);
-
-  let {
-    page,
-    rowsPerPage,
-    totalPage,
-    handleChangePage,
-    handleChangeRowsPerPage,
-  } = CsUsePagination(0, 10, 4);
+  const [totalPage, setTotalPage] = useState(0); // total page
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -232,19 +62,42 @@ export default function ListPurchaseOrders(props) {
     setSelected(newSelected);
   };
 
+  useEffect(() => {
+    fetchData();
+  }, [
+    filters,
+    order,
+    orderBy,
+    pagination?.page,
+    pagination?.rowsPerPage,
+    keyWord,
+  ]);
+
+  console.log(keyWord);
+
+  const fetchData = async () => {
+    try {
+      let filterParmas = csUseQueryString({
+        ...filters,
+        ...pagination,
+        keyWord,
+      });
+
+      console.log(filterParmas);
+
+      const response = await purchaseOrderService.handleGetAllPurchaseorders(
+        filterParmas
+      );
+      if (response && response.success === true) {
+        setData(response.data);
+        setTotalPage(response?.pagination?.total);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const isSelected = (id) => selected.indexOf(id) !== -1;
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const visibleRows = useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
-    [order, orderBy, page, rowsPerPage]
-  );
 
   return (
     <Paper sx={{ width: "100%", mb: 2 }}>
@@ -262,41 +115,34 @@ export default function ListPurchaseOrders(props) {
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
-            rowCount={rows.length}
+            rowCount={data.length}
           />
 
           <TableBody sx={{ width: "100%" }}>
-            {visibleRows.map((row, index) => {
-              const isItemSelected = isSelected(row.id);
-              const labelId = `enhanced-table-checkbox-${index}`;
+            {data &&
+              data.length > 0 &&
+              data.map((row, index) => {
+                const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-              return (
-                <RowProduct
-                  labelId={labelId}
-                  key={index}
-                  row={row}
-                  handleClick={handleSelectRow}
-                  isItemSelected={isItemSelected}
-                />
-              );
-            })}
-            {emptyRows > 0 && (
-              <TableRow
-                style={{
-                  height: 53 * emptyRows,
-                }}
-              >
-                <TableCell colSpan={6} />
-              </TableRow>
-            )}
+                return (
+                  <RowProduct
+                    labelId={labelId}
+                    key={index}
+                    row={row}
+                    handleClick={handleSelectRow}
+                    isItemSelected={isItemSelected}
+                  />
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>
 
       <CsPagination
         totalPage={totalPage}
-        limitPage={rowsPerPage}
-        page={page}
+        limitPage={pagination?.rowsPerPage}
+        page={pagination?.page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

@@ -8,28 +8,40 @@ import Categories from "../../components/filters/Categories";
 import ActionProduct from "./ActionProduct";
 import FilterSuppliers from "../../components/filters/FilterSuppliers";
 import { useTranslation } from "react-i18next";
+import CsUsePagination from "../../hook/CsUsePagination";
 
-import {
-  ListProductTypes,
-  ListDisplayOption,
-  ListOnHands,
-} from "../../utils/constain";
-
+import { ListDisplayOption, ListOnHands } from "../../utils/constain";
 import FilterRadio from "../../components/filters/FilterRadio";
 
 function Products(props) {
   const { t } = useTranslation("product");
+  const [sort, setSort] = useState({
+    order: "asc",
+    orderBy: "name",
+  });
+
+  const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
+    CsUsePagination(0, 5);
 
   const [filters, setFilters] = useState({
     categoryID: 0,
     supplierIDs: [],
-    productTypeID: 0,
     displayOption: 0,
     onHand: 0,
   });
 
+  const [keyWord, setKeyWord] = useState("");
+
+  const handleSearch = (value) => {
+    console.log("value", value);
+    setPage(0);
+
+    setKeyWord(value);
+  };
   const handleSetFilter = (value, id) => {
     console.log(id, value, typeof value);
+
+    setPage(0);
 
     switch (id) {
       case "category":
@@ -40,11 +52,6 @@ function Products(props) {
 
         break;
       case "supplierIDs":
-        console.log(value);
-
-        value.map((item) => {
-          console.log(item);
-        });
         setFilters((state) => ({
           ...state,
           supplierIDs: value,
@@ -65,6 +72,16 @@ function Products(props) {
         break;
     }
   };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = sort.orderBy === property && sort.order === "asc";
+    setSort((state) => ({
+      order: isAsc ? "desc" : "asc",
+      orderBy: property,
+    }));
+  };
+
+  console.log(sort);
 
   return (
     <div>
@@ -112,8 +129,16 @@ function Products(props) {
             width: "100%",
           }}
         >
-          <ActionProduct />
-          <ListProducts filters={filters} />
+          <ActionProduct handleSearch={handleSearch} />
+          <ListProducts
+            sort={sort}
+            keyWord={keyWord}
+            filters={filters}
+            pagination={pagination}
+            handleRequestSort={handleRequestSort}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+          />
         </Box>
       </Stack>
     </div>

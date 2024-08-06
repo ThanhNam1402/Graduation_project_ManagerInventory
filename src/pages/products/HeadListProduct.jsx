@@ -36,7 +36,7 @@ const headCells = [
   },
   {
     id: "name",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Tên Hàng",
   },
@@ -47,10 +47,22 @@ const headCells = [
     label: "Nhóm Hàng",
   },
   {
+    id: "onHand",
+    numeric: true,
+    disablePadding: false,
+    label: "Tồn Kho",
+  },
+  {
     id: "price",
     numeric: true,
     disablePadding: false,
     label: "Giá",
+  },
+  {
+    id: "price_sale",
+    numeric: true,
+    disablePadding: false,
+    label: "Giá Bán",
   },
   {
     id: "status",
@@ -72,8 +84,6 @@ export function EnhancedTableHead(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
-
-  console.log(order, orderBy);
 
   return (
     <TableHead>

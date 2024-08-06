@@ -8,6 +8,7 @@ import {
   TableCell,
   Tab,
   Tabs,
+  Stack,
 } from "@mui/material";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -61,14 +62,32 @@ function RowProduct(props) {
         <TableCell component="th" id={labelId} scope="row" padding="none">
           {row?.code}
         </TableCell>
-        <TableCell align="right">{row?.name}</TableCell>
-        <TableCell align="right">{row?.category_id}</TableCell>
+        <TableCell align="left">
+          <Stack
+            direction="row"
+            justifyContent="left"
+            alignItems="center"
+            spacing={2}
+          >
+            <img
+              width="40px"
+              src={`http://localhost:6969/${row?.img}`}
+              alt=""
+            />
+            {row?.name}
+          </Stack>
+        </TableCell>
+        <TableCell align="right">{row?.Category.name}</TableCell>
+        <TableCell align="right">{row?.onHand}</TableCell>
         <TableCell align="right">{row?.price}</TableCell>
-        <TableCell align="right">{row?.status}</TableCell>
+        <TableCell align="right">{row?.price}</TableCell>
+        <TableCell align="right">
+          {row?.status === 1 ? "Đang Kinh Doanh" : "Ngừng Kinh Doanh"}
+        </TableCell>
       </TableRow>
 
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>
               <Box sx={{ width: "100%" }}>

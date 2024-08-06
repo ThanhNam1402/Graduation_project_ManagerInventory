@@ -53,16 +53,10 @@ const headCells = [
     label: "Email",
   },
   {
-    id: "total",
+    id: "status",
     numeric: true,
     disablePadding: false,
-    label: "Nợ Cần Trả",
-  },
-  {
-    id: "totalFindal",
-    numeric: true,
-    disablePadding: false,
-    label: "Tổng Mua",
+    label: "Trạng Thái",
   },
 ];
 

@@ -27,7 +27,7 @@ function TabInfomation(props) {
             >
               Mã Khách Hàng
             </Typography>
-            <p>MKH001</p>
+            <p>{item?.code}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -37,6 +37,7 @@ function TabInfomation(props) {
             >
               Email
             </Typography>
+            <p>{item?.email}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -65,12 +66,6 @@ function TabInfomation(props) {
             >
               Address
             </Typography>
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam
-              architecto fuga quod, ex quam, itaque eligendi optio atque
-              expedita quasi aliquid velit deserunt alias, veniam asperiores
-              reprehenderit repellat! Consequuntur, harum.
-            </p>
           </Stack>
         </div>
         <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>

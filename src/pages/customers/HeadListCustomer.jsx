@@ -29,16 +29,17 @@ import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
   {
-    id: "nam31131e",
+    id: "name",
     numeric: false,
-    disablePadding: true,
-    label: "Mã Khách Hàng",
-  },
-  {
-    id: "cal3131ories",
-    numeric: true,
     disablePadding: false,
     label: "Tên Khách Hàng",
+  },
+
+  {
+    id: "email",
+    numeric: true,
+    disablePadding: false,
+    label: "Email",
   },
   {
     id: "fat",
@@ -46,12 +47,7 @@ const headCells = [
     disablePadding: false,
     label: "Điện Thoại",
   },
-  {
-    id: "carbs",
-    numeric: true,
-    disablePadding: false,
-    label: "Nợ Hiện Tại",
-  },
+
   {
     id: "total",
     numeric: true,

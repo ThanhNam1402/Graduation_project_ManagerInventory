@@ -18,15 +18,10 @@ import FormControl from "@mui/material/FormControl";
 
 import { useTranslation } from "react-i18next";
 
-const listCate = [
-  { id: 0, name: "all" },
-  { id: 1, name: "Thời Trang Nam" },
-];
-
 function Categories(props) {
   const { t } = useTranslation("filter");
 
-  const { handleGetValue } = props;
+  const { handleGetValue, listCate } = props;
 
   const [search, setSearch] = useState("");
 
@@ -74,6 +69,11 @@ function Categories(props) {
               name="radio-buttons-group"
               onChange={(e) => handleGetValue(e.target.value, "category")}
             >
+              <FormControlLabel
+                value={0}
+                control={<Radio color="secondary" />}
+                label={"all"}
+              />
               {listCate &&
                 listCate.length > 0 &&
                 listCate.map((item, index) => {

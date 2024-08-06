@@ -58,14 +58,15 @@ function RowCustomer(props) {
             }}
           />
         </TableCell>
-        <TableCell component="th" id={labelId} scope="row" padding="none">
+        <TableCell component="th" id={labelId} scope="row">
           {row.name}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.total}</TableCell>
-        <TableCell align="right">{row.totalFindal}</TableCell>
+        <TableCell align="right">{row?.email}</TableCell>
+        <TableCell align="right">{row?.carbs}</TableCell>
+        <TableCell align="right">{row?.total}</TableCell>
+        <TableCell align="right">
+          {row?.status === 1 ? "Đang hoạt động" : "Ngừng hoạt động"}
+        </TableCell>
       </TableRow>
 
       <TableRow>

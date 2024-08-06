@@ -15,28 +15,21 @@ import { purchaseOrderService } from "../../services/purchaseOrder.service";
 export default function ListPurchaseOrders(props) {
   let {
     filters,
+    sort,
     keyWord,
     pagination,
+    handleRequestSort,
     handleChangeRowsPerPage,
     handleChangePage,
   } = props;
 
   const [data, setData] = useState([]);
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
   const [totalPage, setTotalPage] = useState(0); // total page
 
-  const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      console.log(rows);
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = data.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -64,22 +57,16 @@ export default function ListPurchaseOrders(props) {
 
   useEffect(() => {
     fetchData();
-  }, [
-    filters,
-    order,
-    orderBy,
-    pagination?.page,
-    pagination?.rowsPerPage,
-    keyWord,
-  ]);
+  }, [filters, pagination?.page, pagination?.rowsPerPage, keyWord, sort]);
 
-  console.log(keyWord);
+  console.log(props);
 
   const fetchData = async () => {
     try {
       let filterParmas = csUseQueryString({
         ...filters,
         ...pagination,
+        ...sort,
         keyWord,
       });
 
@@ -111,8 +98,8 @@ export default function ListPurchaseOrders(props) {
         >
           <EnhancedTableHead
             numSelected={selected.length}
-            order={order}
-            orderBy={orderBy}
+            order={sort?.order}
+            orderBy={sort?.orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
             rowCount={data.length}

@@ -28,18 +28,13 @@ export default function ListProducts(props) {
     handleRequestSort,
   } = props;
 
-  console.log(props);
-
   const [data, setData] = useState([]);
-
   const [totalPage, setTotalPage] = useState(0); // total page
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
     fetchData();
   }, [filters, sort, pagination?.page, pagination?.rowsPerPage, keyWord]);
-
-  console.log(props);
 
   const fetchData = async () => {
     try {
@@ -49,8 +44,6 @@ export default function ListProducts(props) {
         ...sort,
         keyWord,
       });
-
-      console.log(filterParmas);
 
       const response = await productService.handleGetAllProduct(filterParmas);
       if (response && response.success === true) {

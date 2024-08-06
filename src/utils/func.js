@@ -29,3 +29,43 @@ export function stableSort(array, comparator) {
   }
 
 }
+
+
+export const TotalRowCount = (price, qty, sale_price) => {
+  let newQty = qty ? qty : 1;
+  let a = price * newQty - sale_price;
+  return a;
+};
+
+export const TotalPrice = (items) => {
+  if (items.length > 0) {
+    let c = 0;
+    let a = items.forEach((item) => {
+      c += TotalRowCount(item?.price, item?.qty, item?.sale_price);
+    });
+    return c;
+  }
+  return null;
+};
+
+export const TotalSalePrice = (items) => {
+  if (items.length > 0) {
+    let c = 0;
+    let a = items.forEach((item) => {
+      c += item?.sale_price;
+    });
+    return c;
+  }
+  return null;
+};
+
+export function SubTotal(items) {
+  if (items.length > 0) {
+    let c = 0;
+    let a = items.forEach((item) => {
+      c += item?.price;
+    });
+    return c;
+  }
+  return null;
+}

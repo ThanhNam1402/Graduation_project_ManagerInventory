@@ -8,14 +8,16 @@ import DashBoard from "../pages/dashboard/DashBoard";
 
 import Product from "../pages/products/index";
 import AddProduct from "../pages/products/AddProduct";
-import UpdateProduct from "../pages/products/ProductDetail";
 
 import PriceBook from "../pages/priceBook";
 import InventoryCount from "../pages/inventoryCount";
 import AddInventoryCount from "../pages/inventoryCount/addinventoryCount";
 import Transaction from "../pages/transaction";
 import AddTransaction from "../pages/transaction/AddTransaction";
-import PurchaseOrrder from "../pages/purchaseOrder";
+
+import AddPurChaseOrder from "../pages/purchaseOrder/AddPurchaseOrder";
+import PurchaseOrder from "../pages/purchaseOrder";
+
 import Customers from "../pages/customers";
 import Suppliers from "../pages/suppliers";
 import Invoices from "../pages/invoices";
@@ -30,7 +32,7 @@ function MainRouters(props) {
 
           <Route path="products" element={<Product />} />
           <Route path="products/new" element={<AddProduct />} />
-          <Route path="products/:id" element={<UpdateProduct />} />
+          <Route path="products/:id" element={<AddProduct />} />
 
           <Route path="pricebook" element={<PriceBook />} />
 
@@ -43,7 +45,9 @@ function MainRouters(props) {
           <Route path="customers" element={<Customers />} />
           <Route path="suppliers" element={<Suppliers />} />
           <Route path="invoices" element={<Invoices />} />
-          <Route path="purchaseOrder" element={<PurchaseOrrder />} />
+          <Route path="purchaseOrder" element={<PurchaseOrder />} />
+          <Route path="purchaseOrder/new" element={<AddPurChaseOrder />} />
+          <Route path="purchaseOrder/:id" element={<AddPurChaseOrder />} />
         </Routes>
       </Container>
     </div>

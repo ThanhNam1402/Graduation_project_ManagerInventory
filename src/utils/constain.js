@@ -26,8 +26,9 @@ export const ListOnHands = {
     title: "filter.on-hand",
     data: [
         { value: 0, name: "All" },
-        { value: 1, name: "Hết Hàng" },
-        { value: 2, name: "Còn Hàng" }
+        { value: 1, name: "Còn Hàng" },
+        { value: 2, name: "Hết Hàng" }
+
     ]
 }
 

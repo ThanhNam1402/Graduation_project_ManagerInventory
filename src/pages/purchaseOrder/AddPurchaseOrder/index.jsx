@@ -1,0 +1,141 @@
+import { useCallback, useEffect, useState } from "react";
+import {
+  Paper,
+  Grid,
+  Autocomplete,
+  Box,
+  TextField,
+  Typography,
+} from "@mui/material";
+
+import AddDetail from "./AddDetail";
+import TableAddProducts from "./TableAddProducts";
+import { purchaseOrderService } from "../../../services/purchaseOrder.service";
+
+import _ from "lodash";
+
+import {
+  TotalRowCount,
+  TotalSalePrice,
+  TotalPrice,
+  SubTotal,
+} from "../../../utils/func";
+
+function AddPurChaseOrder(props) {
+  const [options, setOption] = useState([]);
+  const [value, setValue] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [dataTable, setDataTable] = useState(0);
+
+  const [allPrice, setAllPrice] = useState({
+    total: 0,
+    subTotal: 0,
+    totalSalePrice: 0,
+  });
+
+  const handleOnChange = async (value) => {
+    setInputValue(value);
+
+    console.log(value);
+    if (value !== "") {
+      let res = await purchaseOrderService.handleGetComplete(value);
+      if (res && res.success === true) {
+        setOption(res.data);
+      }
+    } else {
+      setOption([]);
+    }
+  };
+
+  let handleChangeValue = (e, value) => {
+    setValue(value);
+  };
+
+  const getTableProducts = (data) => {
+    setDataTable(data);
+  };
+
+  useEffect(() => {
+    let a = SubTotal(dataTable);
+    let b = TotalPrice(dataTable);
+    let c = TotalSalePrice(dataTable);
+
+    setAllPrice((state) => ({
+      ...state,
+      total: b,
+      subTotal: a,
+      totalSalePrice: c,
+    }));
+  }, [dataTable]);
+
+  return (
+    <Grid container spacing={2}>
+      <Grid item xs={8}>
+        <Autocomplete
+          freeSolo
+          size="small"
+          value={value}
+          onChange={(event, newValue) => {
+            handleChangeValue(event, newValue);
+          }}
+          inputValue={inputValue}
+          onInputChange={(event, newInputValue) => {
+            handleOnChange(newInputValue);
+          }}
+          options={options}
+          id="country-select-demo"
+          sx={{ width: 300 }}
+          autoHighlight
+          getOptionLabel={(option) => (option?.name ? option?.name : null)}
+          renderOption={(props, option) => {
+            const { key, ...optionProps } = props;
+            return (
+              <Box
+                key={key}
+                component="li"
+                sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+                {...optionProps}
+              >
+                <img
+                  loading="lazy"
+                  width="40"
+                  src={`http://localhost:6969/${option?.img}`}
+                  alt=""
+                />
+                <Box sx={{ width: "100%" }}>
+                  {option?.name}
+                  <Typography variant="caption" component={"p"}>
+                    Tồn Kho : {option?.onHand}
+                  </Typography>
+                  <hr />
+                </Box>
+              </Box>
+            );
+          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              hiddenLabel
+              placeholder="Tìm kiếm sản phẩm"
+              inputProps={{
+                ...params.inputProps,
+                autoComplete: "new-password", // disable autocomplete and autofill
+              }}
+            />
+          )}
+        />
+
+        <Paper elevation={2} sx={{ mt: 2 }}>
+          <TableAddProducts value={value} getTableProducts={getTableProducts} />
+        </Paper>
+      </Grid>
+      <Grid item xs={4}>
+        <Paper elevation={2} sx={{ p: 3 }}>
+          <AddDetail allPrice={allPrice} data={dataTable} />
+        </Paper>
+      </Grid>
+    </Grid>
+  );
+}
+
+export default AddPurChaseOrder;

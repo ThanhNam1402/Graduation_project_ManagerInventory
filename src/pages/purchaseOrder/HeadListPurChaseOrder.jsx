@@ -28,36 +28,35 @@ import { alpha } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
- 
   {
-    id: "nam31131e",
+    id: "code",
     numeric: false,
     disablePadding: true,
-    label: "Mã Hàng",
+    label: "Mã Nhập Hàng",
   },
   {
-    id: "cal3131ories",
+    id: "time",
     numeric: true,
     disablePadding: false,
-    label: "Tên hàng",
+    label: "Thời Gian",
   },
   {
-    id: "fat",
+    id: "supplier",
     numeric: true,
     disablePadding: false,
-    label: "Giá bán",
+    label: "Nhà Cung Cấp",
   },
   {
-    id: "carbs",
+    id: "total",
     numeric: true,
     disablePadding: false,
-    label: "Giá vốn",
+    label: "Tổng Giá",
   },
   {
-    id: "protein",
+    id: "status",
     numeric: true,
     disablePadding: false,
-    label: "Tồn kho",
+    label: "Trạng Thái",
   },
 ];
 

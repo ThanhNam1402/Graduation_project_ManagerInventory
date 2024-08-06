@@ -10,7 +10,9 @@ import FilterRadio from "../../components/filters/FilterRadio";
 import { ListStatusPurchaseOrder } from "../../utils/constain";
 import CsUsePagination from "../../hook/CsUsePagination";
 
-function PurchaseOrrder(props) {
+
+
+function PurchaseOrder(props) {
   const { t } = useTranslation("product");
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
@@ -18,6 +20,10 @@ function PurchaseOrrder(props) {
 
   const [filters, setFilters] = useState({
     status: 0,
+  });
+  const [sort, setSort] = useState({
+    order: "asc",
+    orderBy: "name",
   });
 
   const [keyWord, setKeyWord] = useState("");
@@ -29,38 +35,25 @@ function PurchaseOrrder(props) {
     setKeyWord(value);
   };
   const handleSetFilter = (value, id) => {
-    console.log(id, value, typeof value);
-
     setPage(0);
 
     switch (id) {
-      case "category":
+      case "status":
         setFilters((state) => ({
           ...state,
-          categoryID: value,
+          status: value,
         }));
 
-        break;
-      case "supplierIDs":
-        setFilters((state) => ({
-          ...state,
-          supplierIDs: value,
-        }));
-        break;
-      case "displayOption":
-        setFilters((state) => ({
-          ...state,
-          displayOption: value,
-        }));
-
-        break;
-      case "onHand":
-        setFilters((state) => ({
-          ...state,
-          onHand: value,
-        }));
         break;
     }
+  };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = sort.orderBy === property && sort.order === "asc";
+    setSort((state) => ({
+      order: isAsc ? "desc" : "asc",
+      orderBy: property,
+    }));
   };
 
   return (
@@ -97,9 +90,11 @@ function PurchaseOrrder(props) {
         >
           <ActionProduct handleSearch={handleSearch} />
           <ListPurchaseOrders
+            sort={sort}
             keyWord={keyWord}
             filters={filters}
             pagination={pagination}
+            handleRequestSort={handleRequestSort}
             handleChangePage={handleChangePage}
             handleChangeRowsPerPage={handleChangeRowsPerPage}
           />
@@ -109,4 +104,4 @@ function PurchaseOrrder(props) {
   );
 }
 
-export default PurchaseOrrder;
+export default PurchaseOrder;

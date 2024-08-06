@@ -12,9 +12,11 @@ import CsUsePagination from "../../hook/CsUsePagination";
 
 import { ListDisplayOption, ListOnHands } from "../../utils/constain";
 import FilterRadio from "../../components/filters/FilterRadio";
+import { categoryService } from "../../services/category.service";
 
 function Products(props) {
   const { t } = useTranslation("product");
+  const [listCate, setlistCate] = useState([]);
   const [sort, setSort] = useState({
     order: "asc",
     orderBy: "name",
@@ -33,16 +35,11 @@ function Products(props) {
   const [keyWord, setKeyWord] = useState("");
 
   const handleSearch = (value) => {
-    console.log("value", value);
     setPage(0);
-
     setKeyWord(value);
   };
   const handleSetFilter = (value, id) => {
-    console.log(id, value, typeof value);
-
     setPage(0);
-
     switch (id) {
       case "category":
         setFilters((state) => ({
@@ -81,7 +78,16 @@ function Products(props) {
     }));
   };
 
-  console.log(sort);
+  useEffect(() => {
+    handeGetAllCate();
+  }, []);
+
+  const handeGetAllCate = async () => {
+    let res = await categoryService.handleGetAllCate();
+    if (res && res.success) {
+      setlistCate(res.data);
+    }
+  };
 
   return (
     <div>
@@ -101,12 +107,12 @@ function Products(props) {
               {t("title")}
             </Typography>
 
-            <Categories handleGetValue={handleSetFilter} />
+            <Categories listCate={listCate} handleGetValue={handleSetFilter} />
 
-            <FilterSuppliers
+            {/* <FilterSuppliers
               supplierIDs={filters.supplierIDs}
               handleGetValue={handleSetFilter}
-            />
+            /> */}
 
             {/* onHands */}
 

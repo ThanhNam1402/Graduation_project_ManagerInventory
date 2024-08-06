@@ -1,7 +1,8 @@
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import { Stack, Typography, Button } from "@mui/material";
+import { Stack, Typography, Button, Grid } from "@mui/material";
+
+import { REACT_APP_BACKEND_URL } from "../../config/config";
+
+import { Link } from "react-router-dom";
 
 function TabInfomation(props) {
   console.log(props);
@@ -14,10 +15,7 @@ function TabInfomation(props) {
   return (
     <Grid container spacing={4}>
       <Grid item xs={3}>
-        <img
-          src="https://i.pinimg.com/564x/b0/91/5f/b0915f3c86472ea1ad3d1472cebd6c15.jpg"
-          width="100%"
-        />
+        <img src={`${REACT_APP_BACKEND_URL}/${item?.img}`} width="100%" />
       </Grid>
       <Grid item xs={9}>
         <div>
@@ -94,7 +92,7 @@ function TabInfomation(props) {
         }}
         mt={3}
       >
-        <Button variant="contained" color="success">
+        <Button component={Link} to={`${item.id}`} variant="contained" color="success">
           Cập Nhật
         </Button>
         <Button variant="text" color="warning">

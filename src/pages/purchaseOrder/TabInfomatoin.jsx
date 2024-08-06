@@ -20,7 +20,7 @@ function TabInfomation(props) {
             >
               Mã nhập hàng
             </Typography>
-            <p>{item.name}</p>
+            <p>{item.code}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -30,6 +30,7 @@ function TabInfomation(props) {
             >
               Thời gian
             </Typography>
+            <p>{item.createdAt}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -39,6 +40,7 @@ function TabInfomation(props) {
             >
               Nhà cung cấp
             </Typography>
+            <p>{item?.Supplier?.name}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -61,7 +63,7 @@ function TabInfomation(props) {
           >
             Trạng thái
           </Typography>
-          <p>Đã nhập hàng</p>
+          <p>{item?.status === 1 ? "Phiếu Tạm" : "Đã Nhập Hàng"}</p>
         </Stack>
         <Stack mt={2} direction="row">
           <Typography
@@ -85,14 +87,12 @@ function TabInfomation(props) {
         </Stack>
       </Grid>
       <Grid item xs={12}>
-        <TableProductOrders />
+        <TableProductOrders idPurchaseOrder={item.id} />
       </Grid>
       <Grid item xs={12}>
         <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
           <Button variant="contained">Cập Nhật</Button>
-          <Button variant="contained" color="error">
-            Hủy Bỏ
-          </Button>
+          <Button variant="contained" color="error">Xóa</Button>
         </Stack>
       </Grid>
     </Grid>

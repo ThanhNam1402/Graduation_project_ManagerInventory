@@ -1,6 +1,14 @@
 {
     "title" : "Products",
     "table" : {
-        "tableHead" : {}
+        "tableHead" : {
+            "code" : "Product Code",
+            "name" : "Product Name",
+            "price" : "Price",
+            "sale_price" : "Sale Price",
+            "category" : "Category",
+            "onhand" : "Onhand",
+            "status" : "Status"
+        }
     }
 }

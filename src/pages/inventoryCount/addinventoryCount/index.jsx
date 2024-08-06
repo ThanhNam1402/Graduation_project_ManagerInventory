@@ -11,10 +11,8 @@ import {
   Typography,
   Button,
   Grid,
-  InputAdornment,
 } from "@mui/material";
 
-import SearchIcon from "@mui/icons-material/Search";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
@@ -26,10 +24,14 @@ import RemoveIcon from "@mui/icons-material/Remove";
 
 import { productService } from "./../../../services/product.service";
 import { invertoryService } from "./../../../services/invertory.service";
+import { handleformat } from "./../../../utils/format";
+
 
 const AddInventoryCount = () => {
   const [data, setData] = useState([]);
   const [purchasedProducts, setPurchasedProducts] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
 
   let filters = "";
   let keyWord = "";
@@ -69,12 +71,24 @@ const AddInventoryCount = () => {
   const handlePurchase = (product) => {
     setPurchasedProducts((prev) => {
       const existingProduct = prev.find((item) => item.id === product.id);
+      let updatedProducts;
+
       if (existingProduct) {
-        return prev.map((item) =>
+        updatedProducts = prev.map((item) =>
           item.id === product.id ? { ...item, qty: item.qty + 1 } : item
         );
+      } else {
+        updatedProducts = [...prev, { ...product, qty: 1 }];
       }
-      return [...prev, { ...product, qty: 1 }];
+
+      // Cập nhật tổng giá
+      const total = updatedProducts.reduce(
+        (acc, item) => acc + item.qty * item.sale_price,
+        0
+      );
+      setTotalPrice(total);
+
+      return updatedProducts;
     });
   };
 
@@ -87,24 +101,44 @@ const AddInventoryCount = () => {
   };
 
   const handleDecrease = (productId) => {
-    setPurchasedProducts((prev) =>
-      prev.map((item) =>
+    setPurchasedProducts((prev) => {
+      const updatedProducts = prev.map((item) =>
         item.id === productId && item.qty > 1
           ? { ...item, qty: item.qty - 1 }
           : item
-      )
-    );
+      );
+
+      // Cập nhật tổng giá
+      const total = updatedProducts.reduce(
+        (acc, item) => acc + item.qty * item.sale_price,
+        0
+      );
+      setTotalPrice(total);
+
+      return updatedProducts;
+    });
   };
 
   const handleDelete = (productId) => {
-    setPurchasedProducts((prev) =>
-      prev.filter((item) => item.id !== productId)
-    );
+    setPurchasedProducts((prev) => {
+      const updatedProducts = prev.filter((item) => item.id !== productId);
+
+      // Cập nhật tổng giá
+      const total = updatedProducts.reduce(
+        (acc, item) => acc + item.qty * item.sale_price,
+        0
+      );
+      setTotalPrice(total);
+
+      return updatedProducts;
+    });
   };
 
   const handleGetCode = async () => {
     try {
       const response = await invertoryService.handleGetCode();
+      console.log("Check code" , response);
+      
       if (response) {
         return response.data;
       } else {
@@ -126,12 +160,22 @@ const AddInventoryCount = () => {
       }
       let code = currentCode.code;
 
-      //Tăng giá trị lên 1
-      const newCode = (parseInt(code.replace("KH", "")) + 1)
-        .toString()
-        .padStart(4, "0");
-      const FNcode = `KH${newCode}`;
+       // Tách phần chữ và phần số trong mã
+       const match = code.match(/^([A-Za-z]*)(\d+)$/);
+       if (!match) {
+         throw new Error("Invalid code format");
+       }
+ 
+       const prefix = match[1];
+       const numberPart = match[2];
 
+       // Tăng số lên 1
+       const newNumber = (parseInt(numberPart, 10) + 1)
+       .toString()
+       .padStart(numberPart.length, "0");
+
+       // Kết hợp phần chữ với số mới
+      const FNcode = `${prefix}${newNumber}`;
       let dataCreat = {
         status: 0,
         code: FNcode,
@@ -238,8 +282,11 @@ const AddInventoryCount = () => {
             <Typography>Mã kiểm kho: Mã phiếu tự động</Typography>
             <Typography>Trạng thái: Phiếu tạm</Typography>
             <Typography>
-              Tổng SL thực tế:{" "}
+              Tổng SL thực tế:
               {purchasedProducts.reduce((acc, item) => acc + item.qty, 0)}
+            </Typography>
+            <Typography variant="p">
+              Tổng giá: {handleformat.formatPrice(totalPrice)}
             </Typography>
             <TextField
               label="Ghi chú"

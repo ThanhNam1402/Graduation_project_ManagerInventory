@@ -6,15 +6,20 @@ import { path } from "./utils/constain";
 import "react-toastify/dist/ReactToastify.css";
 
 import { ToastContainer } from "react-toastify";
+import useRoleCheck from "./auth/checkRole";
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useRoleCheck();
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     setIsAuthenticated(!!storedUser);
+
+    console.log(storedUser);
+    
 
     if (!storedUser && location.pathname !== path.LOGIN) {
       navigate(path.LOGIN);

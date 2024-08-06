@@ -1,34 +1,35 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Login from "./auth/Login";
 import MainRouters from "./routers/MainRouters";
 import { path } from "./utils/constain";
 import "react-toastify/dist/ReactToastify.css";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Get local storage
     const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
-      setIsAuthenticated(false);
-    } else {
-      setIsAuthenticated(true);
+    setIsAuthenticated(!!storedUser);
+
+    if (!storedUser && location.pathname !== path.LOGIN) {
+      navigate(path.LOGIN);
     }
-  }, [navigate]);
+  }, [navigate, location.pathname]);
 
   return (
     <>
       <Routes>
         <Route index element={<Login />} />
         <Route path={path.LOGIN} element={<Login />} />
-        {/* {isAuthenticated && ( */}
-        <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
-        {/* )} */}
+        {isAuthenticated && (
+          <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
+        )}
+        {!isAuthenticated && <Route path="*" element={<Login />} />}
       </Routes>
 
       <ToastContainer />

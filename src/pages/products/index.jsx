@@ -12,7 +12,6 @@ import CsUsePagination from "../../hook/CsUsePagination";
 
 import { ListDisplayOption, ListOnHands } from "../../utils/constain";
 import FilterRadio from "../../components/filters/FilterRadio";
-
 function Products(props) {
   const { t } = useTranslation("product");
   const [sort, setSort] = useState({
@@ -38,6 +37,7 @@ function Products(props) {
 
     setKeyWord(value);
   };
+  
   const handleSetFilter = (value, id) => {
     console.log(id, value, typeof value);
 

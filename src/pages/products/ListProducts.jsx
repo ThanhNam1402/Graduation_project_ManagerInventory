@@ -77,6 +77,7 @@ export default function ListProducts(props) {
     }
   };
 
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = data.map((n) => n.id);

@@ -6,8 +6,31 @@ import ListInventoryCount from "./ListInventoryCount";
 import Time from "../../components/filters/Time";
 import Status from "../../components/filters/Status";
 import Action from "./ActionInventoryCount";
+import CsUsePagination from "../../hook/CsUsePagination";
 function InventoryCount() {
   const [selectedCount, setSelectedCount] = useState(0);
+
+  const [filters, setFilters] = useState({
+    status: '',
+  });
+  const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
+  CsUsePagination(0, 5);
+
+  const handleSetFilter = (value, id) => {
+    console.log(id, value, typeof value);
+
+    switch (id) {
+      case "status":
+        setFilters((state) => ({
+          ...state,
+          status: value,
+        }));
+
+        break;
+    }
+  };
+
+  const [keyWord, setKeyWord] = useState("");
 
   return (
     <>
@@ -31,7 +54,12 @@ function InventoryCount() {
             }}
           >
             <Action selectedCount={selectedCount} />
-            <ListInventoryCount onSelectionChange={setSelectedCount} />
+            <ListInventoryCount
+              keyWord={keyWord}
+              filters={filters}
+              pagination={pagination}
+              onSelectionChange={setSelectedCount}
+            />
           </Box>
         </Box>
       </Box>

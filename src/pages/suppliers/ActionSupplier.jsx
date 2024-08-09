@@ -52,6 +52,7 @@ function ActionSupplier(props) {
         <Button
           component={Link}
           variant="contained"
+          color="success"
           startIcon={<AddRoundedIcon />}
           to="add"
         >
@@ -65,6 +66,7 @@ function ActionSupplier(props) {
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
             variant="contained"
+            color="success"
             startIcon={<MoreVertIcon />}
           >
             {t("action")}

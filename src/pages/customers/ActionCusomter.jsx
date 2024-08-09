@@ -54,6 +54,7 @@ function ActionCustomer(props) {
           variant="contained"
           startIcon={<AddRoundedIcon />}
           to="add"
+          color="success"
         >
           {t("new")}
         </Button>
@@ -64,6 +65,7 @@ function ActionCustomer(props) {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
+            color="success"
             variant="contained"
             startIcon={<MoreVertIcon />}
           >

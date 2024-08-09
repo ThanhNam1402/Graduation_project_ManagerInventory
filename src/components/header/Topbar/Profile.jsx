@@ -57,7 +57,7 @@ export default function Profile() {
             <Avatar
               sx={{ width: 28, height: 28 }}
               alt="Remy Sharp"
-              src={users.picture}
+              src={users.avatar}
             ></Avatar>
           </IconButton>
         </Tooltip>
@@ -101,7 +101,7 @@ export default function Profile() {
           <Avatar
             sx={{ width: 28, height: 28 }}
             alt="Remy Sharp"
-            src={users.picture ?? ""}
+            src={users.avatar ?? ""}
           />
           {users.name ?? users.email}
         </MenuItem>

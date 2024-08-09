@@ -53,6 +53,7 @@ function ActionProduct(props) {
           variant="contained"
           startIcon={<AddRoundedIcon />}
           to="new"
+          color="success"
         >
           {t("new")}
         </Button>
@@ -65,6 +66,7 @@ function ActionProduct(props) {
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
             variant="contained"
+            color="success"
             startIcon={<MoreVertIcon />}
           >
             {t("action")}

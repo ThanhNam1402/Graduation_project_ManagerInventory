@@ -11,6 +11,7 @@ import {
 import { purchaseOrderService } from "../../services/purchaseOrder.service";
 
 import { useEffect, useState, useRef } from "react";
+import { handleformat } from "../../utils/format";
 
 const TAX_RATE = 0.07;
 
@@ -66,19 +67,23 @@ export default function TableProductOrders(props) {
                 <TableCell>{row?.code}</TableCell>
                 <TableCell align="right">{row?.name}</TableCell>
                 <TableCell align="right">
-                  {row?.PurchaseOrder_Detail?.qty}
+                  {handleformat.formatPrice(row?.PurchaseOrder_Detail?.qty)}
                 </TableCell>
                 <TableCell align="right">
-                  {row?.PurchaseOrder_Detail?.price}
+                  {handleformat.formatPrice(row?.PurchaseOrder_Detail?.price)}
                 </TableCell>
                 <TableCell align="right">
-                  {row?.PurchaseOrder_Detail?.price_sale}
-                </TableCell>
-                <TableCell align="right">
-                  {priceRow(
-                    row?.PurchaseOrder_Detail?.price,
-                    row?.PurchaseOrder_Detail?.qty,
+                  {handleformat.formatPrice(
                     row?.PurchaseOrder_Detail?.price_sale
+                  )}
+                </TableCell>
+                <TableCell align="right">
+                  {handleformat.formatPrice(
+                    priceRow(
+                      row?.PurchaseOrder_Detail?.price,
+                      row?.PurchaseOrder_Detail?.qty,
+                      row?.PurchaseOrder_Detail?.price_sale
+                    )
                   )}
                 </TableCell>
               </TableRow>

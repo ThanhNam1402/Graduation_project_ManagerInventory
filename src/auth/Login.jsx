@@ -5,22 +5,87 @@ import { TextField, Button, Grid, Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
+import  { jwtDecode} from "jwt-decode";
+
+import { userService } from "../services/user.service";
 
 import "./login.scss";
 
 function Login() {
-  const [users, SetUsers] = useState([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [intervalId, setIntervalId] = useState(null);
   const navigate = useNavigate();
 
-  const handleLoginSuccess = (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse?.credential);
-    console.log(decoded);
-    SetUsers(decoded);
-    localStorage.setItem("user", JSON.stringify(decoded));
-    navigate("/system");
+  const handleLoginSuccess = async (credentialResponse) => {
+    const decoded = jwtDecode(credentialResponse.credential);
+    const userEmail = decoded.email;
+    const userName = decoded.name;
+    setName(userName);
+    setEmail(userEmail);
+    
+  
+    try {
+      const apiResponse = await userService.handleGetAll(userEmail, userName);
+      console.log("API Response:", apiResponse);
+  
+      if (apiResponse.data) {
+        const users = apiResponse.data;
+        const currentUser = users.find((user) => user.email === userEmail);
+  
+        if (currentUser) {
+          if (currentUser.role === 1) {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                email: userEmail,
+                name: userName,
+                role: currentUser.role,
+                avatar: decoded.picture
+              })
+            );
+  
+            // const id = setInterval(async () => {
+            //   try {
+            //     const response = await userService.handleGetAll(userEmail, userName);
+            //     const updatedUser = response.data.find((user) => user.email === userEmail);
+  
+            //     if (updatedUser && updatedUser.role !== 1) {
+            //       localStorage.removeItem("user");
+            //       clearInterval(id);
+            //       navigate("/login");
+            //     }
+            //   } catch (error) {
+            //     console.error("Error checking user role:", error);
+            //     clearInterval(id);
+            //     localStorage.removeItem("user");
+            //     navigate("/login");
+            //   }
+            // }, 5000); 
+  
+            // setIntervalId(id);
+            navigate("/system");
+          } else {
+            localStorage.removeItem("user");
+            navigate("/login");
+            console.log("Error: Insufficient permissions");
+          }
+        } else {
+          localStorage.removeItem("user");
+          navigate("/login");
+          console.log("Error: User not found");
+        }
+      } else {
+        console.log("Error: No data returned from API");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
   };
-
+  
+  
   const handleLoginError = () => {
     console.log("Login Failed");
   };
@@ -32,16 +97,18 @@ function Login() {
   } = useForm();
 
   const onSubmit = (data) => {
-    SetUsers(data);
     localStorage.setItem("user", JSON.stringify(data));
     navigate("/system");
   };
 
   useEffect(() => {
-    if (users) {
-      console.log(users);
-    }
-  }, [users]);
+    return () => {
+      // Clean up interval on component unmount
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [intervalId]);
 
   return (
     <>
@@ -75,7 +142,6 @@ function Login() {
                 style={{ width: 350, height: "auto" }}
               />
             </Grid>
-            {/* -------------------------------- */}
             <Grid item xs={12} md={9} sx={{ maxWidth: 600 }}>
               <Typography
                 variant="h3"
@@ -169,18 +235,6 @@ function Login() {
                       className="Login row"
                     />
                   </Box>
-                  <Typography
-                    component="a"
-                    variant="a"
-                    sx={{ mt: 2 }}
-                    style={{
-                      cursor: "pointer",
-                      textDecoration: "underline",
-                    }}
-                    onClick={() => navigate("/register")}
-                  >
-                    Bạn chưa có tài khoản?
-                  </Typography>
                 </Typography>
               </Box>
             </Grid>

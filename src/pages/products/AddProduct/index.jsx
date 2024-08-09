@@ -210,6 +210,7 @@ function AddProduct(props) {
                       id="code"
                       margin="dense"
                       variant="standard"
+                      InputProps={{ inputProps: { min: 0 } }}
                       placeholder="Nhập Giá Vốn Sản Phẩm"
                       size="small"
                     />
@@ -234,6 +235,7 @@ function AddProduct(props) {
                       })}
                       type="number"
                       hiddenLabel
+                      InputProps={{ inputProps: { min: 0 } }}
                       fullWidth
                       id="code"
                       margin="dense"
@@ -262,6 +264,7 @@ function AddProduct(props) {
                         },
                       })}
                       type="number"
+                      InputProps={{ inputProps: { min: 0 } }}
                       hiddenLabel
                       fullWidth
                       id="onHand"

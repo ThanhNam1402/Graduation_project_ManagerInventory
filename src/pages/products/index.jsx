@@ -38,6 +38,7 @@ function Products(props) {
     setPage(0);
     setKeyWord(value);
   };
+
   const handleSetFilter = (value, id) => {
     setPage(0);
     switch (id) {

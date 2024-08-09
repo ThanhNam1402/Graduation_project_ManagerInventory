@@ -17,7 +17,9 @@ function TopBar(props) {
           alignItems="center"
           spacing={2}
         >
-          <Box>Logo</Box>
+          <Box>
+            <img width="30" src="https://i.pinimg.com/564x/9f/93/ae/9f93ae8f39417cd575e735bf5f1b1505.jpg" alt="" />
+          </Box>
           <Stack direction="row" alignItems="center" spacing={1}>
             <ChangeLanguage />
             <ChangeMode />

@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import { Stack, Typography, Button } from "@mui/material";
 
 import TableProductOrders from "./TableProductOrders";
+import { handleformat } from "../../utils/format";
 
 function TabInfomation(props) {
   let { item } = props;
@@ -30,7 +31,7 @@ function TabInfomation(props) {
             >
               Thời gian
             </Typography>
-            <p>{item.createdAt}</p>
+            <p>{handleformat.formatDate(item.createdAt)}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -92,7 +93,9 @@ function TabInfomation(props) {
       <Grid item xs={12}>
         <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
           <Button variant="contained">Cập Nhật</Button>
-          <Button variant="contained" color="error">Xóa</Button>
+          {/* <Button variant="contained" color="error">
+            Xóa
+          </Button> */}
         </Stack>
       </Grid>
     </Grid>

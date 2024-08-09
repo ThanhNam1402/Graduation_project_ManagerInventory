@@ -5,8 +5,31 @@ import Time from "../../components/filters/Time";
 import ActionTransaction from "./ActionTransaction";
 import DeliveryTime from "../../components/filters/DeliveryTime";
 import Pay from "../../components/filters/Pay";
+import CsUsePagination from "../../hook/CsUsePagination";
+
 function Transaction() {
   const [selectedCount, setSelectedCount] = useState(0);
+  const [keyWord, setKeyWord] = useState("");
+  const [filters, setFilters] = useState({
+    status: '',
+  });
+  const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
+  CsUsePagination(0, 5);
+
+  const handleSetFilter = (value, id) => {
+    console.log(id, value, typeof value);
+
+    switch (id) {
+      case "status":
+        setFilters((state) => ({
+          ...state,
+          status: value,
+        }));
+
+        break;
+    }
+  };
+
   return (
     <>
       <Box>
@@ -30,7 +53,11 @@ function Transaction() {
             }}
           >
             <ActionTransaction selectedCount={selectedCount} />
-            <ListTransaction onSelectionChange={setSelectedCount} />
+            <ListTransaction 
+             keyWord={keyWord}
+             filters={filters}
+             pagination={pagination}
+            onSelectionChange={setSelectedCount} />
           </Box>
         </Box>
       </Box>

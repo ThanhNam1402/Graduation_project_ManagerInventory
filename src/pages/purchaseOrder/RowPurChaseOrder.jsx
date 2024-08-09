@@ -15,6 +15,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import TabPanelRow from "../../components/TabPanelRow";
 import TabInfomation from "./TabInfomatoin";
+import { handleformat } from "../../utils/format";
 
 function a11yProps(index) {
   return {
@@ -62,9 +63,13 @@ function RowProduct(props) {
         <TableCell component="th" id={labelId} scope="row" padding="none">
           {row.code}
         </TableCell>
-        <TableCell align="right">{row?.createdAt}</TableCell>
+        <TableCell align="right">
+          {handleformat.formatDate(row?.createdAt)}
+        </TableCell>
         <TableCell align="right">{row?.Supplier?.name}</TableCell>
-        <TableCell align="right">{row?.total}</TableCell>
+        <TableCell align="right">
+          {handleformat.formatPrice(row?.total)}
+        </TableCell>
         <TableCell align="right">
           {row?.status === 1 ? "Phiếu Nhập" : "Đã Nhập Hàng"}
         </TableCell>

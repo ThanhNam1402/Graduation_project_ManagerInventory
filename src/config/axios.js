@@ -11,8 +11,19 @@ const api = axios.create({
 
 // api.interceptors.request.use((config) => {
 
-//     const currentState = store.getState()
-//     const token = currentState.user?.userInfo?.token?.token ?? '';
+//     // const currentState = store.getState()
+//     // const token = currentState.user?.userInfo?.token?.token ?? '';
+
+//     let userInfo = localStorage.getItem('user');
+//     console.log(userInfo);
+
+//     let newUser = JSON.parse(userInfo)
+//     console.log(newUser);
+
+//     let token = newUser.role
+//     console.log(token);
+
+
 
 //     if (!config.headers["Authorization"]) {
 //         config.headers["Authorization"] = `Bearer ${token}`;
@@ -27,9 +38,7 @@ const api = axios.create({
 
 api.interceptors.response.use(
     (response) => {
-
         return response.data;
-
     }, async (error) => {
 
         console.log(error);

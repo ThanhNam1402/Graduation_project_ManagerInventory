@@ -85,7 +85,7 @@ function AddProduct(props) {
           toast.warning(res?.message);
         }
       } catch (error) {
-        console.log(res);
+        console.log(error);
         toast.error("Error from server");
       }
     }

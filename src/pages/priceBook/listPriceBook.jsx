@@ -7,7 +7,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TextField, Box } from "@mui/material";
 import {
   Backdrop,
@@ -21,6 +21,10 @@ import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import NotInterestedOutlinedIcon from "@mui/icons-material/NotInterestedOutlined";
 
 import "./listPriceBook.scss";
+import { productService } from "../../services/product.service";
+import { pricebookService } from "./../../services/pricebook.service";
+import { handleformat } from "../../utils/format";
+
 
 function ListPriceBooks(props) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -28,6 +32,7 @@ function ListPriceBooks(props) {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [popoverRowId, setPopoverRowId] = useState(null);
+  const [data, setData] = useState([]);
 
   const handleOpenPopover = (event, rowId, value) => {
     setPopoverRowId(rowId);
@@ -50,36 +55,62 @@ function ListPriceBooks(props) {
     }, 1000);
   };
 
-  const [rows, setRows] = useState([
-    {
-      id: 1,
-      maHang: "SP000002",
-      tenHang: "MD.M60002 Bút sáp vặn NGÂN 18 màu 12/144/t",
-      giaVon: "21,212,121",
-      giaNhapCuoi: "21,212,121",
-      giaChung: "21,212,121",
-    },
-    {
-      id: 2,
-      maHang: "SP000001",
-      tenHang: "Hộp dấu nhựa Shiny SP-1",
-      giaVon: "100,000",
-      giaNhapCuoi: "100,000",
-      giaChung: "110,000",
-    },
-  ]);
-
-  const handleInputChange = (id, event) => {
+  const handleInputChange = async (id, event) => {
+    console.log("Check id", id);
+    
     let { value } = event.target;
-    if (value === "") {
-      value = "0";
+    let Number_Value = parseFloat(value.replace(/[^0-9,-]+/g,"").replace(",","."));
+
+    if (isNaN(Number_Value)) {
+      Number_Value = 0;
+    }else{
+      try {
+        const res = await pricebookService.handleUpdateSale_Price(id, Number_Value);
+        let data = res.data;
+        console.log("Check res update ", data);
+        GetAllProducts()
+      } catch (error) {
+        console.log(error);
+      }
     }
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === id ? { ...row, giaChung: value } : row))
-    );
   };
 
-  console.log(props);
+
+
+  let filters = "";
+  let keyWord = "";
+  let pagination = 0;
+  useEffect(() => {
+    GetAllProducts();
+  }, [filters, pagination?.page, pagination?.rowsPerPage, keyWord]);
+
+  
+
+  const GetAllProducts = async () => {
+    try {
+      let filterParams = new URLSearchParams({
+        categoryID: filters.categoryID || 0,
+        displayOption: filters.displayOption || 0,
+        keyWord: keyWord || "",
+        onHand: filters.onHand || 0,
+        order: pagination?.order || "asc",
+        orderBy: pagination?.orderBy || "name",
+        page: pagination?.page || 0,
+        rowsPerPage: pagination?.rowsPerPage || 5,
+      }).toString();
+
+      console.log(filterParams);
+
+      const response = await productService.handleGetAllProduct(filterParams);
+      console.log("Check data get Pb" ,response.data);
+
+      if (response && response.success === true) {
+        setData(response.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <>
       <Box sx={{ p: 3 }}>
@@ -90,8 +121,7 @@ function ListPriceBooks(props) {
                 <TableCell>Mã hàng</TableCell>
                 <TableCell>Tên hàng</TableCell>
                 <TableCell>Giá vốn</TableCell>
-                <TableCell>Giá nhập cuối</TableCell>
-                <TableCell>Giá chung</TableCell>
+                <TableCell>Giá bán</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
@@ -106,18 +136,17 @@ function ListPriceBooks(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {data.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell>{row.maHang}</TableCell>
-                  <TableCell>{row.tenHang}</TableCell>
-                  <TableCell>{row.giaVon}</TableCell>
-                  <TableCell>{row.giaNhapCuoi}</TableCell>
+                  <TableCell>{row.code}</TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{handleformat.formatPrice(row.price)}</TableCell>
                   <TableCell>
                     <TextField
                       size="small"
-                      value={row.giaChung}
+                      value={handleformat.formatPrice(row.sale_price)}
                       onClick={(event) =>
-                        handleOpenPopover(event, row.id, row.giaChung)
+                        handleOpenPopover(event, row.id, handleformat.formatPrice(row.sale_price))
                       }
                       onChange={(event) => handleInputChange(row.id, event)}
                       InputProps={{

@@ -69,10 +69,12 @@ const AddTransaction = () => {
       console.log(filterParams);
 
       const response = await productService.handleGetAllProduct(filterParams);
-      console.log(response);
+      console.log("Check data get Pb" ,response.data);
 
       if (response && response.success === true) {
-        setData(response.data);
+        const filteredData = response.data.filter(item => item.onHand !== null && item.onHand !== 0
+        );
+        setData(filteredData);
       }
     } catch (err) {
       console.log(err);
@@ -210,6 +212,10 @@ const AddTransaction = () => {
         status: FNstatus,
         note: FNnote
       };
+
+      await handleCreatOrderDetail();
+
+
       const response = await orderService.hendleCreat(dataCreat);
       console.log(response);
       toast.success(response.messges);
@@ -217,16 +223,21 @@ const AddTransaction = () => {
       console.log(error);
     }
 
-    handleCreatOrderDetail();
   };
 
   const handleCreatOrderDetail = async () => {
     try {
+      if (purchasedProducts.length === 0) {
+      toast.error("No products were added to the order!");
+        throw new Error("No products were added to the order!");
+      }
+  
       const currentCode = await handleGetCode();
       const order_id = currentCode.id;
-
+  
       const promises = purchasedProducts.map(async (item) => {
         console.log(item);
+  
         let data = {
           order_id: order_id,
           product_id: item.id,
@@ -236,25 +247,22 @@ const AddTransaction = () => {
           sale_price: item.sale_price,
           type: 0,
         };
-
-        console.log("Này dùng để push order detail ", data);
-
+  
         try {
           const response = await orderService.handleCreatOrderDetail(data);
           console.log("Response for item", item.id, ":", response);
         } catch (error) {
-          console.error(
-            "Error creating inventory detail for item",
-            item.id,
-            ":",
-            error
-          );
+          console.error(`Error creating inventory detail for item ${item.id}:`, error);
+          throw error; // Ném lỗi ra ngoài để Addorder có thể xử lý
         }
       });
+  
       await Promise.all(promises);
       console.log("All inventory details have been created successfully.");
+      
     } catch (error) {
-      console.error("Error in handleCreatInventoryDetail:", error);
+      console.error("Error in handleCreatOrderDetail:", error);
+      throw error; // Ném lỗi ra ngoài để Addorder có thể xử lý
     }
   };
 

@@ -3,6 +3,7 @@
     "table" : {
         "tableHead" : {
             "code" : "Product Code",
+            "time" : "Time",
             "name" : "Product Name",
             "price" : "Price",
             "sale_price" : "Sale Price",

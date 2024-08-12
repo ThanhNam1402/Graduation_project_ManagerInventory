@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import {
   Table,
@@ -14,8 +15,11 @@ import {
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import { TotalRowCount } from "../../../utils/func";
+import { purchaseOrderService } from "../../../services/purchaseOrder.service";
 
 function TableAddProducts(props) {
+  let { id } = useParams();
+
   let { value, getTableProducts } = props;
   const [data, setData] = useState([]);
 
@@ -36,6 +40,9 @@ function TableAddProducts(props) {
         newData[index].qty = newData[index].qty + 1;
       } else {
         value.qty = 1;
+
+        console.log(value);
+
         newData.push(value);
       }
       setData(newData);
@@ -45,6 +52,32 @@ function TableAddProducts(props) {
   useEffect(() => {
     getTableProducts(data);
   }, [data]);
+
+  useEffect(() => {
+    if (id) {
+      fetchOneData();
+    }
+  }, []);
+
+  const fetchOneData = async () => {
+    let res = await purchaseOrderService.handleGetOrderProducts(id);
+
+    let data = res?.data;
+    let products = data.Products;
+
+    const flattenedData = {
+      Products: products.map((product) => ({
+        ...product,
+        ...product.PurchaseOrder_Detail,
+      })),
+    };
+
+    flattenedData?.Products.map((product, index) => {
+      delete flattenedData?.Products[index].PurchaseOrder_Detail;
+    });
+
+    setData(flattenedData?.Products);
+  };
 
   const handelDelItems = (id) => {
     const newData = [...data];

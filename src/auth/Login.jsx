@@ -5,87 +5,44 @@ import { TextField, Button, Grid, Box, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 
 import { GoogleLogin } from "@react-oauth/google";
-import  { jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 import { userService } from "../services/user.service";
+
+import { useAppContext } from "../context/AppContent";
 
 import "./login.scss";
 
 function Login() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const appContext = useAppContext();
+
+  console.log(appContext);
+
   const [intervalId, setIntervalId] = useState(null);
   const navigate = useNavigate();
 
   const handleLoginSuccess = async (credentialResponse) => {
     const decoded = jwtDecode(credentialResponse.credential);
     const userEmail = decoded.email;
-    const userName = decoded.name;
-    setName(userName);
-    setEmail(userEmail);
-    
-  
-    try {
-      const apiResponse = await userService.handleGetAll(userEmail, userName);
-      console.log("API Response:", apiResponse);
-  
-      if (apiResponse.data) {
-        const users = apiResponse.data;
-        const currentUser = users.find((user) => user.email === userEmail);
-  
-        if (currentUser) {
-          if (currentUser.role === 1) {
-            localStorage.setItem(
-              "user",
-              JSON.stringify({
-                email: userEmail,
-                name: userName,
-                role: currentUser.role,
-                avatar: decoded.picture
-              })
-            );
-  
-            // const id = setInterval(async () => {
-            //   try {
-            //     const response = await userService.handleGetAll(userEmail, userName);
-            //     const updatedUser = response.data.find((user) => user.email === userEmail);
-  
-            //     if (updatedUser && updatedUser.role !== 1) {
-            //       localStorage.removeItem("user");
-            //       clearInterval(id);
-            //       navigate("/login");
-            //     }
-            //   } catch (error) {
-            //     console.error("Error checking user role:", error);
-            //     clearInterval(id);
-            //     localStorage.removeItem("user");
-            //     navigate("/login");
-            //   }
-            // }, 5000); 
-  
-            // setIntervalId(id);
-            navigate("/system");
-          } else {
-            localStorage.removeItem("user");
-            navigate("/login");
-            console.log("Error: Insufficient permissions");
-          }
-        } else {
-          localStorage.removeItem("user");
-          navigate("/login");
-          console.log("Error: User not found");
-        }
+
+    if (decoded) {
+      let res = await userService.getUserInfo(userEmail);
+      if (res && res.success) {
+        let userInfo = {
+          data: res.data,
+          token: res.token,
+          picture: decoded.picture,
+        };
+        localStorage.setItem("user", JSON.stringify(userInfo));
+        appContext.setUserInfo(userInfo);
+
+        navigate("/system");
       } else {
-        console.log("Error: No data returned from API");
+        navigate("/login");
       }
-    } catch (error) {
-      console.error("Error logging in:", error);
-      localStorage.removeItem("user");
-      navigate("/login");
     }
   };
-  
-  
+
   const handleLoginError = () => {
     console.log("Login Failed");
   };

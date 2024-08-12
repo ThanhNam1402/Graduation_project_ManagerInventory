@@ -8,15 +8,18 @@ import {
   FormControl,
 } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supplierService } from "../../../services/supplier.service";
 import { purchaseOrderService } from "../../../services/purchaseOrder.service";
-import { Search } from "@mui/icons-material";
 
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppContext } from "../../../context/AppContent";
 
 function AddDetail(props) {
+  let { id } = useParams();
+  const appContext = useAppContext();
+
   const navigate = useNavigate();
   const [note, setNote] = useState("");
   const [code, setCode] = useState("");
@@ -26,6 +29,25 @@ function AddDetail(props) {
 
   let { allPrice, data } = props;
   const [supplier, setSupplier] = useState(null);
+
+  useEffect(() => {
+    if (id) {
+      fetchOneData();
+    }
+  }, []);
+
+  const fetchOneData = async () => {
+    console.log("call api");
+    if (id) {
+      let res = await purchaseOrderService.handleGetOnePurchaseorders(id);
+
+      if (res && res.success && res.data) {
+        setSupplier(res?.data?.Supplier);
+        setCode(res?.data?.code);
+      }
+      console.log(res);
+    }
+  };
 
   const handleOnChange = async (value) => {
     setInputValue(value);
@@ -46,12 +68,6 @@ function AddDetail(props) {
   const handelAddPurchaseOrder = async (status) => {
     console.log(code, supplier);
 
-    if (!code) {
-      toast.error("Thiếu Trường mã nhập hàng !!");
-      return;
-    } else {
-    }
-
     if (!supplier) {
       toast.error("Vui lòng chọn nhà cung cấp !!");
       return;
@@ -64,6 +80,7 @@ function AddDetail(props) {
       note: note,
       code: code,
       status: status,
+      user_id: appContext?.userInfo?.data?.id,
     };
     let detail = {
       data: data,
@@ -80,6 +97,8 @@ function AddDetail(props) {
       navigate("/system/purchaseOrder/");
     }
   };
+
+  console.log(supplier);
 
   return (
     <div>

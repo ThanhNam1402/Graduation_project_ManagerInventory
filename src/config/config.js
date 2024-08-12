@@ -1,1 +1,1 @@
-export const REACT_APP_BACKEND_URL = 'http://localhost:6969/'
+export const REACT_APP_BACKEND_URL = 'http://localhost:8181/'

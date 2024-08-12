@@ -32,47 +32,49 @@ const headCells = [
     id: "code",
     numeric: false,
     disablePadding: true,
-    label: "Mã Hàng",
+    label: "code",
   },
   {
     id: "name",
     numeric: false,
     disablePadding: false,
-    label: "Tên Hàng",
+    label: "name",
   },
   {
     id: "category",
     numeric: true,
     disablePadding: false,
-    label: "Nhóm Hàng",
+    label: "category",
   },
   {
     id: "onHand",
     numeric: true,
     disablePadding: false,
-    label: "Tồn Kho",
+    label: "onhand",
   },
   {
     id: "price",
     numeric: true,
     disablePadding: false,
-    label: "Giá",
+    label: "price",
   },
   {
     id: "price_sale",
     numeric: true,
     disablePadding: false,
-    label: "Giá Bán",
+    label: "sale_price",
   },
   {
     id: "status",
     numeric: true,
     disablePadding: false,
-    label: "Trạng Thái",
+    label: "status",
   },
 ];
 
 export function EnhancedTableHead(props) {
+  const { t } = useTranslation("product");
+
   const {
     onSelectAllClick,
     order,
@@ -112,7 +114,7 @@ export function EnhancedTableHead(props) {
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {t("table.tableHead." + headCell.label)}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}

@@ -9,26 +9,77 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
+  CircularProgress,
+  Paper,
+  Box,
+  Backdrop,
+  Typography,
+  Fade,
 } from "@mui/material";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
+import { delay } from "../../utils/func";
 
 import SearchProduct from "../../components/filters/SearchProduct";
+
+import { fileService } from "../../services/file.service";
 
 function ActionProduct(props) {
   const { t } = useTranslation("action");
   let { handleSearch } = props;
+  const [openBackDrop, setOpenBackDrop] = useState(false);
+
+  const [exportFileName, setExportFileName] = useState(null);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const [bannerOpen, setBannerOpen] = useState(false);
+  const closeBanner = () => {
+    setBannerOpen(false);
+    setExportFileName(null);
+  };
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+
+  const handleExportAll = async () => {
+    try {
+      setOpenBackDrop(true);
+      await delay(2000);
+      let res = await fileService.handleExportAll("products");
+      if (res) {
+        setExportFileName(res.data);
+        setBannerOpen(true);
+      }
+      setOpenBackDrop(false);
+    } catch (error) {
+      setOpenBackDrop(false);
+    }
+  };
+
+  const handleDownloadFile = async () => {
+    console.log(exportFileName);
+
+    await fileService.handleDowloadFile(exportFileName).then((response) => {
+      console.log(response);
+      const blob = new Blob([response], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+
+      const anchor = document.createElement("a");
+      anchor.download = exportFileName;
+      anchor.href = url;
+      anchor.click();
+      window.URL.revokeObjectURL(url);
+    });
+    setBannerOpen(false);
   };
 
   return (
@@ -92,7 +143,7 @@ function ActionProduct(props) {
               </ListItemIcon>
               <ListItemText>Import </ListItemText>
             </MenuItem>
-            <MenuItem>
+            <MenuItem onClick={handleExportAll}>
               <ListItemIcon>
                 <FileDownloadOutlinedIcon fontSize="small" />
               </ListItemIcon>
@@ -101,6 +152,80 @@ function ActionProduct(props) {
           </Menu>
         </div>
       </Stack>
+
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          marginLeft: "0px !important",
+        }}
+        open={openBackDrop}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+      <Fade appear={false} in={bannerOpen}>
+        <Paper
+          role="dialog"
+          aria-modal="false"
+          aria-label="Cookie banner"
+          square
+          variant="outlined"
+          tabIndex={-1}
+          sx={{
+            backgroundColor: "white",
+            position: "fixed",
+            bottom: 0,
+            right: 0,
+            width: "420px",
+            m: 0,
+            p: 3,
+            borderWidth: 1,
+            borderTopWidth: 1,
+            borderRadius: 2,
+          }}
+        >
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            justifyContent="space-between"
+            gap={2}
+          >
+            <Box
+              sx={{
+                flexShrink: 1,
+                alignSelf: { xs: "flex-start", sm: "center" },
+              }}
+            >
+              <Typography fontWeight="bold">
+                Xử lý thiết lập xuất file
+              </Typography>
+              <Typography variant="body2">{exportFileName}</Typography>
+            </Box>
+            <Stack
+              gap={2}
+              direction={{
+                xs: "row-reverse",
+                sm: "row",
+              }}
+              sx={{
+                flexShrink: 0,
+                alignSelf: { xs: "flex-end", sm: "center" },
+              }}
+            >
+              <Button
+                size="small"
+                onClick={handleDownloadFile}
+                variant="contained"
+              >
+                Tải Xuống
+              </Button>
+              <Button size="small" onClick={closeBanner}>
+                Hủy
+              </Button>
+            </Stack>
+          </Stack>
+        </Paper>
+      </Fade>
     </Stack>
   );
 }

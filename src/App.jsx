@@ -7,10 +7,13 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { ToastContainer } from "react-toastify";
 import useRoleCheck from "./auth/checkRole";
+import { useAppContext } from "./context/AppContent";
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
+  const appContext = useAppContext();
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   useRoleCheck();
 
@@ -18,11 +21,10 @@ function App() {
     const storedUser = localStorage.getItem("user");
     setIsAuthenticated(!!storedUser);
 
-    console.log(storedUser);
-    
-
     if (!storedUser && location.pathname !== path.LOGIN) {
       navigate(path.LOGIN);
+    } else {
+      appContext.setUserInfo(JSON.parse(storedUser));
     }
   }, [navigate, location.pathname]);
 
@@ -34,7 +36,7 @@ function App() {
         {isAuthenticated && (
           <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
         )}
-        {!isAuthenticated && <Route path="*" element={<Login />} />}
+        {/* {!isAuthenticated && <Route path="*" element={<Login />} />} */}
       </Routes>
 
       <ToastContainer />

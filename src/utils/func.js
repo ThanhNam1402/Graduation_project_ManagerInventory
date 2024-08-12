@@ -69,3 +69,9 @@ export function SubTotal(items) {
   }
   return null;
 }
+
+
+
+export const delay = (t) => {
+  return new Promise(resolve => setTimeout(resolve, t));
+}

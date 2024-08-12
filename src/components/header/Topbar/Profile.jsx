@@ -11,12 +11,14 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { googleLogout } from "@react-oauth/google";
 import { useState, useEffect } from "react";
-import { useNavigate  } from "react-router-dom";
-
-
+import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../../../context/AppContent";
 
 export default function Profile() {
-  const [users, SetUsers] = useState([]);
+  const appContext = useAppContext();
+
+  console.log(appContext);
+
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -27,18 +29,11 @@ export default function Profile() {
     setAnchorEl(null);
   };
 
-  /*----------------------logout------------------------*/ 
-  useEffect(() => {
-    // Get locostore
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      SetUsers(JSON.parse(storedUser));
-    }
-  }, []);
+  /*----------------------logout------------------------*/
 
-   const handleLogout = () => {
+  const handleLogout = () => {
+    appContext.setUserInfo({});
     googleLogout();
-    SetUsers([]);
     localStorage.removeItem("user");
     navigate("/login");
   };
@@ -57,7 +52,7 @@ export default function Profile() {
             <Avatar
               sx={{ width: 28, height: 28 }}
               alt="Remy Sharp"
-              src={users.avatar}
+              src={appContext?.userInfo?.picture}
             ></Avatar>
           </IconButton>
         </Tooltip>
@@ -101,9 +96,9 @@ export default function Profile() {
           <Avatar
             sx={{ width: 28, height: 28 }}
             alt="Remy Sharp"
-            src={users.avatar ?? ""}
+            src={appContext?.userInfo?.picture}
           />
-          {users.name ?? users.email}
+          {appContext?.userInfo?.data?.name}
         </MenuItem>
 
         <Divider />
@@ -114,7 +109,7 @@ export default function Profile() {
           </ListItemIcon>
           Cài Đặt
         </MenuItem>
-        <MenuItem onClick={handleLogout}> 
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

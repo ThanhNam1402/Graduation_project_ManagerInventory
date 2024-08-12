@@ -11,6 +11,7 @@ import {
   Typography,
   Button,
   Container,
+  Checkbox,
 } from "@mui/material";
 
 import { useEffect, useMemo, useState } from "react";
@@ -30,6 +31,18 @@ function AddProduct(props) {
   const navigate = useNavigate();
 
   const [img, setImg] = useState();
+  const [checked, setChecked] = useState(false);
+  const [status, setStatus] = useState(null);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+    if (checked) {
+      setStatus(1);
+    } else {
+      setStatus(2);
+    }
+  };
+  console.log(status);
 
   const {
     register,
@@ -50,10 +63,13 @@ function AddProduct(props) {
     if (res && res.success) {
       reset(res.data);
       setImg(res?.data?.img);
+      setStatus(res?.data?.status);
+      
+      if (res?.data?.status === 2) {
+        setChecked(true);
+      }
     }
   };
-
-  console.log(id);
 
   const _onSubmit = async (data) => {
     console.log(data);
@@ -62,7 +78,7 @@ function AddProduct(props) {
     if (id) {
       try {
         let res = await productService.handleUpdateProducts(
-          { ...data, file },
+          { ...data, file, status },
           id
         );
 
@@ -251,36 +267,39 @@ function AddProduct(props) {
                     )}
                   </FormControl>
                 </Stack>
-                <Stack mb={2} direction="row" alignItems="center">
-                  <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                    Tồn Kho
-                  </InputLabel>
-                  <FormControl fullWidth>
-                    <TextField
-                      {...register("onHand", {
-                        required: {
-                          value: true,
-                          message: "Trường Dữ Liệu Không Được Trống !!",
-                        },
-                      })}
-                      type="number"
-                      InputProps={{ inputProps: { min: 0 } }}
-                      hiddenLabel
-                      fullWidth
-                      id="onHand"
-                      margin="dense"
-                      variant="standard"
-                      placeholder="Nhập Bán Vốn Sản Phẩm"
-                      size="small"
-                    />
 
-                    {errors.onHand && (
-                      <Typography color="error" variant="body2">
-                        {errors?.onHand?.message}
-                      </Typography>
-                    )}
-                  </FormControl>
-                </Stack>
+                {!id && (
+                  <Stack mb={2} direction="row" alignItems="center">
+                    <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
+                      Tồn Kho
+                    </InputLabel>
+                    <FormControl fullWidth>
+                      <TextField
+                        {...register("onHand", {
+                          required: {
+                            value: true,
+                            message: "Trường Dữ Liệu Không Được Trống !!",
+                          },
+                        })}
+                        type="number"
+                        InputProps={{ inputProps: { min: 0 } }}
+                        hiddenLabel
+                        fullWidth
+                        id="onHand"
+                        margin="dense"
+                        variant="standard"
+                        placeholder="Nhập Bán Vốn Sản Phẩm"
+                        size="small"
+                      />
+
+                      {errors.onHand && (
+                        <Typography color="error" variant="body2">
+                          {errors?.onHand?.message}
+                        </Typography>
+                      )}
+                    </FormControl>
+                  </Stack>
+                )}
               </Box>
 
               <Box elevation={2} sx={{ p: 2, mb: 2 }}>
@@ -368,6 +387,19 @@ function AddProduct(props) {
                     )}
                   </FormControl>
                 </Stack>
+
+                {id && (
+                  <Stack my={2} direction="row" alignItems="center">
+                    <InputLabel sx={{ minWidth: 100 }}>
+                      Ngừng kinh doanh
+                    </InputLabel>
+                    <Checkbox
+                      checked={checked}
+                      onChange={handleChange}
+                      inputProps={{ "aria-label": "controlled" }}
+                    />
+                  </Stack>
+                )}
               </Paper>
             </Grid>
           </Grid>

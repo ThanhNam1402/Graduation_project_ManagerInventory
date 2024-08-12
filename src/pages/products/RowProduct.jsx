@@ -17,8 +17,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import TabInfomation from "./TabInfomatoin";
 import TabPanelRow from "../../components/TabPanelRow";
 import { handleformat } from "../../utils/format";
-
-
+import { REACT_APP_BACKEND_URL } from "../../config/config";
 
 function a11yProps(index) {
   return {
@@ -74,13 +73,13 @@ function RowProduct(props) {
           >
             <img
               width="40px"
-              src={`http://localhost:6969/${row?.img}`}
+              src={`${REACT_APP_BACKEND_URL}/${row?.img}`}
               alt=""
             />
             {row?.name}
           </Stack>
         </TableCell>
-        <TableCell align="right">{row?.Category.name}</TableCell>
+        <TableCell align="right">{row?.Category?.name}</TableCell>
         <TableCell align="right">{row?.onHand}</TableCell>
         <TableCell align="right">
           {handleformat.formatPrice(row?.price)}
@@ -105,8 +104,8 @@ function RowProduct(props) {
                     aria-label="basic tabs"
                   >
                     <Tab label="Thông tin" {...a11yProps(0)} />
-                    <Tab label="Thẻ Kho" {...a11yProps(1)} />
-                    <Tab label="Tồn Kho" {...a11yProps(2)} />
+                    {/* <Tab label="Thẻ Kho" {...a11yProps(1)} />
+                    <Tab label="Tồn Kho" {...a11yProps(2)} /> */}
                   </Tabs>
                 </Box>
                 <TabPanelRow value={value} index={0}>
@@ -115,12 +114,12 @@ function RowProduct(props) {
                     handleDelProduct={handleDelProduct}
                   />
                 </TabPanelRow>
-                <TabPanelRow value={value} index={1}>
+                {/* <TabPanelRow value={value} index={1}>
                   Item Two
                 </TabPanelRow>
                 <TabPanelRow value={value} index={2}>
                   Item Three
-                </TabPanelRow>
+                </TabPanelRow> */}
               </Box>
             </Box>
           </Collapse>

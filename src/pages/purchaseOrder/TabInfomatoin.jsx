@@ -92,7 +92,7 @@ function TabInfomation(props) {
       </Grid>
       <Grid item xs={12}>
         <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
-          <Button variant="contained">Cập Nhật</Button>
+          {/* <Button variant="contained">Cập Nhật</Button> */}
           {/* <Button variant="contained" color="error">
             Xóa
           </Button> */}

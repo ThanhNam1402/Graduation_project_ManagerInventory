@@ -24,9 +24,9 @@ export const orderService = {
     });
   },
 
-  handleUpdateStastus(id, status){
-    return api.put(`/api/order/${id}`,{
-        status: status
+  handleUpdateStastus(id, status) {
+    return api.put(`/api/order/${id}`, {
+      status: status
     })
   }
 };

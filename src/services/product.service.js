@@ -36,9 +36,12 @@ export const productService = {
     handleDelProducts(id) {
         return api.delete(`/api/products/${id}`)
     },
+
     handleDelListProducts(ids) {
         return api.delete(`/api/products/list/`, {
             ids: ids
         })
     },
+
+   
 }

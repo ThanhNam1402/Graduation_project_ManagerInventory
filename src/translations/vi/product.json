@@ -1,6 +1,15 @@
 {
     "title" : "Danh Sách Sản Phẩm",
     "table" : {
-        "tableHead" : {}
+        "tableHead" : {
+            "code" : "Mã Sản Phẩm",
+            "time" : "Thời Gian",
+            "name" : "Tên Sản Phẩm",
+            "price" : "Giá",
+            "sale_price" : "Giá Giảm",
+            "category" : "Nhóm Hàng",
+            "onhand" : "Tồn Kho",
+            "status" : "Trạng Thái"
+        }
     }
 }

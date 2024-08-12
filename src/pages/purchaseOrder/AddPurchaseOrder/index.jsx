@@ -11,6 +11,7 @@ import {
 import AddDetail from "./AddDetail";
 import TableAddProducts from "./TableAddProducts";
 import { purchaseOrderService } from "../../../services/purchaseOrder.service";
+import { REACT_APP_BACKEND_URL } from "../../../config/config";
 
 import _ from "lodash";
 
@@ -39,7 +40,7 @@ function AddPurChaseOrder(props) {
     console.log(value);
     if (value !== "") {
       let res = await purchaseOrderService.handleGetComplete(value);
-      if (res && res.success === true) {
+      if (res && res.success === true && res.data) {
         setOption(res.data);
       }
     } else {
@@ -67,6 +68,8 @@ function AddPurChaseOrder(props) {
       totalSalePrice: c,
     }));
   }, [dataTable]);
+
+ 
 
   return (
     <Grid container spacing={2}>
@@ -99,7 +102,7 @@ function AddPurChaseOrder(props) {
                 <img
                   loading="lazy"
                   width="40"
-                  src={`http://localhost:6969/${option?.img}`}
+                  src={`${REACT_APP_BACKEND_URL}/${option?.img}`}
                   alt=""
                 />
                 <Box sx={{ width: "100%" }}>

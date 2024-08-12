@@ -11,6 +11,7 @@ function TabInfomation(props) {
   const handelDelItem = (id) => {
     handleDelProduct(id);
   };
+  console.log(item.status);
 
   return (
     <Grid container spacing={4}>
@@ -92,19 +93,20 @@ function TabInfomation(props) {
         }}
         mt={3}
       >
-        <Button component={Link} to={`${item.id}`} variant="contained" color="success">
+        <Button
+          component={Link}
+          to={`${item.id}`}
+          variant="contained"
+          color="success"
+        >
           Cập Nhật
         </Button>
-        <Button variant="text" color="warning">
-          Ngừng Kinh Doanh
-        </Button>
-        <Button
-          onClick={() => handelDelItem(item.id)}
-          variant="contained"
-          color="error"
-        >
-          Xóa
-        </Button>
+
+        {item.status !== 2 && (
+          <Button onClick={() => handelDelItem(item.id)} variant="text">
+            Ngừng Kinh Doanh
+          </Button>
+        )}
       </Stack>
     </Grid>
   );

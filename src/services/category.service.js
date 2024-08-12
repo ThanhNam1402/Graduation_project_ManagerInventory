@@ -1,5 +1,3 @@
-
-
 import api from "../config/axios"
 
 export const categoryService = {

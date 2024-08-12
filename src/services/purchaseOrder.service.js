@@ -7,6 +7,13 @@ export const purchaseOrderService = {
     handleGetAllPurchaseorders(filter) {
         return api.get(`/api/purchaseorders?${filter}`)
     },
+
+    handleGetOnePurchaseorders(id) {
+        return api.get(`/api/purchaseorders/one/${id}`)
+    },
+
+
+
     handleGetOrderProducts(id) {
         return api.get(`/api/purchaseorders/detail/${id}`)
     },

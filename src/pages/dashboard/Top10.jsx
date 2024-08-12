@@ -13,17 +13,69 @@ import FormControl from "@mui/material/FormControl";
 import NativeSelect from "@mui/material/NativeSelect";
 
 
-const data = [
-  { name: "Tháng 1", uv: 4000, pv: 2400, amt: 2400 },
-  { name: "Tháng 2", uv: 3000, pv: 1398, amt: 2210 },
-  { name: "Tháng 3", uv: 2000, pv: 9800, amt: 2290 },
-  { name: "Tháng 4", uv: 2780, pv: 3908, amt: 2000 },
-  { name: "Tháng 5", uv: 1890, pv: 4800, amt: 2181 },
-  { name: "Tháng 6", uv: 2390, pv: 3800, amt: 2500 },
-  { name: "Tháng 7", uv: 3490, pv: 4300, amt: 2100 },
-];
+import { useState, useEffect } from "react";
+import { orderService } from "./../../services/order.service";
+import { handleformat } from "../../utils/format";
+
+
+// const data = [
+//   { name: "Tháng 1", uv: 4000, pv: 2400, amt: 2400 },
+//   { name: "Tháng 2", uv: 3000, pv: 1398, amt: 2210 },
+//   { name: "Tháng 3", uv: 2000, pv: 9800, amt: 2290 },
+//   { name: "Tháng 4", uv: 2780, pv: 3908, amt: 2000 },
+//   { name: "Tháng 5", uv: 1890, pv: 4800, amt: 2181 },
+//   { name: "Tháng 6", uv: 2390, pv: 3800, amt: 2500 },
+//   { name: "Tháng 7", uv: 3490, pv: 4300, amt: 2100 },
+// ];
 
 const Top10 = () => {
+
+  const [data, setData] = useState([]);
+  const [revenue, SetRevenue] = useState({});
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const res = await orderService.handleGetAll();
+      let data = res.data;
+
+      const groupedData = data.reduce((acc, item) => {
+        const productName = item.Products.name;
+
+        if (!acc[productName]) {
+          acc[productName] = {
+            name: productName,
+            total: 0,
+          };
+        }
+        acc[productName].total += item.Products.Order_Detail.total;
+        return acc;
+      }, {});
+
+
+
+      const filteredData = Object.values(groupedData);
+      const top10Products = filteredData
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 10);
+
+
+      const totalRevenue = filteredData.reduce((acc, item) => acc + item.total, 0);
+     
+      setData(top10Products);
+      SetRevenue(totalRevenue);
+
+      console.log("Data format: ", top10Products);
+      console.log("Data revenue: ", revenue);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Box sx={{ mt: 3, p: 1, bgcolor: "background.paper", boxShadow: 2 }}>
@@ -60,7 +112,7 @@ const Top10 = () => {
               width={900}
               height={450}
               data={data}
-              layout="vertical" // Đặt layout thành vertical để có biểu đồ ngang
+              layout="vertical"
               margin={{
                 top: 20,
                 right: 30,
@@ -83,7 +135,7 @@ const Top10 = () => {
                   lineHeight: "40px",
                 }}
               />
-              <Bar dataKey="uv" fill="#8884d8" barSize={30} />
+              <Bar dataKey="total" fill="#8884d8" barSize={30} />
             </BarChart>
           </ResponsiveContainer>
         </Box>

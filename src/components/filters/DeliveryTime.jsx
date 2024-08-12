@@ -15,8 +15,11 @@ import {
   Grid,
 } from "@mui/material";
 import UnfoldMoreOutlinedIcon from "@mui/icons-material/UnfoldMoreOutlined";
+import { useTranslation } from "react-i18next";
 
 function DeliveryTime() {
+  const { t } = useTranslation("filter");
+
   const [value, setValue] = useState("female");
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -57,7 +60,7 @@ function DeliveryTime() {
               ".MuiAccordionSummary-content": { margin: 0 },
             }}
           >
-            Thời gian giao hàng
+            {t("filter.delivery")}
           </AccordionSummary>
           <AccordionDetails>
             <FormControl>
@@ -72,7 +75,7 @@ function DeliveryTime() {
                   control={<Radio />}
                   label={
                     <Typography component="p" variant="p">
-                      Tháng này
+                     {t("filter.month")}
                       <UnfoldMoreOutlinedIcon
                         style={{ verticalAlign: "middle", marginLeft: 65 }}
                         onClick={handleClick}
@@ -84,7 +87,7 @@ function DeliveryTime() {
                 <FormControlLabel
                   value="male"
                   control={<Radio />}
-                  label="Lựa chọn khác"
+                  label= {t("filter.options")}
                 />
               </RadioGroup>
             </FormControl>

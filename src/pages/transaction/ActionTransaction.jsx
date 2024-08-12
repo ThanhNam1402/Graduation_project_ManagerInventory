@@ -6,8 +6,12 @@ import Button from "@mui/material/Button";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 
 import CsSearch from "../../components/filters/SearchProduct";
+import { useTranslation } from "react-i18next";
+
 
 function ActionTransaction({ selectedCount }) {
+  const { t } = useTranslation("order");
+
   const handleSearch = (query) => {
     console.log("Tìm kiếm:", query);
     // Nghiệp vụ Search ở đây!
@@ -41,14 +45,15 @@ function ActionTransaction({ selectedCount }) {
             startIcon={<AddOutlinedIcon />}
             onClick={()=> handleButtonClick()}
           >
-            Đặt hàng
+                          {t("orders.action.order")}
+
           </Button>
           <Button
             variant="contained"
             color="success"
             startIcon={<FileDownloadOutlinedIcon />}
           >
-            Xuất file
+             {t("orders.action.export")}
           </Button>
         </Box>
       </Box>

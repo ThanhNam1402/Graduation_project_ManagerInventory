@@ -63,7 +63,7 @@ const AddTransaction = () => {
         order: pagination?.order || "asc",
         orderBy: pagination?.orderBy || "name",
         page: pagination?.page || 0,
-        rowsPerPage: pagination?.rowsPerPage || 5,
+        rowsPerPage: pagination?.rowsPerPage || 15,
       }).toString();
 
       console.log(filterParams);
@@ -213,7 +213,6 @@ const AddTransaction = () => {
         note: FNnote
       };
 
-      await handleCreatOrderDetail();
 
 
       const response = await orderService.hendleCreat(dataCreat);
@@ -222,6 +221,7 @@ const AddTransaction = () => {
     } catch (error) {
       console.log(error);
     }
+      await handleCreatOrderDetail();
 
   };
 

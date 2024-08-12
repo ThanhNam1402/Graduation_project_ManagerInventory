@@ -1,0 +1,17 @@
+{
+  "pricebook": {
+    "title": "Price Book",
+    "table": {
+      "tableHead": {
+        "code": "Product Code",
+        "name": "Product Name",
+        "price": "Capital Price",
+        "sale_price": "Selling Price"
+      }
+    },
+    "filter": {
+        "filterCode": "Search By Code",
+        "filterName": "Search By Name"
+      }
+  }
+}

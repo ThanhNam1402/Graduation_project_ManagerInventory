@@ -37,8 +37,11 @@ import csUseQueryString from "../../hook/csUseQueryString";
 import { orderService } from "./../../services/order.service";
 import { handleformat } from "../../utils/format";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+
 
 function ListTransaction(props) {
+  const { t } = useTranslation("order");
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [data, setData] = useState([]);
@@ -177,13 +180,13 @@ function ListTransaction(props) {
                     }}
                   />
                 </TableCell>
-                <TableCell>Mã đặt hàng</TableCell>
+                <TableCell>{t("orders.table.tableHead.code")}</TableCell>
 
-                <TableCell>Thời gian</TableCell>
-                <TableCell>Khách hàng</TableCell>
-                <TableCell>Khách cần trả</TableCell>
-                <TableCell>Khách đã trả</TableCell>
-                <TableCell>Trạng thái</TableCell>
+                <TableCell>{t("orders.table.tableHead.time")}</TableCell>
+                <TableCell>{t("orders.table.tableHead.client")}</TableCell>
+                <TableCell>{t("orders.table.tableHead.pay")}</TableCell>
+                <TableCell>{t("orders.table.tableHead.paid")}</TableCell>
+                <TableCell>{t("orders.table.tableHead.status")}</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>

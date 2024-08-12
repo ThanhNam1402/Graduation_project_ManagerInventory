@@ -7,8 +7,16 @@
         "on-hand" : "Tồn Kho",
         "gender" : "Giới Tính",
         "status" : "Trạng Thái",
-        "customer-type" : "Loại Khách Hàng"
-
-
-    }
+        "customer-type" : "Loại Khách Hàng",
+        "time": "Thời Gian",
+        "month": "Tháng",
+        "options": "Lựa Chọn Khác",
+        "provisional": "Phiếu Tạm",
+        "balanced": "Đã Cân Bằng",
+        "canceled": "Đã Hủy",
+        "pay": "Phương thức thanh toán",
+        "delivery": "Thời gian giao hàng",
+        "order": "Đặt Hàng"
+    },
+     "search": "Tìm theo tên, mã"
 }

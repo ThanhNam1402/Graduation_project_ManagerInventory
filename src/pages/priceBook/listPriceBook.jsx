@@ -24,9 +24,13 @@ import "./listPriceBook.scss";
 import { productService } from "../../services/product.service";
 import { pricebookService } from "./../../services/pricebook.service";
 import { handleformat } from "../../utils/format";
+import { useTranslation } from "react-i18next";
+
 
 
 function ListPriceBooks(props) {
+  const { t } = useTranslation("pricebook");
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -118,17 +122,18 @@ function ListPriceBooks(props) {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Mã hàng</TableCell>
-                <TableCell>Tên hàng</TableCell>
-                <TableCell>Giá vốn</TableCell>
-                <TableCell>Giá bán</TableCell>
+           
+                <TableCell>{t("pricebook.table.tableHead.code")}</TableCell>
+                <TableCell>{t("pricebook.table.tableHead.name")}</TableCell>
+                <TableCell>{t("pricebook.table.tableHead.price")}</TableCell>
+                <TableCell>{t("pricebook.table.tableHead.sale_price")}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
-                  <TextField size="small" placeholder="Tìm mã hàng" />
+                  <TextField size="small" placeholder={t("pricebook.filter.filterCode")} />
                 </TableCell>
                 <TableCell>
-                  <TextField size="small" placeholder="Tìm tên hàng" />
+                  <TextField size="small" placeholder={t("pricebook.filter.filterName")} />
                 </TableCell>
                 <TableCell />
                 <TableCell />

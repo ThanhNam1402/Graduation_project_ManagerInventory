@@ -1,0 +1,17 @@
+{
+  "pricebook": {
+    "title": "Thiết Lập Giá",
+    "table": {
+      "tableHead": {
+        "code": "Mã sản phẩm",
+        "name": "Tên sản phẩm",
+        "price": "Giá vốn",
+        "sale_price": "Giá bán"
+      }
+    }, 
+    "filter": {
+        "filterCode": "Tìm theo mã",
+        "filterName": "Tìm theo tên"
+      }
+  }
+}

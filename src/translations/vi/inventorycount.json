@@ -1,0 +1,19 @@
+{
+    "inventorycount": {
+      "title": "Kiểm Kho",
+      "table": {
+        "tableHead": {
+          "code": "Mã Kiểm Kho",
+          "time": "Thời Gian",
+          "quantity": "SL thực tế",
+          "total": "Tổng thực tế",
+           "status": "Trạng Thái"
+        }
+      }, 
+      "filter": "Tìm Kiếm Theo Tên, Mã Hàng",
+      "action": {
+        "check": "Kiểm Kho",
+        "export": "Xuất File"
+      }
+    }
+  }

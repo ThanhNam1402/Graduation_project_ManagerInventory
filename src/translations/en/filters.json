@@ -7,6 +7,15 @@
         "on-hand" : "OnHand",
         "gender" : "Gender",
         "status" : "Status",
-        "customer-type" : "Customer type"
-    }
+        "customer-type" : "Customer type",
+        "time" : "Time",
+        "month": "Month",
+        "options": "Options",
+        "provisional": "Provisional Ballot",
+        "balanced": "Has Been Balanced",
+        "canceled": "Canceled",
+        "pay": "Pay",
+        "delivery": "Delivery Time"
+    },
+    "search": "Search by Name, Code"
 }

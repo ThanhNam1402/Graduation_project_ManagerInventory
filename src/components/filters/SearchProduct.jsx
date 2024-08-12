@@ -6,8 +6,11 @@ import _ from "lodash";
 import { useCallback } from "react";
 
 import SearchIcon from "@mui/icons-material/Search";
+import { useTranslation } from "react-i18next";
 
 function CsSearch(props) {
+  const { t } = useTranslation("filter");
+
   let { handleSearch } = props;
 
   const handleOnChange = useCallback(
@@ -21,7 +24,7 @@ function CsSearch(props) {
         id="input-with-icon-textfield"
         size="small"
         onChange={(event) => handleOnChange(event)}
-        placeholder="Tìm kiếm theo tên, mã hàng"
+        placeholder= {t("search")}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

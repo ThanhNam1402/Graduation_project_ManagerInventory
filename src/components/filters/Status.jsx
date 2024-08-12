@@ -9,8 +9,11 @@ import Checkbox from "@mui/material/Checkbox";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useTranslation } from "react-i18next";
 
 function Status() {
+  const { t } = useTranslation("filter");
+
   return (
     <>
 
@@ -24,7 +27,7 @@ function Status() {
             ".MuiAccordionSummary-content": { margin: 0 },
           }}
         >
-          Trạng thái
+         {t("filter.status")}
         </AccordionSummary>
         <AccordionDetails>
           <FormControl>
@@ -32,9 +35,9 @@ function Status() {
               aria-labelledby="demo-controlled-radio-buttons-group"
               name="controlled-radio-buttons-group"
             >
-              <FormControlLabel control={<Checkbox />} label="Phiếu Tạm" />
-              <FormControlLabel control={<Checkbox />} label="Đã cân bằng kho" />
-              <FormControlLabel control={<Checkbox />} label="Đã hủy" />
+              <FormControlLabel control={<Checkbox />} label={t("filter.provisional")}/>
+              <FormControlLabel control={<Checkbox />} label={t("filter.balanced")} />
+              <FormControlLabel control={<Checkbox />} label={t("filter.canceled")} />
             </RadioGroup>
           </FormControl>
         </AccordionDetails>

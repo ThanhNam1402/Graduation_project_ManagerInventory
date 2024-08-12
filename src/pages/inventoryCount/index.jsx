@@ -7,7 +7,11 @@ import Time from "../../components/filters/Time";
 import Status from "../../components/filters/Status";
 import Action from "./ActionInventoryCount";
 import CsUsePagination from "../../hook/CsUsePagination";
+import { useTranslation } from "react-i18next";
+
 function InventoryCount() {
+  const { t } = useTranslation("inventorycount");
+
   const [selectedCount, setSelectedCount] = useState(0);
 
   const [filters, setFilters] = useState({
@@ -43,7 +47,7 @@ function InventoryCount() {
             }}
           >
             <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
-              Kiểm kho
+            {t("inventorycount.title")}
             </Typography>
             <Time />
             <Status />

@@ -12,7 +12,11 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 function Pay() {
+  const { t } = useTranslation("filter");
+
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const handleChange = (event) => {
@@ -32,11 +36,11 @@ function Pay() {
               ".MuiAccordionSummary-content": { margin: 0 },
             }}
           >
-            Phương thức thanh toán
+               {t("filter.pay")}
           </AccordionSummary>
           <FormControl sx={{ m: 1, width: 215 }}>
             <InputLabel id="demo-multiple-chip-label">
-              Phương thức thanh toán
+            {t("filter.pay")}
             </InputLabel>
             <Select
               labelId="payment-method-label"

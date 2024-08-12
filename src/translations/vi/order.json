@@ -1,0 +1,20 @@
+{
+    "orders": {
+      "title": "Đặt Hàng",
+      "table": {
+        "tableHead": {
+          "code": "Mã Đặt Hàng",
+          "time": "Thời Gian",
+          "client": "Khách Hàng",
+          "pay": "Khách Cần Trả",
+          "paid":"Khách Đã Trả",
+          "status": "Trạng Thái"
+        }
+      }, 
+      "filter": "Tìm Kiếm Theo Tên, Mã Hàng",
+      "action": {
+        "order": "Đặt Hàng",
+        "export": "Xuất File"
+      }
+    }
+  }

@@ -2,7 +2,9 @@ import { TextField, InputAdornment, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 
+
 function Search({ onSearch }) {
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleInputChange = (event) => {

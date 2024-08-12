@@ -5,8 +5,12 @@ import Button from "@mui/material/Button";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import CsSearch from "../../components/filters/SearchProduct";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 
 function Action({ selectedCount }) {
+  const { t } = useTranslation("inventorycount");
+
   const handleSearch = (query) => {
     console.log("Tìm kiếm:", query);
     // Nghiệp vụ Search ở đây!
@@ -40,14 +44,14 @@ function Action({ selectedCount }) {
             startIcon={<AddOutlinedIcon />}
             onClick={()=> handleButtonClick()}
           >
-            Kiểm kho
+               {t("inventorycount.action.check")}
           </Button>
           <Button
             variant="contained"
             color="success"
             startIcon={<FileDownloadOutlinedIcon />}
           >
-            Xuất file
+               {t("inventorycount.action.export")}
           </Button>
         </Box>
       </Box>

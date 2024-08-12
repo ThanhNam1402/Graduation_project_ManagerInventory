@@ -9,8 +9,12 @@ import ListPriceBook from "./listPriceBook";
 import Price from "../../components/filters/Price";
 import FilterRadio from "../../components/filters/FilterRadio";
 import { ListProductTypes, ListOnHands } from "../../utils/constain";
+import { useTranslation } from "react-i18next";
+
 
 function PriceBook(props) {
+  const { t } = useTranslation("pricebook");
+
   const [category, setCateGory] = useState(null);
 
   const handleSetFilter = (value, id) => {
@@ -26,7 +30,7 @@ function PriceBook(props) {
           }}
         >
           <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
-            Thiết Lập Giá
+            {t("pricebook.title")}
           </Typography>
 
           {/* product type */}

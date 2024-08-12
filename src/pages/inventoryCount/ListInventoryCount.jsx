@@ -29,8 +29,12 @@ import { invertoryService } from "./../../services/invertory.service";
 import { toast } from "react-toastify";
 import { handleformat } from "../../utils/format";
 import { usePrint } from "../../utils/print";
+import { useTranslation } from "react-i18next";
+
 
 function ListInventoryCount(props) {
+  const { t } = useTranslation("inventorycount");
+
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [data, setData] = useState([]);
@@ -150,11 +154,11 @@ function ListInventoryCount(props) {
                     }}
                   />
                 </TableCell>
-                <TableCell>Mã kiểm kho</TableCell>
-                <TableCell>Thời gian</TableCell>
-                <TableCell>SL thực tế</TableCell>
-                <TableCell>Tổng thực tế</TableCell>
-                <TableCell>Trạng thái</TableCell>
+                <TableCell>{t("inventorycount.table.tableHead.code")}</TableCell>
+                <TableCell>{t("inventorycount.table.tableHead.time")}</TableCell>
+                <TableCell>{t("inventorycount.table.tableHead.quantity")}</TableCell>
+                <TableCell>{t("inventorycount.table.tableHead.total")}</TableCell>
+                <TableCell>{t("inventorycount.table.tableHead.status")}</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>

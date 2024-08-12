@@ -1,0 +1,19 @@
+{
+    "inventorycount": {
+      "title": "inventory Count",
+      "table": {
+        "tableHead": {
+          "code": "Inventory Code",
+          "time": "Time",
+          "quantity": "Actual Quantity",
+          "total": "Actual Total",
+          "status": "Status"
+        }
+      },
+      "filter": "",
+      "action": {
+        "check": "Check Inventory",
+        "export": "Export File"
+      }
+    }
+  }

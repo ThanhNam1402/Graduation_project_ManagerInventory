@@ -1,0 +1,20 @@
+     
+        {
+            "orders": {
+              "title": "Order",
+              "table": {
+                "tableHead": {
+                  "code": "Order Code",
+                  "time": "Time",
+                  "client": "Client",
+                  "pay": "Need To Pay",
+                  "paid": "Customer Has Paid",
+                  "status": "Status"
+                }
+              },
+              "action": {
+                "order": "Order",
+                "export": "Export File"
+              }
+            }
+          }

@@ -6,8 +6,11 @@ import ActionTransaction from "./ActionTransaction";
 import DeliveryTime from "../../components/filters/DeliveryTime";
 import Pay from "../../components/filters/Pay";
 import CsUsePagination from "../../hook/CsUsePagination";
+import { useTranslation } from "react-i18next";
 
 function Transaction() {
+  const { t } = useTranslation("order");
+
   const [selectedCount, setSelectedCount] = useState(0);
   const [keyWord, setKeyWord] = useState("");
   const [filters, setFilters] = useState({
@@ -41,7 +44,7 @@ function Transaction() {
             }}
           >
             <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
-              Phiếu đặt hàng
+            {t("orders.title")}
             </Typography>
             <Time />
             <Pay />

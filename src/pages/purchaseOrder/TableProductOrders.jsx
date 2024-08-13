@@ -67,7 +67,7 @@ export default function TableProductOrders(props) {
                 <TableCell>{row?.code}</TableCell>
                 <TableCell align="right">{row?.name}</TableCell>
                 <TableCell align="right">
-                  {handleformat.formatPrice(row?.PurchaseOrder_Detail?.qty)}
+                  {row?.PurchaseOrder_Detail?.qty}
                 </TableCell>
                 <TableCell align="right">
                   {handleformat.formatPrice(row?.PurchaseOrder_Detail?.price)}

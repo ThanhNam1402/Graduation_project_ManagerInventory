@@ -180,6 +180,7 @@ function ActionProduct(props) {
             width: "420px",
             m: 0,
             p: 3,
+            zIndex: 100,
             borderWidth: 1,
             borderTopWidth: 1,
             borderRadius: 2,

@@ -10,11 +10,13 @@ import {
   Paper,
   Typography,
   Button,
+  CircularProgress,
+  Backdrop,
   Grid,
-  FormControlLabel, 
+  FormControlLabel,
   Radio,
   RadioGroup,
-  FormControl
+  FormControl,
 } from "@mui/material";
 
 import { useState, useEffect } from "react";
@@ -29,14 +31,21 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { productService } from "./../../../services/product.service";
 import { orderService } from "./../../../services/order.service";
 import { handleformat } from "./../../../utils/format";
+import { delay } from "../../../utils/func";
+
+import { useAppContext } from "../../../context/AppContent";
 
 const AddTransaction = () => {
+  const appContext = useAppContext();
+
   const [data, setData] = useState([]);
   const [purchasedProducts, setPurchasedProducts] = useState([]);
   const [userName, setUserName] = useState("");
   const [note, setNote] = useState("");
-  const [status, setStatus] = useState(null); 
+  const [status, setStatus] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   let filters = "";
   let keyWord = "";
@@ -46,7 +55,6 @@ const AddTransaction = () => {
     console.log(userName);
     console.log("Note", note);
     console.log("status", status);
-    
   }, [userName, note, status]);
 
   useEffect(() => {
@@ -69,10 +77,11 @@ const AddTransaction = () => {
       console.log(filterParams);
 
       const response = await productService.handleGetAllProduct(filterParams);
-      console.log("Check data get Pb" ,response.data);
+      console.log("Check data get Pb", response.data);
 
       if (response && response.success === true) {
-        const filteredData = response.data.filter(item => item.onHand !== null && item.onHand !== 0
+        const filteredData = response.data.filter(
+          (item) => item.onHand !== null && item.onHand !== 0
         );
         setData(filteredData);
       }
@@ -92,7 +101,6 @@ const AddTransaction = () => {
   const handleStatusChange = (event) => {
     setStatus(parseInt(event.target.value, 10));
   };
-
 
   const handlePurchase = (product) => {
     setPurchasedProducts((prev) => {
@@ -177,6 +185,9 @@ const AddTransaction = () => {
   const Addorder = async () => {
     try {
       // Lấy code hiện tại
+
+      setIsLoading(true);
+      await delay(1500);
       const currentCode = await handleGetCode();
       console.log(currentCode);
       if (!currentCode) {
@@ -202,7 +213,7 @@ const AddTransaction = () => {
       // Kết hợp phần chữ với số mới
       const FNcode = `${prefix}${newNumber}`;
       const client_name = userName || "Khách lẽ";
-      const FNnote = note || "Không có"
+      const FNnote = note || "Không có";
       const FNstatus = status || 0;
 
       let dataCreat = {
@@ -210,34 +221,37 @@ const AddTransaction = () => {
         client_paid: totalPrice,
         code: FNcode,
         status: FNstatus,
-        note: FNnote
+        note: FNnote,
       };
 
-
-
-      const response = await orderService.hendleCreat(dataCreat);
-      console.log(response);
-      toast.success(response.messges);
+      if (purchasedProducts.length > 0) {
+        const response = await orderService.hendleCreat(dataCreat);
+        console.log(response);
+        toast.success(response.messges);
+      }
     } catch (error) {
       console.log(error);
     }
-      await handleCreatOrderDetail();
+    await handleCreatOrderDetail();
 
+    setPurchasedProducts([]);
+    setTotalPrice(0);
+    setIsLoading(false);
   };
 
   const handleCreatOrderDetail = async () => {
     try {
+      console.log(purchasedProducts.length);
       if (purchasedProducts.length === 0) {
-      toast.error("No products were added to the order!");
-        throw new Error("No products were added to the order!");
+        return toast.error("No products were added to the order!");
       }
-  
+
       const currentCode = await handleGetCode();
       const order_id = currentCode.id;
-  
+
       const promises = purchasedProducts.map(async (item) => {
         console.log(item);
-  
+
         let data = {
           order_id: order_id,
           product_id: item.id,
@@ -247,19 +261,21 @@ const AddTransaction = () => {
           sale_price: item.sale_price,
           type: 0,
         };
-  
+
         try {
           const response = await orderService.handleCreatOrderDetail(data);
           console.log("Response for item", item.id, ":", response);
         } catch (error) {
-          console.error(`Error creating inventory detail for item ${item.id}:`, error);
+          console.error(
+            `Error creating inventory detail for item ${item.id}:`,
+            error
+          );
           throw error; // Ném lỗi ra ngoài để Addorder có thể xử lý
         }
       });
-  
+
       await Promise.all(promises);
       console.log("All inventory details have been created successfully.");
-      
     } catch (error) {
       console.error("Error in handleCreatOrderDetail:", error);
       throw error; // Ném lỗi ra ngoài để Addorder có thể xử lý
@@ -268,6 +284,13 @@ const AddTransaction = () => {
 
   return (
     <>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <Grid container spacing={2}>
         <Grid item xs={2} sx={{ p: 2, m: 2 }}>
           <Typography variant="h5">ĐẶT HÀNG</Typography>
@@ -315,7 +338,9 @@ const AddTransaction = () => {
 
         <Grid item xs={5}>
           <Box sx={{ p: 2, border: 1 }}>
-            <Typography variant="h6">ThanhNam</Typography>
+            <Typography variant="h6">
+              {appContext?.userInfo?.data?.name}
+            </Typography>
             <Typography>Mã kiểm dặt hàng: Mã phiếu tự động</Typography>
             <Typography>
               Tổng SL thực tế:
@@ -332,20 +357,26 @@ const AddTransaction = () => {
               onChange={handleNameChange}
               sx={{ my: 2 }}
             />
-             <FormControl>
-             <Typography variant="p">
-              Trạng thái phiếu
-            </Typography>
-          <RadioGroup
-            aria-labelledby="radio-buttons-group-label"
-            name="radio-buttons-group"
-            value={status}
-            onChange={handleStatusChange}
-          >
-            <FormControlLabel value={1} control={<Radio />} label="Hoàn thành" />
-            <FormControlLabel value={0} control={<Radio />} label="Chưa thanh toán" />
-          </RadioGroup>
-        </FormControl>
+            <FormControl>
+              <Typography variant="p">Trạng thái phiếu</Typography>
+              <RadioGroup
+                aria-labelledby="radio-buttons-group-label"
+                name="radio-buttons-group"
+                value={status}
+                onChange={handleStatusChange}
+              >
+                <FormControlLabel
+                  value={1}
+                  control={<Radio />}
+                  label="Hoàn thành"
+                />
+                <FormControlLabel
+                  value={0}
+                  control={<Radio />}
+                  label="Chưa thanh toán"
+                />
+              </RadioGroup>
+            </FormControl>
             <TextField
               label="Ghi chú"
               variant="outlined"

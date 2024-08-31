@@ -19,13 +19,13 @@ const useRoleCheck = () => {
             }));
             if (updatedUser.role !== 1) {
               localStorage.removeItem("user");
-              navigate("/login");
+              // navigate("/login");
             }
           }
         } catch (error) {
           console.error("Error checking user role:", error);
           localStorage.removeItem("user");
-          navigate("/login");
+          // navigate("/login");
         }
       }
     };

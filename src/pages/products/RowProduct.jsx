@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import {
   Checkbox,
   Collapse,
@@ -28,13 +28,14 @@ function a11yProps(index) {
 
 function RowProduct(props) {
   const { row, isItemSelected, handleClick, labelId, handleDelProduct } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (_, newValue) => {
     setValue(newValue);
   };
+
   return (
     <>
       <TableRow

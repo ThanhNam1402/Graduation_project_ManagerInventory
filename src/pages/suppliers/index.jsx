@@ -7,13 +7,14 @@ import FilterRadio from "../../components/filters/FilterRadio";
 import ListSuppliers from "./ListSuppliers";
 import ActionCustomer from "./ActionSupplier";
 import { ListStatus } from "../../utils/constain";
-
 import CsUsePagination from "../../hook/CsUsePagination";
+import AddSupplier from "./AddSupplier";
 
 function Suppliers(props) {
   const [filters, setFilters] = useState({
     status: 0,
   });
+  const [openModal, setOpenModal] = useState(false);
   const [keyWord, setKeyWord] = useState("");
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
@@ -38,8 +39,13 @@ function Suppliers(props) {
     }
   };
 
+  // open modal
+  const handleOpenModal = () => {
+    setOpenModal(!openModal);
+  };
+
   return (
-    <div>
+    <>
       <Stack direction="row">
         <Box
           sx={{
@@ -69,7 +75,10 @@ function Suppliers(props) {
             width: "100%",
           }}
         >
-          <ActionCustomer handleSearch={handleSearch} />
+          <ActionCustomer
+            handleSearch={handleSearch}
+            handleOpenModal={handleOpenModal}
+          />
           <ListSuppliers
             keyWord={keyWord}
             filters={filters}
@@ -79,7 +88,8 @@ function Suppliers(props) {
           />
         </Box>
       </Stack>
-    </div>
+      <AddSupplier openModal={openModal} handleOpenModal={handleOpenModal} />
+    </>
   );
 }
 

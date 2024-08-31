@@ -5,7 +5,7 @@ import Navbar from "./NavBar";
 import { Box } from "@mui/material";
 function Header() {
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box>
       <TopBar />
       <Navbar />
     </Box>

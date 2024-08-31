@@ -7,21 +7,21 @@ import FilterRadio from "../../components/filters/FilterRadio";
 import ListCustomers from "./ListCustomers";
 import ActionCustomer from "./ActionCusomter";
 import { ListStatus, ListCustomersType } from "../../utils/constain";
+import AddCustomer from "./AddCustomer";
 
 function Customers(props) {
   const [filters, setFilters] = useState({
     status: 0,
     customer_type: 0,
   });
-  const [keyWord, setKeyWord] = useState("");
 
+  const [openModal, setOpenModal] = useState(false);
+  const [keyWord, setKeyWord] = useState("");
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
     CsUsePagination(0, 5);
 
   const handleSearch = (value) => {
-    console.log("value", value);
     setPage(0);
-
     setKeyWord(value);
   };
 
@@ -43,9 +43,14 @@ function Customers(props) {
     }
   };
 
+  // open modal
+  const handleOpenModal = () => {
+    setOpenModal(!openModal);
+  };
+
   console.log(filters);
   return (
-    <div>
+    <>
       <Stack direction="row">
         <Box
           sx={{
@@ -58,7 +63,7 @@ function Customers(props) {
           }}
         >
           <Box>
-            <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
+            <Typography sx={{ mb: 3 }} variant="h5" component={"h5"}>
               Khách Hàng
             </Typography>
 
@@ -82,7 +87,10 @@ function Customers(props) {
             width: "100%",
           }}
         >
-          <ActionCustomer handleSearch={handleSearch} />
+          <ActionCustomer
+            handleSearch={handleSearch}
+            handleOpenModal={handleOpenModal}
+          />
           <ListCustomers
             keyWord={keyWord}
             filters={filters}
@@ -92,7 +100,8 @@ function Customers(props) {
           />
         </Box>
       </Stack>
-    </div>
+      <AddCustomer openModal={openModal} handleOpenModal={handleOpenModal} />
+    </>
   );
 }
 

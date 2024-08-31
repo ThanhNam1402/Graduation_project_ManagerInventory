@@ -28,6 +28,8 @@ export default function ListProducts(props) {
     handleRequestSort,
   } = props;
 
+
+  
   const [data, setData] = useState([]);
   const [totalPage, setTotalPage] = useState(0); // total page
   const [selected, setSelected] = useState([]);
@@ -69,7 +71,6 @@ export default function ListProducts(props) {
       console.log(error);
     }
   };
-
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {

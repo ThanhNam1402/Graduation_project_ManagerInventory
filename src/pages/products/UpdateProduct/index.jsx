@@ -13,6 +13,7 @@ import {
   Dialog,
   Checkbox,
 } from "@mui/material";
+import { useEffect, useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -21,35 +22,75 @@ import Previews from "../PreviewImages";
 import { productService } from "../../../services/product.service";
 import { delay } from "../../../utils/func";
 
-function AddProduct(props) {
+function UpdateProduct(props) {
   const navigate = useNavigate();
-  let { openModal, handleOpenModal } = props;
 
+  let { id, openModal, handleOpenModal } = props;
+
+  console.log(id);
+
+  const [checked, setChecked] = useState(false);
+  const [status, setStatus] = useState(null);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+    if (checked) {
+      setStatus(1);
+    } else {
+      setStatus(2);
+    }
+  };
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    if (Number(id)) {
+      handelGetOne();
+    }
+  }, []);
+
+  const handelGetOne = async () => {
+    let res = await productService.handleGetOneProduct(id);
+
+    if (res && res.success) {
+      reset(res.data);
+      setStatus(res?.data?.status);
+
+      if (res?.data?.status === 2) {
+        setChecked(true);
+      }
+    }
+  };
 
   const _onSubmit = async (data) => {
     console.log(data);
     let file = data.file[0];
-    try {
-      setIsLoading(true);
-      await delay(500);
-      let res = await productService.handleNewProducts({ ...data, file });
 
-      if (res && res.success) {
-        toast.success(res?.message);
-        setIsLoading(false);
-      } else {
-        toast.warning(res?.message);
+    if (id) {
+      try {
+        setIsLoading(true);
+        await delay(1000);
+        let res = await productService.handleUpdateProducts(
+          { ...data, file, status },
+          id
+        );
+
+        if (res && res.success) {
+          toast.success(res?.message);
+          setIsLoading(false);
+
+          navigate("/system/products");
+        } else {
+          toast.warning(res?.message);
+        }
+      } catch (error) {
+        toast.error("Error from server");
         setIsLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error from server");
-      setIsLoading(false);
     }
   };
 
@@ -68,7 +109,9 @@ function AddProduct(props) {
                 alignItems="center"
                 justifyContent={"space-between"}
               >
-                <Typography variant="h6">Thêm Mới Sản Phẩm</Typography>
+                <Typography variant="h6">
+                  {id ? "Chỉnh Sửa Sản Phẩm" : "Thêm Mới Sản Phẩm"}
+                </Typography>
               </Stack>
             </div>
 
@@ -198,6 +241,39 @@ function AddProduct(props) {
                       </FormControl>
                     </Stack>
 
+                    {!id && (
+                      <Stack mb={2} direction="row" alignItems="center">
+                        <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
+                          Tồn Kho
+                        </InputLabel>
+                        <FormControl fullWidth>
+                          <TextField
+                            {...register("onHand", {
+                              required: {
+                                value: true,
+                                message: "Trường Dữ Liệu Không Được Trống !!",
+                              },
+                            })}
+                            type="number"
+                            InputProps={{ inputProps: { min: 0 } }}
+                            hiddenLabel
+                            fullWidth
+                            id="onHand"
+                            margin="dense"
+                            variant="standard"
+                            placeholder="Nhập Bán Vốn Sản Phẩm"
+                            size="small"
+                          />
+
+                          {errors.onHand && (
+                            <Typography color="error" variant="body2">
+                              {errors?.onHand?.message}
+                            </Typography>
+                          )}
+                        </FormControl>
+                      </Stack>
+                    )}
+
                     <Previews />
 
                     <Stack my={2} direction="row" alignItems="center">
@@ -214,7 +290,58 @@ function AddProduct(props) {
                   </Box>
                 </Grid>
 
-                <Grid item xs={4}></Grid>
+                <Grid item xs={4}>
+                  <Paper elevation={2} sx={{ px: 2, py: 3 }}>
+                    <Typography
+                      variant="button"
+                      component={"p"}
+                      sx={{ borderBottom: 1 }}
+                    >
+                      Phân Loại
+                    </Typography>
+
+                    <Stack my={2} direction="row" alignItems="center">
+                      <InputLabel sx={{ minWidth: 100 }}>Nhóm hàng</InputLabel>
+                      <FormControl size="small" sx={{ m: 1 }} fullWidth>
+                        <Select
+                          displayEmpty
+                          defaultValue={10}
+                          inputProps={{ "aria-label": "Without label" }}
+                          {...register("category_id", {
+                            required: {
+                              value: true,
+                              message: "Trường Dữ Liệu Không Được Trống !!",
+                            },
+                          })}
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value={10}>Thời Trang Nam</MenuItem>
+                          <MenuItem value={2}>Thời Trang Nữ</MenuItem>
+                        </Select>
+                        {errors.category_id && (
+                          <Typography color="error" variant="body2">
+                            {errors?.category_id?.message}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Stack>
+
+                    {id && (
+                      <Stack my={2} direction="row" alignItems="center">
+                        <InputLabel sx={{ minWidth: 100 }}>
+                          Ngừng kinh doanh
+                        </InputLabel>
+                        <Checkbox
+                          checked={checked}
+                          onChange={handleChange}
+                          inputProps={{ "aria-label": "controlled" }}
+                        />
+                      </Stack>
+                    )}
+                  </Paper>
+                </Grid>
               </Grid>
             </div>
             <Stack
@@ -223,14 +350,10 @@ function AddProduct(props) {
               justifyContent={"flex-end"}
               alignItems={"center"}
             >
-              <Button type="submit" variant="contained" color="success">
+              <Button type="submit" variant="contained">
                 Lưu
               </Button>
-              <Button
-                onClick={handleOpenModal}
-                variant="outlined"
-                color="success"
-              >
+              <Button onClick={handleOpenModal} variant="outlined">
                 Hủy
               </Button>
             </Stack>
@@ -241,4 +364,4 @@ function AddProduct(props) {
   );
 }
 
-export default AddProduct;
+export default memo(UpdateProduct);

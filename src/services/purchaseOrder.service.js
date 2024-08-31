@@ -12,14 +12,14 @@ export const purchaseOrderService = {
         return api.get(`/api/purchaseorders/one/${id}`)
     },
 
-
-
     handleGetOrderProducts(id) {
         return api.get(`/api/purchaseorders/detail/${id}`)
     },
+    
     handleGetComplete(keyWord) {
         return api.get(`/api/purchaseorders/autocomplete?keyword=${keyWord}`)
     },
+    
     handleAddPurChaseOrder(dataPurChase, dataDetail) {
         return api.post(`/api/purchaseorders/new`, {
             dataPurChase: dataPurChase,

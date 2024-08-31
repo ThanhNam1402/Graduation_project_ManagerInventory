@@ -32,7 +32,6 @@ function TableAddProducts(props) {
 
   useEffect(() => {
     const newData = [...data];
-
     if (value) {
       let checkID = data.find((item) => item.id === value.id);
       if (checkID) {

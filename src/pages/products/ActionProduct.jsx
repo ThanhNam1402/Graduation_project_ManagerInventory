@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import { Link } from "react-router-dom";
 import {
   Button,
   Stack,
@@ -9,10 +7,8 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
-  CircularProgress,
   Paper,
   Box,
-  Backdrop,
   Typography,
   Fade,
 } from "@mui/material";
@@ -21,26 +17,24 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
+
 import { delay } from "../../utils/func";
-
 import SearchProduct from "../../components/filters/SearchProduct";
-
 import { fileService } from "../../services/file.service";
 
 function ActionProduct(props) {
   const { t } = useTranslation("action");
-  let { handleSearch } = props;
-  const [openBackDrop, setOpenBackDrop] = useState(false);
+  let { handleSearch, handleOpenModal } = props;
 
+  const [bannerOpen, setBannerOpen] = useState(false);
   const [exportFileName, setExportFileName] = useState(null);
-
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const [bannerOpen, setBannerOpen] = useState(false);
   const closeBanner = () => {
     setBannerOpen(false);
     setExportFileName(null);
@@ -99,11 +93,10 @@ function ActionProduct(props) {
         spacing={1}
       >
         <Button
-          component={Link}
           variant="contained"
-          startIcon={<AddRoundedIcon />}
-          to="new"
           color="success"
+          startIcon={<AddRoundedIcon />}
+          onClick={handleOpenModal}
         >
           {t("new")}
         </Button>
@@ -152,17 +145,6 @@ function ActionProduct(props) {
           </Menu>
         </div>
       </Stack>
-
-      <Backdrop
-        sx={{
-          color: "#fff",
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          marginLeft: "0px !important",
-        }}
-        open={openBackDrop}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
 
       <Fade appear={false} in={bannerOpen}>
         <Paper

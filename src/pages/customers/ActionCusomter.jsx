@@ -21,7 +21,7 @@ import SearchProduct from "../../components/filters/SearchProduct";
 function ActionCustomer(props) {
   const { t } = useTranslation("action");
 
-  let { handleSearch } = props;
+  let { handleSearch, handleOpenModal } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -50,11 +50,10 @@ function ActionCustomer(props) {
         spacing={1}
       >
         <Button
-          component={Link}
           variant="contained"
-          startIcon={<AddRoundedIcon />}
-          to="add"
           color="success"
+          startIcon={<AddRoundedIcon />}
+          onClick={handleOpenModal}
         >
           {t("new")}
         </Button>

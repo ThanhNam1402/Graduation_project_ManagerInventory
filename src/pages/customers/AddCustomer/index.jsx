@@ -5,23 +5,19 @@ import {
   Stack,
   FormControl,
   InputLabel,
-  MenuItem,
-  Select,
   Box,
   Typography,
   Button,
   Dialog,
-  Checkbox,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import Previews from "../PreviewImages";
 import { productService } from "../../../services/product.service";
 import { delay } from "../../../utils/func";
 
-function AddProduct(props) {
+function AddCustomer(props) {
   const navigate = useNavigate();
   let { openModal, handleOpenModal } = props;
 
@@ -68,7 +64,7 @@ function AddProduct(props) {
                 alignItems="center"
                 justifyContent={"space-between"}
               >
-                <Typography variant="h6">Thêm Mới Sản Phẩm</Typography>
+                <Typography variant="h6">Thêm Mới Khách Hàng</Typography>
               </Stack>
             </div>
 
@@ -78,7 +74,7 @@ function AddProduct(props) {
                   <Box elevation={2} sx={{ p: 2, mb: 2 }}>
                     <Stack mb={2} direction="row" alignItems="center">
                       <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Tên Sản Phẩm
+                        Tên Khách Hàng
                       </InputLabel>
                       <FormControl fullWidth>
                         <TextField
@@ -107,7 +103,7 @@ function AddProduct(props) {
 
                     <Stack mb={2} direction="row" alignItems="center">
                       <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Mã Sản Phẩm
+                        Điện thoại
                       </InputLabel>
                       <TextField
                         {...register("code")}
@@ -121,25 +117,9 @@ function AddProduct(props) {
                       />
                     </Stack>
 
-                    <Stack mb={2} direction="row" alignItems="center">
-                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Mã vạch Sản Phẩm
-                      </InputLabel>
-                      <TextField
-                        {...register("barcode")}
-                        hiddenLabel
-                        fullWidth
-                        id="code"
-                        margin="dense"
-                        variant="standard"
-                        placeholder="Nhập Mã vạch Sản Phẩm"
-                        size="small"
-                      />
-                    </Stack>
-
                     <Stack my={2} direction="row" alignItems="center">
                       <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Giá Vốn Sản Phẩm
+                        Email
                       </InputLabel>
                       <FormControl fullWidth>
                         <TextField
@@ -169,7 +149,7 @@ function AddProduct(props) {
 
                     <Stack mb={2} direction="row" alignItems="center">
                       <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Giá Bán Sản Phẩm
+                        Facebook
                       </InputLabel>
                       <FormControl fullWidth>
                         <TextField
@@ -198,7 +178,37 @@ function AddProduct(props) {
                       </FormControl>
                     </Stack>
 
-                    <Previews />
+
+                    <Stack mb={2} direction="row" alignItems="center">
+                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
+                        Mã số thuế
+                      </InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          {...register("sale_price", {
+                            required: {
+                              value: true,
+                              message: "Trường Dữ Liệu Không Được Trống !!",
+                            },
+                          })}
+                          type="number"
+                          hiddenLabel
+                          InputProps={{ inputProps: { min: 0 } }}
+                          fullWidth
+                          id="code"
+                          margin="dense"
+                          variant="standard"
+                          placeholder="Nhập Bán Vốn Sản Phẩm"
+                          size="small"
+                        />
+
+                        {errors.sale_price && (
+                          <Typography color="error" variant="body2">
+                            {errors?.sale_price?.message}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Stack>
 
                     <Stack my={2} direction="row" alignItems="center">
                       <TextField
@@ -223,14 +233,10 @@ function AddProduct(props) {
               justifyContent={"flex-end"}
               alignItems={"center"}
             >
-              <Button type="submit" variant="contained" color="success">
+              <Button type="submit" variant="contained">
                 Lưu
               </Button>
-              <Button
-                onClick={handleOpenModal}
-                variant="outlined"
-                color="success"
-              >
+              <Button onClick={handleOpenModal} variant="outlined">
                 Hủy
               </Button>
             </Stack>
@@ -241,4 +247,4 @@ function AddProduct(props) {
   );
 }
 
-export default AddProduct;
+export default AddCustomer;

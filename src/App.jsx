@@ -10,32 +10,33 @@ import useRoleCheck from "./auth/checkRole";
 import { useAppContext } from "./context/AppContent";
 
 function App() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const appContext = useAppContext();
+  // const navigate = useNavigate();
+  // const location = useLocation();
+  // const appContext = useAppContext();
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  useRoleCheck();
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // useRoleCheck();
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    setIsAuthenticated(!!storedUser);
-
-    if (!storedUser && location.pathname !== path.LOGIN) {
-      navigate(path.LOGIN);
-    } else {
-      appContext.setUserInfo(JSON.parse(storedUser));
-    }
-  }, [navigate, location.pathname]);
+  // useEffect(() => {
+    // const storedUser = localStorage.getItem("user");
+    // setIsAuthenticated(!!storedUser);
+// 
+    // if (!storedUser && location.pathname !== path.LOGIN) {
+    //   navigate(path.LOGIN);
+    // } else {
+    //   appContext.setUserInfo(JSON.parse(storedUser));
+    // }
+  // }, [navigate, location.pathname]);
 
   return (
     <>
       <Routes>
+      <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
+
         <Route index element={<Login />} />
         <Route path={path.LOGIN} element={<Login />} />
-        {isAuthenticated && (
-          <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
-        )}
+        {/* {isAuthenticated && (/ */}
+        {/* )} */}
         {/* {!isAuthenticated && <Route path="*" element={<Login />} />} */}
       </Routes>
 

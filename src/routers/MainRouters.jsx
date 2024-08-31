@@ -26,12 +26,18 @@ function MainRouters(props) {
   return (
     <div>
       <Header />
-      <Container maxWidth="xl">
+      <Container
+        maxWidth="xl"
+        sx={{
+          backgroundColor: "primary.light",
+          minHeight: "89vh",
+          padding: 3,
+        }}
+      >
         <Routes>
           <Route index element={<DashBoard />} />
 
           <Route path="products" element={<Product />} />
-          <Route path="products/new" element={<AddProduct />} />
           <Route path="products/:id" element={<AddProduct />} />
 
           <Route path="pricebook" element={<PriceBook />} />

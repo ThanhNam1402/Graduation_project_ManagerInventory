@@ -5,28 +5,26 @@ const theme = extendTheme({
     light: {
       palette: {
         primary: {
-          main: "#2196f3",
-          light: "#fff",
-          dark: "#333",
-          contrastText: "#fff",
+          main: '#2196f3',
+          light: '#e8eaed',
+          dark: '#333',
+          contrastText: '#fff',
         },
         warning: {
-          main: "#76ff03",
-          light: "#ccff90",
-          dark: "#ccff90",
-          contrastText: "#333",
+          main: '#76ff03',
+          light: '#ccff90',
+          dark: '#ccff90',
+          contrastText: '#333',
         },
         success: {
-          main: "#4caf50",
-          light: "#81c784",
-          dark: "#81c784",
-          contrastText: "#fff",
-        },
+          main: '#66bb6a',
+          light: '#81c784',
+          dark: '#81c784',
+          contrastText: '#fff',
+        }
       },
-
       shadows: [
         "none",
-        // 0 2px 6px rgba(var(--v-shadow-key-umbra-color), .14), 0 0 transparent, 0 0 transparent;
         "0px 2px 6px rgba(0,0,0,0.14), 0px 0px 0px 0px rgba(0,0,0,0),0px 0px 0px 0px rgba(0,0,0,0)",
         "0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)",
         "0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12)",
@@ -56,14 +54,20 @@ const theme = extendTheme({
     dark: {
       palette: {
         primary: {
-          main: "#bbdefb",
-          light: "#fff",
-          dark: "#fff",
-          contrastText: "#333",
+          main: '#42a5f5',
+          light: '#333',
+          dark: '#fff',
+          contrastText: '#333',
         },
-      },
-    },
-  },
+        success: {
+          main: '#66bb6a',
+          light: '#81c784',
+          dark: '#81c784',
+          contrastText: '#fff',
+        }
+      }
+    }
+  }
 });
 
 export default theme;

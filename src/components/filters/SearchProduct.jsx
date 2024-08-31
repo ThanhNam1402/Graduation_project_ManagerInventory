@@ -1,6 +1,10 @@
-import React from "react";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
+import {
+  Paper,
+  TextField,
+  InputAdornment,
+  InputBase,
+  IconButton,
+} from "@mui/material";
 import _ from "lodash";
 
 import { useCallback } from "react";
@@ -19,20 +23,40 @@ function CsSearch(props) {
   );
   return (
     <div>
-      <TextField
-        sx={{ width: { xs: "100%", sm: "480px" } }}
-        id="input-with-icon-textfield"
-        size="small"
-        onChange={(event) => handleOnChange(event)}
-        placeholder= {t("search")}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
+      <Paper
+        component="form"
+        sx={{
+          p: "2px 4px",
+          display: "flex",
+          alignItems: "center",
+          width: 400,
+          borderRadius: 2,
         }}
-      />
+      >
+        <IconButton sx={{ p: "10px" }} aria-label="menu">
+          <SearchIcon />
+        </IconButton>
+        <InputBase
+          onChange={(event) => handleOnChange(event)}
+          sx={{ ml: 1, flex: 1 }}
+          placeholder="Tìm Kiếm..."
+          inputProps={{ "aria-label": "Tìm Kiếm..." }}
+        />
+
+        {/* <TextField
+          sx={{ width: { xs: "100%", sm: "480px" } }}
+          id="input-with-icon-textfield"
+          size="small"
+          placeholder={t("search")}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        /> */}
+      </Paper>
     </div>
   );
 }

@@ -1,16 +1,23 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { TextField, Button, Grid, Box, Typography } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import {
+  AccountCircle,
+  Visibility,
+  VisibilityOff,
+  Lock,
+} from "@mui/icons-material";
+
 import { useForm } from "react-hook-form";
-
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-
-import { userService } from "../services/user.service";
-
 import { useAppContext } from "../context/AppContent";
-
 import "./login.scss";
 
 function Login() {
@@ -18,34 +25,7 @@ function Login() {
 
   console.log(appContext);
 
-  const [intervalId, setIntervalId] = useState(null);
   const navigate = useNavigate();
-
-  const handleLoginSuccess = async (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
-    const userEmail = decoded.email;
-
-    if (decoded) {
-      let res = await userService.getUserInfo(userEmail);
-      if (res && res.success) {
-        let userInfo = {
-          data: res.data,
-          token: res.token,
-          picture: decoded.picture,
-        };
-        localStorage.setItem("user", JSON.stringify(userInfo));
-        appContext.setUserInfo(userInfo);
-
-        navigate("/system");
-      } else {
-        navigate("/login");
-      }
-    }
-  };
-
-  const handleLoginError = () => {
-    console.log("Login Failed");
-  };
 
   const {
     register,
@@ -58,144 +38,103 @@ function Login() {
     navigate("/system");
   };
 
-  useEffect(() => {
-    return () => {
-      // Clean up interval on component unmount
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [intervalId]);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   return (
     <>
       <Box
-        className="card shadow-lg gradient-background"
         sx={{
-          height: "100vh",
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          background: "linear-gradient(to bottom, #ebfaf7 0%, #ffd1ff 100%)",
         }}
       >
         <Box
+          component="form"
           onSubmit={handleSubmit(onSubmit)}
           sx={{
-            mt: 4,
-            p: 4,
+            background:
+              "linear-gradient(to bottom right, #cffffa 50%, #faebf1 50%)",
+            padding: 4,
+            borderRadius: 2,
+            boxShadow: 3,
             textAlign: "center",
-            borderRadius: "15px",
-            boxShadow: "0px 3px 10px rgba(0, 0, 0, 10)",
+            maxWidth: "400px",
+            width: "100%",
           }}
-          component={"form"}
-          className="box-form"
         >
-          <Grid container spacing={3}>
-            <Grid item xs={4} md={3} sx={{ textAlign: "center" }}>
-              <img
-                src="https://i.pinimg.com/564x/44/6d/93/446d93702f14f2c09549fdce5500b8ec.jpg"
-                alt="login"
-                className="img-fluid"
-                style={{ width: 350, height: "auto" }}
-              />
-            </Grid>
-            <Grid item xs={12} md={9} sx={{ maxWidth: 600 }}>
-              <Typography
-                variant="h3"
-                component="h3"
-                className="mint"
-                sx={{
-                  fontSize: "3rem",
-                  fontWeight: "bold",
-                  letterSpacing: "1px",
-                  color: "transparent",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  backgroundImage:
-                    "linear-gradient(to right,  #00a2ff , #730ffe ,#0fbafe, #0f7ffe, #09f1b8   )",
-                  WebkitTextStrokeWidth: "1px",
-                  WebkitTextStrokeColor: "transparent",
-                  WebkitTextFillColor: "transparent",
-                  WebkitTextStroke: "1px transparent",
-                  marginBottom: "15px",
-                }}
-              >
-                Login Form
-              </Typography>
-
-              <Grid container spacing={0}>
-                <TextField
-                  sx={{ mb: 3 }}
-                  label="Email"
-                  variant="outlined"
-                  fullWidth
-                  {...register("email", {
-                    required: true,
-                    pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  })}
-                  error={!!errors.email}
-                  helperText={errors.email && "Email không được để trống!"}
-                />
-
-                <TextField
-                  sx={{ mb: 3 }}
-                  label="Password"
-                  variant="outlined"
-                  fullWidth
-                  {...register("password", {
-                    required: true,
-                    pattern: /^(?=.*[A-Za-z\d])[A-Za-z\d]{6,}$/,
-                  })}
-                  error={!!errors.password}
-                  helperText={
-                    errors.password && "Password không được để trống!"
-                  }
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  fullWidth
-                >
-                  Đăng nhập
-                </Button>
-              </Grid>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  maxWidth: "100%",
-                }}
-              >
-                <Typography
-                  variant="p"
-                  component="h3"
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Box component="div" sx={{ mt: 2 }}>
-                    Hoặc
-                  </Box>
-                  <Box
-                    sx={{
-                      mt: 2,
-                    }}
+          <Typography variant="h4" sx={{ mb: 2, fontWeight: "bold" }}>
+            Log In
+          </Typography>
+          <Typography variant="subtitle1" sx={{ mb: 3 }}>
+            login here using your username and password
+          </Typography>
+          <TextField
+            label="Email"
+            fullWidth
+            variant="outlined"
+            placeholder="@UserName"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircle />
+                </InputAdornment>
+              ),
+            }}
+            {...register("email", {
+              required: "Email không được để trống!",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Địa chỉ email không hợp lệ!",
+              },
+            })}
+            error={!!errors.email}
+            helperText={errors.email && errors.email.message}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Password"
+            fullWidth
+            variant="outlined"
+            type={showPassword ? "text" : "password"}
+            placeholder="Password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Lock />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
                   >
-                    <GoogleLogin
-                      onSuccess={handleLoginSuccess}
-                      onError={handleLoginError}
-                      className="Login row"
-                    />
-                  </Box>
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            {...register("password", {
+              required: "Password không được để trống!",
+              minLength: {
+                value: 6,
+                message: "Mật khẩu phải có ít nhất 6 ký tự!",
+              },
+            })}
+            error={!!errors.password}
+            helperText={errors.password && errors.password.message}
+            sx={{ mb: 2 }}
+          />
+          <Button type="submit" variant="outlined" color="primary" fullWidth>
+            Log In
+          </Button>
         </Box>
       </Box>
     </>

@@ -385,20 +385,6 @@ function ListInventoryCount(props) {
                                     sx={{ maxWidth: "30%" }}
                                     className="print-hidden"
                                   >
-                                    {/* <Grid item xs={6}>
-                                      <Typography sx={{ mb: 1 }}>
-                                        Số lượng thực:
-                                      </Typography>
-                                      <Typography sx={{ mb: 1 }}>
-                                        Số lượng lệch tăng:
-                                      </Typography>
-                                      <Typography sx={{ mb: 1 }}>
-                                        Số lượng lệch giảm:
-                                      </Typography>
-                                      <Typography sx={{ mb: 1 }}>
-                                        Số lượng chênh lệch:
-                                      </Typography>
-                                    </Grid> */}
                                     <Grid item xs={6}>
                                       <Typography sx={{ mb: 1 }}>
                                         {row.SoLuongThucTe}

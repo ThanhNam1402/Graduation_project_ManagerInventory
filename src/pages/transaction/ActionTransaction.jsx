@@ -12,10 +12,7 @@ import { useTranslation } from "react-i18next";
 function ActionTransaction({ selectedCount }) {
   const { t } = useTranslation("order");
 
-  const handleSearch = (query) => {
-    console.log("Tìm kiếm:", query);
-    // Nghiệp vụ Search ở đây!
-  };
+ 
 
   const navigate = useNavigate();
 

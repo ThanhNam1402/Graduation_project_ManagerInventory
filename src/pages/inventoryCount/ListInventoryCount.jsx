@@ -8,29 +8,28 @@ import {
   TableRow,
   Paper,
   Checkbox,
-  Button,
   Box,
   Typography,
   IconButton,
   Collapse,
   Grid,
-  Divider,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
-import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
-import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 import csUseQueryString from "../../hook/csUseQueryString";
 import { invertoryService } from "./../../services/invertory.service";
 import { toast } from "react-toastify";
 import { handleformat } from "../../utils/format";
-import { usePrint } from "../../utils/print";
+import { usePrint } from "../../utils/print/print";
 import { useTranslation } from "react-i18next";
 
+import Information from "./Information";
+import Action from "./Action";
+import Product_details from "./ProductDetails";
+import Payment_summary from "./PaymentSummary";
+import Print_Header from "../../utils/print/Header";
+import Print_Footer from "../../utils/print/Footer";
 
 function ListInventoryCount(props) {
   const { t } = useTranslation("inventorycount");
@@ -154,18 +153,28 @@ function ListInventoryCount(props) {
                     }}
                   />
                 </TableCell>
-                <TableCell>{t("inventorycount.table.tableHead.code")}</TableCell>
-                <TableCell>{t("inventorycount.table.tableHead.time")}</TableCell>
-                <TableCell>{t("inventorycount.table.tableHead.quantity")}</TableCell>
-                <TableCell>{t("inventorycount.table.tableHead.total")}</TableCell>
-                <TableCell>{t("inventorycount.table.tableHead.status")}</TableCell>
+                <TableCell>
+                  {t("inventorycount.table.tableHead.code")}
+                </TableCell>
+                <TableCell>
+                  {t("inventorycount.table.tableHead.time")}
+                </TableCell>
+                <TableCell>
+                  {t("inventorycount.table.tableHead.quantity")}
+                </TableCell>
+                <TableCell>
+                  {t("inventorycount.table.tableHead.total")}
+                </TableCell>
+                <TableCell>
+                  {t("inventorycount.table.tableHead.status")}
+                </TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
               {data.map((row, index) => (
                 <React.Fragment key={index}>
-                  <TableRow onClick={() => handleRowClick(row.id)}>
+                  <TableRow>
                     <TableCell>
                       <IconButton
                         aria-label="expand row"
@@ -185,7 +194,6 @@ function ListInventoryCount(props) {
                         onChange={() => handleCheckboxChange(row.id)}
                       />
                     </TableCell>
-
                     <TableCell>{row.code}</TableCell>
                     <TableCell>
                       {handleformat.formatDate(row.createdAt)}
@@ -215,31 +223,25 @@ function ListInventoryCount(props) {
                               <span className="screen-text">Thông tin</span>
                             </Typography>
                             {/* HEADER PHIẾU IN */}
-                            <Box sx={{ mb: 3 }} className="print-text">
-                              <Typography variant="h6" component="div">
-                                Công ty TNHH 2 thành viên
-                              </Typography>
-                              <Typography variant="body1">
-                                Địa chỉ: Đường Lê Bình, Phường Hưng Lợi, Quận
-                                Ninh Kiều, TP Cần Thơ
-                              </Typography>
-                              <Typography variant="body1">
-                                Số điện thoại: 0365850920
-                              </Typography>
-                            </Box>
+                            <Print_Header />
                             <Box
                               sx={{ mb: 3, textAlign: "center" }}
                               className="print-text"
                             >
                               <Typography
                                 variant="h4"
-                                component="h5"
-                                gutterBottom
+                                component="h2"
+                                align="center"
+                                sx={{
+                                  fontFamily: "Times New Roman",
+                                  fontWeight: "bold",
+                                  color: "#2196f3",
+                                }}
                               >
-                                Phiếu in
+                                Phiếu Kiểm Kho
                               </Typography>
                             </Box>
-
+                            {/* Body PHIẾU IN */}
                             <Box sx={{ mt: 3 }} className="print-text">
                               <Typography
                                 variant="h5"
@@ -250,57 +252,7 @@ function ListInventoryCount(props) {
                               </Typography>
                             </Box>
                             <hr className="print-text" />
-                            <Grid container spacing={3}>
-                              <Grid item xs={8}>
-                                <Grid container spacing={3}>
-                                  <Grid item xs={6}>
-                                    <Typography sx={{ p: 1 }}>
-                                      Mã kiểm kho: {row.code}
-                                    </Typography>
-                                    <Divider />
-                                    <Typography sx={{ p: 1 }}>
-                                      Thời gian:{" "}
-                                      {handleformat.formatDate(row.createdAt)}
-                                    </Typography>
-                                    <Divider />
-                                    <Typography sx={{ p: 1 }}>
-                                      Ngày cân bằng:{" "}
-                                      {handleformat.formatDate(row.createdAt)}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={6}>
-                                    <Typography sx={{ p: 1 }}>
-                                      Trạng thái:{" "}
-                                      {row.status === 0
-                                        ? "Đã cân bằng"
-                                        : "Chưa cân bằng"}
-                                    </Typography>
-                                    <Divider />
-                                    <Typography sx={{ p: 1 }}>
-                                      Người tạo: ThanhNam
-                                    </Typography>
-                                    <Divider />
-                                    <Typography sx={{ p: 1 }}>
-                                      Người cân bằng: ThanhNam
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-
-                              <Grid item xs={0.5}>
-                                <Divider
-                                  orientation="vertical"
-                                  sx={{ height: "100%" }}
-                                />
-                              </Grid>
-
-                              <Grid item xs={3.5}>
-                                <Typography sx={{ p: 1 }}>
-                                  Phiếu kiểm kho được tạo tự động khi thêm mới
-                                  Hàng hóa: {row.code}
-                                </Typography>
-                              </Grid>
-                            </Grid>
+                            <Information row={row} />
                             <hr className="print-text" />
                             <Box sx={{ mt: 3 }} className="print-text">
                               <Typography
@@ -312,59 +264,9 @@ function ListInventoryCount(props) {
                               </Typography>
                             </Box>
                             <TableContainer component={Paper} sx={{ mt: 3 }}>
-                              <Table>
-                                <TableHead>
-                                  <TableRow>
-                                    <TableCell>Mã hàng</TableCell>
-                                    <TableCell>Tên hàng</TableCell>
-                                    <TableCell>Số lượng</TableCell>
-                                    <TableCell>Tổng</TableCell>
-                                    <TableCell>Ghi chú</TableCell>
-                                  </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                  {row.items.map((item, itemIndex) => (
-                                    <TableRow key={itemIndex}>
-                                      <TableCell>
-                                        {item.code ? item.code : "No data"}
-                                      </TableCell>
-                                      <TableCell>
-                                        {item.name ? item.name : "No data"}
-                                      </TableCell>
-                                      <TableCell>{item.qty}</TableCell>
-                                      <TableCell>
-                                        {handleformat.formatPrice(
-                                          item.qty * item.sale_price
-                                        )}
-                                      </TableCell>
-                                      <TableCell>
-                                        {item.note ? item.note : "No data"}
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
+                              <Product_details row={row.items} />
                             </TableContainer>
 
-                            {/* FOOTER PHIẾU IN */}
-                            <Box sx={{ mt: 3 }} className="print-text">
-                              <Grid container spacing={3}>
-                                <Grid item xs={7}>
-                                  <Grid container spacing={3}>
-                                    <Grid item xs={6}></Grid>
-                                  </Grid>
-                                </Grid>
-                                <Grid item xs={5}>
-                                  <Typography sx={{ p: 1 }}>
-                                    Cần Thơ ngày{" "}
-                                    {handleformat.formatDate(row.createdAt)}
-                                  </Typography>
-                                  <Typography sx={{ p: 1 }}>
-                                    Người tạo phiếu: {user.name}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </Box>
                             <Grid
                               container
                               spacing={2}
@@ -379,80 +281,17 @@ function ListInventoryCount(props) {
                                     width: "100%",
                                   }}
                                 >
-                                  <Grid
-                                    container
-                                    spacing={3}
-                                    sx={{ maxWidth: "30%" }}
-                                    className="print-hidden"
-                                  >
-                                    <Grid item xs={6}>
-                                      <Typography sx={{ mb: 1 }}>
-                                        {row.SoLuongThucTe}
-                                      </Typography>
-                                      <Typography sx={{ mb: 1 }}>
-                                        {row.SLLechTang}
-                                      </Typography>
-                                      <Typography sx={{ mb: 1 }}>
-                                        {row.SLLechGiam}
-                                      </Typography>
-                                      <Typography sx={{ mb: 1 }}>
-                                        {row.TongChenhLech}
-                                      </Typography>
-                                    </Grid>
-                                  </Grid>
+                                  <Payment_summary row={row} />
                                 </Box>
+                                {/* FOOTER PHIẾU IN */}
+                                <Print_Footer row={row} user={user} />
                               </Grid>
                             </Grid>
-                            <Box
-                              sx={{
-                                mt: 2,
-                                display: "flex",
-                                justifyContent: "flex-end",
-                              }}
-                              className="print-hidden"
-                            >
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{ mr: 1 }}
-                                startIcon={<SaveOutlinedIcon />}
-                              >
-                                Lưu
-                              </Button>
-                              <Button
-                                variant="contained"
-                                sx={{ mr: 1, backgroundColor: "gray" }}
-                                startIcon={<LocalPrintshopOutlinedIcon />}
-                                onClick={handlePrint}
-                              >
-                                In
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="warning"
-                                sx={{ mr: 1, backgroundColor: "gray" }}
-                                startIcon={<FileDownloadOutlinedIcon />}
-                              >
-                                Xuất file
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="success"
-                                sx={{ mr: 1 }}
-                                startIcon={<ContentCopyOutlinedIcon />}
-                              >
-                                Sao chép
-                              </Button>
-                              <Button
-                                variant="contained"
-                                color="error"
-                                sx={{ mr: 1 }}
-                                startIcon={<DeleteForeverOutlinedIcon />}
-                                onClick={() => handleDelInvertory(row.id)}
-                              >
-                                Hủy bỏ
-                              </Button>
-                            </Box>
+                            <Action
+                              handlePrint={handlePrint}
+                              handleDelInvertory={handleDelInvertory}
+                              row={row}
+                            />
                           </Box>
                         </Collapse>
                       </TableCell>

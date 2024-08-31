@@ -6,7 +6,6 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { handleformat } from "../../utils/format";
 
 function Payment_summary({row}) {
   return (
@@ -16,27 +15,27 @@ function Payment_summary({row}) {
           <TableBody>
             <TableRow sx={{ p: "30px"}}>
               <TableCell component="th" scope="row">
-              Tổng số lượng:
+                Tổng thực tế
               </TableCell>
-              <TableCell align="right">{row.qty || 1000}</TableCell>
+              <TableCell align="right">{row.SoLuongThucTe || 1000}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell component="th" scope="row">
-              Tổng tiền:
+                Tổng lệch tăng
               </TableCell>
-              <TableCell align="right">{row.total || 1000}</TableCell>
+              <TableCell align="right">{row.SLLechTang || 1000}</TableCell>
             </TableRow>
             <TableRow  >
               <TableCell component="th" scope="row">
-              Tổng cộng:
+                Tổng lệch giảm
               </TableCell>
-              <TableCell align="right">{row.total || 1000}</TableCell>
+              <TableCell align="right">{row.SLLechGiam || 0}</TableCell>
             </TableRow>
             <TableRow >
               <TableCell component="th" scope="row">
-                Khách trả:
+                Tổng chênh lệch
               </TableCell>
-              <TableCell align="right">{row.client_paid || 1000}</TableCell>
+              <TableCell align="right">{row.TongChenhLech || 1000}</TableCell>
             </TableRow>
           </TableBody>
         </Table>

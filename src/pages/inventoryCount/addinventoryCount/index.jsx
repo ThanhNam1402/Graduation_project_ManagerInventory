@@ -9,6 +9,7 @@ import { invertoryService } from "./../../../services/invertory.service";
 import Inventory_check_sheet from "./InventoryCheckSheet";
 import Product_information from "./ProductInformation";
 import Find from "./Find";
+import LoadingBackdrop from "../../../components/BackDrop";
 
 const AddInventoryCount = () => {
   const [data, setData] = useState([]);
@@ -17,6 +18,7 @@ const AddInventoryCount = () => {
   const [options, setOptions] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [status, setStatus] = useState("0");
+  const [loading, setLoading] = useState(false);
 
   let filters = "";
   let keyWord = "";
@@ -136,6 +138,7 @@ const AddInventoryCount = () => {
   };
 
   const AddInventory = async () => {
+    setLoading(true);
     try {
       //Lấy code hiện tại
       const currentCode = await handleGetCode();
@@ -165,14 +168,19 @@ const AddInventoryCount = () => {
         status: 0,
         code: FNcode,
       };
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      setLoading(false);
       const response = await invertoryService.hendleCreat(dataCreat);
       console.log(response);
       toast.success(response.messges);
     } catch (error) {
+      toast.success(error);
       console.log(error);
     }
 
     handleCreatInventoryDetail();
+    setSelectedProducts([]);
+    setTotalPrice(0);
   };
 
   const handleCreatInventoryDetail = async () => {
@@ -227,7 +235,11 @@ const AddInventoryCount = () => {
       <Grid container spacing={2}>
         <Grid item xs={7}>
           {/* CODE Ở ĐÂY */}
-          <Find value={value} handleAutocompleteChange={handleAutocompleteChange} options={options} />
+          <Find
+            value={value}
+            handleAutocompleteChange={handleAutocompleteChange}
+            options={options}
+          />
           <Product_information
             selectedProducts={selectedProducts}
             handleDecrease={handleDecrease}
@@ -237,6 +249,7 @@ const AddInventoryCount = () => {
         </Grid>
 
         <Grid item xs={5}>
+          <LoadingBackdrop loading={loading} />
           <Inventory_check_sheet
             status={status}
             handleChange={handleChange}

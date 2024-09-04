@@ -71,7 +71,9 @@ function Inventory_check_sheet({
                     {product.name} ({product.code})
                   </TableCell>
                   <TableCell>{product.qty}</TableCell>
-                  <TableCell>{handleformat.formatPrice(product.sale_price)}</TableCell>
+                  <TableCell>
+                    {handleformat.formatPrice(product.sale_price)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -26,6 +26,9 @@ import { pricebookService } from "./../../services/pricebook.service";
 import { handleformat } from "../../utils/format";
 import { useTranslation } from "react-i18next";
 
+import LoadingBackdrop from "../../components/BackDrop";
+import { toast } from "react-toastify";
+
 
 
 function ListPriceBooks(props) {
@@ -54,17 +57,14 @@ function ListPriceBooks(props) {
     handleClosePopover();
     setTimeout(() => {
       setLoading(false);
-      setOpenSnackbar(true);
       handleInputChange(popoverRowId, { target: { value: inputValue } });
-    }, 1000);
+    }, 2000);
   };
 
   const handleInputChange = async (id, event) => {
     console.log("Check id", id);
-    
     let { value } = event.target;
     let Number_Value = parseFloat(value.replace(/[^0-9,-]+/g,"").replace(",","."));
-
     if (isNaN(Number_Value)) {
       Number_Value = 0;
     }else{
@@ -72,14 +72,14 @@ function ListPriceBooks(props) {
         const res = await pricebookService.handleUpdateSale_Price(id, Number_Value);
         let data = res.data;
         console.log("Check res update ", data);
+      toast.success(res.  messges);
+
         GetAllProducts()
       } catch (error) {
         console.log(error);
       }
     }
   };
-
-
 
   let filters = "";
   let keyWord = "";
@@ -102,8 +102,6 @@ function ListPriceBooks(props) {
         page: pagination?.page || 0,
         rowsPerPage: pagination?.rowsPerPage || 5,
       }).toString();
-
-      console.log(filterParams);
 
       const response = await productService.handleGetAllProduct(filterParams);
       console.log("Check data get Pb" ,response.data);
@@ -213,25 +211,7 @@ function ListPriceBooks(props) {
       </Popover>
 
       {/* Backdrop */}
-      <Backdrop open={loading} sx={{ color: "#fff", zIndex: 1200 }}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-
-      {/*  Snackbar */}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={2000}
-        onClose={() => setOpenSnackbar(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      >
-        <Alert
-          onClose={() => setOpenSnackbar(false)}
-          severity="success"
-          sx={{ width: 400, fontSize: 16 }}
-        >
-          Cập nhật thành công
-        </Alert>
-      </Snackbar>
+      <LoadingBackdrop loading={loading} />
     </>
   );
 }

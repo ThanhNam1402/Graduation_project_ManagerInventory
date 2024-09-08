@@ -21,6 +21,12 @@ const theme = extendTheme({
           light: '#81c784',
           dark: '#81c784',
           contrastText: '#fff',
+        },
+        error: {
+          main: '#f5e0dfba',
+          light: '#fea4a3',
+          dark: '#f57977',
+          contrastText: '#ef5350',
         }
       },
       shadows: [

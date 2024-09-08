@@ -35,9 +35,9 @@ api.interceptors.response.use(
     return response.data;
   },
   async (error) => {
-    console.log(error);
+    // console.log(error);
     if (error.response) {
-      console.log(error.response);
+      // console.log(error.response);
 
       if (error.response.status === 401) {
         const originalRequest = error.config;
@@ -104,9 +104,9 @@ api.interceptors.response.use(
       //     }
       // }
     } else if (error.request) {
-      console.log(error.request);
+      // console.log(error.request);
     } else {
-      console.log("Error", error.message);
+      // console.log("Error", error.message);
     }
 
     return Promise.reject(error);

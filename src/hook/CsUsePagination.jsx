@@ -1,23 +1,23 @@
 import { useState } from "react";
 
-function CsUsePagination(curentPage, limit) {
+function CsUsePagination(curentPage, rowsPerpage) {
   // pagination
   const [page, setPage] = useState(curentPage); // current page
-  const [rowsPerPage, setRowsPerPage] = useState(limit); // limit = 10
+  const [limit, setLimit] = useState(rowsPerpage); // limit = 10
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setLimit(parseInt(event.target.value, 10));
     setPage(0);
   };
 
   return {
     pagination: {
       page,
-      rowsPerPage,
+      limit,
     },
     setPage,
     handleChangePage,

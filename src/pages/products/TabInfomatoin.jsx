@@ -119,8 +119,11 @@ function TabInfomation(props) {
 
           {item.status !== 2 && (
             <Button
+              sx={{
+                boxShadow: 0,
+              }}
               onClick={() => handelDelItem(item.id)}
-              variant="text"
+              variant="contained"
               color="error"
             >
               Ngừng Kinh Doanh

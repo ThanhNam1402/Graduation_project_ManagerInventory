@@ -36,7 +36,7 @@ export default function ListProducts(props) {
 
   useEffect(() => {
     fetchData();
-  }, [filters, sort, pagination?.page, pagination?.rowsPerPage, keyWord]);
+  }, [filters, sort, pagination?.page, pagination?.limit, keyWord]);
 
   const fetchData = async () => {
     try {
@@ -48,12 +48,12 @@ export default function ListProducts(props) {
       });
 
       const response = await productService.handleGetAllProduct(filterParmas);
-      if (response && response.success === true) {
+      if (response) {
         setData(response.data);
-        setTotalPage(response?.pagination?.total);
+        setTotalPage(response?.total);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -153,7 +153,7 @@ export default function ListProducts(props) {
 
         <CsPagination
           totalPage={totalPage}
-          limitPage={pagination?.rowsPerPage}
+          limitPage={pagination?.limit}
           page={pagination?.page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Box, Typography, Stack } from "@mui/material";
 
-
 import ListProducts from "./ListProducts";
 import Categories from "../../components/filters/Categories";
 import ActionProduct from "./ActionProduct";
@@ -45,7 +44,6 @@ function Products() {
   const handleOpenModal = () => {
     setOpenModal(!openModal);
   };
-
 
   // handle set filters
   const handleSetFilter = (value, id) => {
@@ -95,9 +93,13 @@ function Products() {
 
   // handle get all categories
   const handeGetAllCate = async () => {
-    let res = await categoryService.handleGetAllCate();
-    if (res && res.success) {
-      setlistCate(res.data);
+    try {
+      let res = await categoryService.handleGetAllCate();
+      if (res && res.status) {
+        setlistCate(res.data);
+      }
+    } catch (error) {
+      toast.error("Loi get danh muc");
     }
   };
 

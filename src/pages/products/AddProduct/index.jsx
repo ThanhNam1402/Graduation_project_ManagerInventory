@@ -3,6 +3,9 @@ import {
   Paper,
   Grid,
   Stack,
+  AccordionDetails,
+  Accordion,
+  AccordionSummary,
   FormControl,
   InputLabel,
   MenuItem,
@@ -11,9 +14,9 @@ import {
   Typography,
   Button,
   Dialog,
-  Checkbox,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
@@ -21,8 +24,9 @@ import Previews from "../PreviewImages";
 import { productService } from "../../../services/product.service";
 import { delay } from "../../../utils/func";
 
+import VariantProduct from "./VariantProduct";
+
 function AddProduct(props) {
-  const navigate = useNavigate();
   let { openModal, handleOpenModal } = props;
 
   const {
@@ -32,24 +36,18 @@ function AddProduct(props) {
   } = useForm();
 
   const _onSubmit = async (data) => {
-    console.log(data);
-    let file = data.file[0];
     try {
-      setIsLoading(true);
       await delay(500);
-      let res = await productService.handleNewProducts({ ...data, file });
+      let res = await productService.handleNewProducts({ ...data });
 
       if (res && res.success) {
         toast.success(res?.message);
-        setIsLoading(false);
       } else {
         toast.warning(res?.message);
-        setIsLoading(false);
       }
     } catch (error) {
       console.log(error);
       toast.error("Error from server");
-      setIsLoading(false);
     }
   };
 
@@ -74,20 +72,15 @@ function AddProduct(props) {
 
             <div>
               <Grid container spacing={2}>
-                <Grid item xs={8} sx={{ p: 0 }}>
-                  <Box elevation={2} sx={{ p: 2, mb: 2 }}>
+                <Grid item xs={8}>
+                  <Box sx={{ p: 2, mb: 2 }}>
                     <Stack mb={2} direction="row" alignItems="center">
                       <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
                         Tên Sản Phẩm
                       </InputLabel>
                       <FormControl fullWidth>
                         <TextField
-                          {...register("name", {
-                            required: {
-                              value: true,
-                              message: "Trường Dữ Liệu Không Được Trống !!",
-                            },
-                          })}
+                          {...register("name")}
                           hiddenLabel
                           fullWidth
                           id="code"
@@ -107,23 +100,7 @@ function AddProduct(props) {
 
                     <Stack mb={2} direction="row" alignItems="center">
                       <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Mã Sản Phẩm
-                      </InputLabel>
-                      <TextField
-                        {...register("code")}
-                        hiddenLabel
-                        fullWidth
-                        id="code"
-                        margin="dense"
-                        variant="standard"
-                        placeholder="Nhập Mã Sản Phẩm"
-                        size="small"
-                      />
-                    </Stack>
-
-                    <Stack mb={2} direction="row" alignItems="center">
-                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Mã vạch Sản Phẩm
+                        Mã vạch
                       </InputLabel>
                       <TextField
                         {...register("barcode")}
@@ -139,23 +116,17 @@ function AddProduct(props) {
 
                     <Stack my={2} direction="row" alignItems="center">
                       <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Giá Vốn Sản Phẩm
+                        Giá Vốn
                       </InputLabel>
                       <FormControl fullWidth>
                         <TextField
-                          {...register("price", {
-                            required: {
-                              value: true,
-                              message: "Trường Dữ Liệu Không Được Trống !!",
-                            },
-                          })}
+                          {...register("price")}
                           type="number"
                           hiddenLabel
                           fullWidth
                           id="code"
                           margin="dense"
                           variant="standard"
-                          InputProps={{ inputProps: { min: 0 } }}
                           placeholder="Nhập Giá Vốn Sản Phẩm"
                           size="small"
                         />
@@ -169,16 +140,37 @@ function AddProduct(props) {
 
                     <Stack mb={2} direction="row" alignItems="center">
                       <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Giá Bán Sản Phẩm
+                        Giá Bán
                       </InputLabel>
                       <FormControl fullWidth>
                         <TextField
-                          {...register("sale_price", {
-                            required: {
-                              value: true,
-                              message: "Trường Dữ Liệu Không Được Trống !!",
-                            },
-                          })}
+                          {...register("sale_price")}
+                          type="number"
+                          hiddenLabel
+                          InputProps={{ inputProps: { min: 0 } }}
+                          fullWidth
+                          id="code"
+                          margin="dense"
+                          variant="standard"
+                          placeholder="Nhập Bán Vốn Sản Phẩm"
+                          size="small"
+                        />
+
+                        {errors.sale_price && (
+                          <Typography color="error" variant="body2">
+                            {errors?.sale_price?.message}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Stack>
+
+                    <Stack mb={2} direction="row" alignItems="center">
+                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
+                        Tồn Kho
+                      </InputLabel>
+                      <FormControl fullWidth>
+                        <TextField
+                          {...register("sale_price")}
                           type="number"
                           hiddenLabel
                           InputProps={{ inputProps: { min: 0 } }}
@@ -200,7 +192,7 @@ function AddProduct(props) {
 
                     <Previews />
 
-                    <Stack my={2} direction="row" alignItems="center">
+                    <Stack mt={2} direction="row" alignItems="center">
                       <TextField
                         {...register("description")}
                         id="standard-multiline-flexible"
@@ -214,9 +206,100 @@ function AddProduct(props) {
                   </Box>
                 </Grid>
 
-                <Grid item xs={4}></Grid>
+                <Grid item xs={4}>
+                  <Paper elevation={2} sx={{ px: 2, py: 3, my: 2 }}>
+                    <Box>
+                      <Typography
+                        variant="button"
+                        component={"p"}
+                        sx={{ borderBottom: 1 }}
+                      >
+                        Phân Loại
+                      </Typography>
+
+                      <Stack my={2} direction="row" alignItems="center">
+                        <InputLabel sx={{ minWidth: 100 }}>
+                          Nhóm hàng
+                        </InputLabel>
+                        <FormControl size="small" sx={{ m: 1 }} fullWidth>
+                          <Select
+                            displayEmpty
+                            defaultValue={10}
+                            inputProps={{ "aria-label": "Without label" }}
+                            {...register("category_id", {
+                              required: {
+                                value: true,
+                                message: "Trường Dữ Liệu Không Được Trống !!",
+                              },
+                            })}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={10}>Thời Trang Nam</MenuItem>
+                            <MenuItem value={2}>Thời Trang Nữ</MenuItem>
+                          </Select>
+                          {errors.category_id && (
+                            <Typography color="error" variant="body2">
+                              {errors?.category_id?.message}
+                            </Typography>
+                          )}
+                        </FormControl>
+                      </Stack>
+                    </Box>
+
+                    <Stack my={2} direction="row" alignItems="center">
+                      <InputLabel sx={{ minWidth: 100 }}>
+                        Nhà Cung Cấp
+                      </InputLabel>
+                      <FormControl size="small" sx={{ m: 1 }} fullWidth>
+                        <Select
+                          displayEmpty
+                          defaultValue={10}
+                          inputProps={{ "aria-label": "Without label" }}
+                          {...register("category_id")}
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value={10}>Thời Trang Nam</MenuItem>
+                          <MenuItem value={2}>Thời Trang Nữ</MenuItem>
+                        </Select>
+                        {errors.category_id && (
+                          <Typography color="error" variant="body2">
+                            {errors?.category_id?.message}
+                          </Typography>
+                        )}
+                      </FormControl>
+                    </Stack>
+                  </Paper>
+                </Grid>
               </Grid>
             </div>
+
+            <Box
+              sx={{
+                p: 2,
+                mb: 3,
+                minHeight: 120,
+                width: "100%",
+              }}
+            >
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  Thuộc Tính
+                </AccordionSummary>
+                <AccordionDetails>
+                  <VariantProduct />
+                </AccordionDetails>
+              </Accordion>
+            </Box>
+
+            {/* ===================== ACTION BUTTON ========================================================== */}
             <Stack
               spacing={2}
               direction="row"

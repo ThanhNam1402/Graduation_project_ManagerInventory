@@ -1,4 +1,4 @@
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography, Badge } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -19,7 +19,7 @@ function Previews(props) {
         setFiles(
           acceptedFiles.map((file) =>
             Object.assign(file, {
-              preview: file ? URL.createObjectURL(file) : {},
+              preview: URL.createObjectURL(file),
             })
           )
         );
@@ -27,26 +27,40 @@ function Previews(props) {
     },
   });
 
-  const thumbs = files.map((file) => (
+  const thumbs = files.map((file, index) => (
     <Grid xs={2} item key={file.name}>
-      <img
-        style={{
-          maxWidth: "115px",
-          minHeight: "90px",
-          display: "block",
-          width: "100%",
-        }}
-        src={file?.preview}
-        onLoad={() => {
-          URL.revokeObjectURL(file?.preview);
-        }}
-      />
+      <Badge
+        color="success"
+        onClick={() => handleDel(index)}
+        badgeContent={"x"}
+      >
+        <img
+          style={{
+            maxWidth: "115px",
+            minHeight: "90px",
+            display: "block",
+            width: "100%",
+          }}
+          src={file?.preview}
+          onLoad={() => {
+            URL.revokeObjectURL(file?.preview);
+          }}
+        />
+      </Badge>
     </Grid>
   ));
 
   useEffect(() => {
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, []);
+
+  const handleDel = (id) => {
+    let currentFiles = [...files];
+    let newFiles = currentFiles.filter((item, index) => index !== id);
+    setFiles(newFiles);
+  };
+
+  console.log(files);
 
   return (
     <Box
@@ -64,20 +78,19 @@ function Previews(props) {
           }}
         >
           <Typography>Chọn Ảnh Hoặc Kéo Vào</Typography>(
-          <span>tối đa 6 ảnh</span>)
+          <span>tối đa 5 ảnh</span>)
         </Box>
-
-        <Grid
-          sx={{
-            mt: 2,
-            minHeight: 90,
-          }}
-          container
-          spacing={1}
-        >
-          {thumbs}
-        </Grid>
       </div>
+      <Grid
+        sx={{
+          mt: 2,
+          minHeight: 90,
+        }}
+        container
+        spacing={1}
+      >
+        {thumbs}
+      </Grid>
     </Box>
   );
 }

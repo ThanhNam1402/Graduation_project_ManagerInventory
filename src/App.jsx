@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import useRoleCheck from "./auth/checkRole";
 import { useAppContext } from "./context/AppContent";
+import Home from "./pages/home";
 
 function App() {
   // const navigate = useNavigate();
@@ -18,26 +19,25 @@ function App() {
   // useRoleCheck();
 
   // useEffect(() => {
-    // const storedUser = localStorage.getItem("user");
-    // setIsAuthenticated(!!storedUser);
-// 
-    // if (!storedUser && location.pathname !== path.LOGIN) {
-    //   navigate(path.LOGIN);
-    // } else {
-    //   appContext.setUserInfo(JSON.parse(storedUser));
-    // }
+  // const storedUser = localStorage.getItem("user");
+  // setIsAuthenticated(!!storedUser);
+  //
+  // if (!storedUser && location.pathname !== path.LOGIN) {
+  //   navigate(path.LOGIN);
+  // } else {
+  //   appContext.setUserInfo(JSON.parse(storedUser));
+  // }
   // }, [navigate, location.pathname]);
 
   return (
     <>
       <Routes>
-      <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
-
-        <Route index element={<Login />} />
+        <Route index element={<Home />} />
+        
+        <Route path={path.REGISTER} element={<Login />} />
         <Route path={path.LOGIN} element={<Login />} />
-        {/* {isAuthenticated && (/ */}
-        {/* )} */}
-        {/* {!isAuthenticated && <Route path="*" element={<Login />} />} */}
+
+        <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
       </Routes>
 
       <ToastContainer />

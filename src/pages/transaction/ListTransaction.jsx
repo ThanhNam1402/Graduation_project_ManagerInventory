@@ -41,6 +41,8 @@ import { handleformat } from "../../utils/format";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
+import CustomDialog from "../../components/Dialog";
+
 function ListTransaction(props) {
   const { t } = useTranslation("order");
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -248,7 +250,7 @@ function ListTransaction(props) {
                                     Thông tin
                                   </Typography>
                                   <Grid container spacing={3}>
-                                   <Temporary_ballot_information row={row}/>
+                                    <Temporary_ballot_information row={row} />
                                     <Temporary_ticket row={row.items} />
                                     <Grid
                                       container
@@ -263,39 +265,19 @@ function ListTransaction(props) {
                                         handleOpenDialog={handleOpenDialog}
                                       />
                                       {/* Modal */}
-                                      <Dialog
+                                      <CustomDialog
                                         open={openDialog}
                                         onClose={handleCloseDialog}
-                                      >
-                                        <DialogTitle>Xác nhận</DialogTitle>
-                                        <DialogContent>
-                                          <Typography>
-                                            Bạn có chắc chắn muốn đổi trạng thái
-                                            đơn này không?
-                                          </Typography>
-                                        </DialogContent>
-                                        <DialogActions>
-                                          <Button
-                                            onClick={() =>
-                                              handleConfirmChangeStatus(
-                                                row.id,
-                                                status
-                                              )
-                                            }
-                                            color="primary"
-                                          >
-                                            Có
-                                          </Button>
-                                          <Button
-                                            onClick={() =>
-                                              handleCancelChangeStatus()
-                                            }
-                                            color="secondary"
-                                          >
-                                            Không
-                                          </Button>
-                                        </DialogActions>
-                                      </Dialog>
+                                        title="Xác nhận"
+                                        content="Xác nhận thay đổi trạng thái đơn hàng!"
+                                        onConfirm={() =>
+                                          handleConfirmChangeStatus(
+                                            row.id,
+                                            status
+                                          )
+                                        }
+                                        onCancel={handleCancelChangeStatus}
+                                      />
                                     </Grid>
                                   </Grid>
                                 </Box>
@@ -327,7 +309,7 @@ function ListTransaction(props) {
                                         Thông tin
                                       </Typography>
                                       <Grid container spacing={3}>
-                                       <Information_completed row={row}/>
+                                        <Information_completed row={row} />
                                         <Ticket_completed row={row.items} />
                                         <Grid
                                           container

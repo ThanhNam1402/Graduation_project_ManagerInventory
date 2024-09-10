@@ -2,22 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { Box, Typography, Stack } from "@mui/material";
 
 import ListProducts from "./ListProducts";
-import Categories from "../../components/filters/Categories";
+import Categories from "../Caterory";
 import ActionProduct from "./ActionProduct";
 import { useTranslation } from "react-i18next";
 import CsUsePagination from "../../hook/CsUsePagination";
 import { ListDisplayOption, ListOnHands } from "../../utils/constain";
 import FilterRadio from "../../components/filters/FilterRadio";
-import { categoryService } from "../../services/category.service";
 import AddProduct from "./AddProduct";
 
 function Products() {
   const { t } = useTranslation("product");
 
-  // id update item
-  const idRef = useRef();
   const [openModal, setOpenModal] = useState(false);
-  const [listCate, setlistCate] = useState([]);
   const [keyWord, setKeyWord] = useState("");
   const [sort, setSort] = useState({
     order: "asc",
@@ -87,22 +83,6 @@ function Products() {
     }));
   };
 
-  useEffect(() => {
-    handeGetAllCate();
-  }, []);
-
-  // handle get all categories
-  const handeGetAllCate = async () => {
-    try {
-      let res = await categoryService.handleGetAllCate();
-      if (res && res.status) {
-        setlistCate(res.data);
-      }
-    } catch (error) {
-      toast.error("Loi get danh muc");
-    }
-  };
-
   return (
     <>
       <Stack direction="row">
@@ -121,7 +101,7 @@ function Products() {
               {t("title")}
             </Typography>
 
-            <Categories listCate={listCate} handleGetValue={handleSetFilter} />
+            <Categories handleGetValue={handleSetFilter} />
             {/* onHands */}
 
             <FilterRadio

@@ -109,7 +109,7 @@ api.interceptors.response.use(
       // console.log("Error", error.message);
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error?.response?.data);
   }
 );
 

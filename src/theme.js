@@ -26,7 +26,7 @@ const theme = extendTheme({
           main: '#f5e0dfba',
           light: '#fea4a3',
           dark: '#f57977',
-          contrastText: '#ef5350',
+          contrastText: '#333333d9',
         }
       },
       shadows: [

@@ -8,7 +8,6 @@ import {
   TableRow,
   Paper,
   Checkbox,
-  Button,
   Box,
   Typography,
   IconButton,
@@ -16,10 +15,6 @@ import {
   Grid,
   Tab,
   Tabs,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -41,7 +36,7 @@ import { handleformat } from "../../utils/format";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
-import CustomDialog from "../../components/Dialog";
+import ModalComfirm from "../../components/modalComfrim/modalConfrim";
 
 function ListTransaction(props) {
   const { t } = useTranslation("order");
@@ -265,7 +260,7 @@ function ListTransaction(props) {
                                         handleOpenDialog={handleOpenDialog}
                                       />
                                       {/* Modal */}
-                                      <CustomDialog
+                                      <ModalComfirm
                                         open={openDialog}
                                         onClose={handleCloseDialog}
                                         title="Xác nhận"

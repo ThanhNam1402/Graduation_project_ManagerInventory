@@ -10,6 +10,8 @@ import useRoleCheck from "./auth/checkRole";
 import { useAppContext } from "./context/AppContent";
 import Home from "./pages/home";
 
+import { Flip } from "react-toastify";
+
 function App() {
   // const navigate = useNavigate();
   // const location = useLocation();
@@ -33,14 +35,18 @@ function App() {
     <>
       <Routes>
         <Route index element={<Home />} />
-        
+
         <Route path={path.REGISTER} element={<Login />} />
         <Route path={path.LOGIN} element={<Login />} />
 
         <Route path={path.SYSTEM + "/*"} element={<MainRouters />} />
       </Routes>
-
-      <ToastContainer />
+      <ToastContainer
+        autoClose={1200}
+        position="top-right"
+        transition={Flip}
+        hideProgressBar={true}
+      />
     </>
   );
 }

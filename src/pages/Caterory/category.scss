@@ -1,0 +1,12 @@
+.category_item {
+
+    button {
+        visibility: hidden;
+    }
+
+    &:hover {
+        button {
+            visibility: visible;
+        }
+    }
+}

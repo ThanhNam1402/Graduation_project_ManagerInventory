@@ -22,6 +22,8 @@ import Customers from "../pages/customers";
 import Suppliers from "../pages/suppliers";
 import Invoices from "../pages/invoices";
 
+import TestCpm from "../components/testCpm";
+
 function MainRouters(props) {
   return (
     <div>
@@ -54,6 +56,7 @@ function MainRouters(props) {
           <Route path="purchaseOrder" element={<PurchaseOrder />} />
           <Route path="purchaseOrder/new" element={<AddPurChaseOrder />} />
           <Route path="purchaseOrder/:id" element={<AddPurChaseOrder />} />
+          <Route path="testcmp" element={<TestCpm />} />
         </Routes>
       </Container>
     </div>

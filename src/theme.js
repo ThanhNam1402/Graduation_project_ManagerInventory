@@ -11,9 +11,9 @@ const theme = extendTheme({
           contrastText: '#fff',
         },
         warning: {
-          main: '#76ff03',
+          main: '#deffc3',
           light: '#ccff90',
-          dark: '#ccff90',
+          dark: '#cfffa6',
           contrastText: '#333',
         },
         success: {
@@ -60,16 +60,28 @@ const theme = extendTheme({
     dark: {
       palette: {
         primary: {
-          main: '#42a5f5',
+          main: '#3b7aad',
           light: '#333',
-          dark: '#fff',
-          contrastText: '#333',
+          dark: '#548fbf',
+          contrastText: '#fff',
         },
         success: {
-          main: '#66bb6a',
-          light: '#81c784',
-          dark: '#81c784',
+          main: '#48a24c',
+          light: '#76c07a',
+          dark: '#37893b',
           contrastText: '#fff',
+        },
+        warning: {
+          main: '#a0b219',
+          light: '#ccff90',
+          dark: '#c2d81a',
+          contrastText: '#333',
+        },
+        error: {
+          main: '#eb9898',
+          light: '#fea4a3',
+          dark: '#f57977',
+          contrastText: '#333333d9',
         }
       }
     }

@@ -10,5 +10,21 @@ export const supplierService = {
 
     handleGetComplete(keyWord) {
         return api.get(`/api/suppliers/autocomplete?keyword=${keyWord}`)
-    }
+    },
+    handleAddSupplier(data) {
+        return api.post(`/api/suppliers`, {
+            ...data
+        })
+    },
+    handleGetOneSupplier(id) {
+        return api.get(`/api/suppliers/${id}`)
+    },
+    handleUpdateSupplier(id, data) {
+        return api.put(`/api/suppliers/${id}`, {
+            ...data
+        })
+    },
+    handleDeleteSupplier(id) {
+        return api.delete(`/api/suppliers/${id}`)
+    },
 }

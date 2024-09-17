@@ -18,9 +18,9 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 
-import { delay } from "../../utils/func";
-import SearchProduct from "../../components/filters/SearchProduct";
-import { fileService } from "../../services/file.service";
+import { delay } from "../../../utils/func";
+import SearchProduct from "../../../components/filters/SearchProduct";
+import { fileService } from "../../../services/file.service";
 
 function ActionProduct(props) {
   const { t } = useTranslation("action");

@@ -59,7 +59,7 @@ function AddProduct(props) {
           encType="multipart/form-data"
           method="POST"
         >
-          <Paper elevation={2} sx={{ p: 2 }}>
+          <Paper elevation={2} sx={{ p: 5 }}>
             <div>
               <Stack
                 direction="row"

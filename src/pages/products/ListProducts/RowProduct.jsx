@@ -15,9 +15,9 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import TabInfomation from "./TabInfomatoin";
-import TabPanelRow from "../../components/TabPanelRow";
-import { handleformat } from "../../utils/format";
-import { REACT_APP_BACKEND_URL } from "../../config/config";
+import TabPanelRow from "../../../components/TabPanelRow";
+import { handleformat } from "../../../utils/format";
+import { REACT_APP_BACKEND_URL } from "../../../config/config";
 
 function a11yProps(index) {
   return {

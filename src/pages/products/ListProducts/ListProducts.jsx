@@ -10,9 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 
-import CsPagination from "../../components/CsPagination";
-import csUseQueryString from "../../hook/csUseQueryString";
-import { productService } from "../../services/product.service";
+import CsPagination from "../../../components/CsPagination";
+import csUseQueryString from "../../../hook/csUseQueryString";
+import { productService } from "../../../services/product.service";
 import RowProduct from "./RowProduct";
 import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListProduct";
 import { toast } from "react-toastify";
@@ -28,8 +28,6 @@ export default function ListProducts(props) {
     handleRequestSort,
   } = props;
 
-
-  
   const [data, setData] = useState([]);
   const [totalPage, setTotalPage] = useState(0); // total page
   const [selected, setSelected] = useState([]);

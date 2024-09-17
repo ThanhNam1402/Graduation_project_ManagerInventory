@@ -14,7 +14,7 @@ function ItemOption(props) {
       id: "",
       value: [],
     },
-  }); // {id = '', value = ['']}
+  });
 
   useEffect(() => {
     setOption((prevState) => ({

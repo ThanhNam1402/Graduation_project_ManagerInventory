@@ -5,9 +5,7 @@ const AppContent = createContext({});
 const AppProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState({});
 
-  useEffect(() => {
-    console.log(userInfo);
-  });
+  useEffect(() => {});
 
   return (
     <AppContent.Provider value={{ userInfo, setUserInfo }}>

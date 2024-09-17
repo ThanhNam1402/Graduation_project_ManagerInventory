@@ -7,12 +7,34 @@ import {
   TableHead,
   TextField,
 } from "@mui/material";
+import { useState, useEffect } from "react";
 
 function TableVariant(props) {
   let { dataTable } = props;
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData([]);
+    setData(dataTable);
+  }, [dataTable]);
   console.log(dataTable);
 
+  const handleChangeValue = (value, name, field) => {
+    const newData = [...data];
+    console.log(newData, name);
+
+    const findIndexItem = newData.findIndex((item) => item.name === name);
+    console.log(findIndexItem);
+
+    if (findIndexItem !== -1) {
+      newData[findIndexItem][field] = value;
+    }
+
+    console.log(newData);
+
+    setData(newData);
+  };
   return (
     <div>
       <TableContainer>
@@ -48,6 +70,10 @@ function TableVariant(props) {
                       margin="dense"
                       variant="standard"
                       size="small"
+                      value={row?.barcode}
+                      onChange={(e) =>
+                        handleChangeValue(e.target.value, row?.name, "barcode")
+                      }
                     />
                   </TableCell>
 
@@ -59,7 +85,7 @@ function TableVariant(props) {
                       margin="dense"
                       variant="standard"
                       size="small"
-                      InputProps={{ inputProps: { min: 1 } }}
+                      value={row?.price}
                     />
                   </TableCell>
                   <TableCell align="left">
@@ -70,6 +96,7 @@ function TableVariant(props) {
                       margin="dense"
                       variant="standard"
                       size="small"
+                      value={row?.sale_price}
                     />
                   </TableCell>
                   <TableCell align="left">
@@ -80,6 +107,7 @@ function TableVariant(props) {
                       margin="dense"
                       variant="standard"
                       size="small"
+                      value={row?.sale_price}
                     />
                   </TableCell>
                 </TableRow>

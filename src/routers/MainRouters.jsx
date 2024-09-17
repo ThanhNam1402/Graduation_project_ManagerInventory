@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "../components/header/Header";
 import DashBoard from "../pages/dashboard/DashBoard";
 
-import Product from "../pages/products/index";
+import Products from "../pages/products";
 import AddProduct from "../pages/products/AddProduct";
 
 import PriceBook from "../pages/priceBook";
@@ -31,7 +31,7 @@ function MainRouters(props) {
       <Container
         maxWidth="xl"
         sx={{
-          backgroundColor: "primary.light",
+          backgroundColor: "layout.main",
           minHeight: "89vh",
           padding: 3,
         }}
@@ -39,7 +39,7 @@ function MainRouters(props) {
         <Routes>
           <Route index element={<DashBoard />} />
 
-          <Route path="products" element={<Product />} />
+          <Route path="products" element={<Products />} />
           <Route path="products/:id" element={<AddProduct />} />
 
           <Route path="pricebook" element={<PriceBook />} />

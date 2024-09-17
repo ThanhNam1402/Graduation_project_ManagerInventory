@@ -1,27 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 
 import ListOption from "./ListOption/ListOption";
 import TableVariant from "./TableVariant/TableVariant";
+import _ from "lodash";
 
 function VariantProduct() {
   const [dataTable, setDataTable] = useState([]);
 
   //   get data option in list option
   const handleGetData = (data) => {
-    console.log("data option", data);
-    console.log("data table", dataTable);
+    console.log("data option ==", data);
 
-    let newDataOption = createCombinations(data);
-    console.log("new data option", newDataOption?.variants);
+    console.log("curent data table == ", dataTable);
 
-    if (data && data?.length > 0) {
-      let resuft = createCombinations(data);
-      setDataTable(resuft?.variants);
-    }
+    let resuft = createCombinations(data);
+    console.log("new data table ==", resuft);
+
+    setDataTable(resuft?.variants);
+
+    // new data
+    // let a = createNewCombinedArray(dataTable, resuft?.variants);
+
+    // console.log("custom 2 ==", a);
+    // setDataTable(a);
   };
 
-  function createCombinations(inputData) {
+  const createCombinations = (inputData) => {
     function combine(current, remaining) {
       if (remaining.length === 0) {
         combinations.push(current);
@@ -50,8 +55,29 @@ function VariantProduct() {
         code: "",
       })),
     };
-  }
+  };
 
+  const createNewCombinedArray = (currentArr, newData) => {
+    let combinedArray = [...currentArr, ...newData];
+
+    console.log(combinedArray);
+
+    if (combinedArray.length > 0) {
+      const uniqueNames = new Set();
+      const result = [];
+
+      combinedArray.forEach((item) => {
+        if (!uniqueNames.has(item.name)) {
+          uniqueNames.add(item.name);
+          result.push(item);
+        }
+      });
+
+      return result;
+    }
+
+    return null;
+  };
 
   return (
     <div>

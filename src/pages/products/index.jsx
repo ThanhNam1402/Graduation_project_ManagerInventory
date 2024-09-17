@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { Box, Typography, Stack } from "@mui/material";
 
-import ListProducts from "./ListProducts";
+import ListProducts from "./ListProducts/ListProducts";
 import Categories from "../Caterory";
-import ActionProduct from "./ActionProduct";
 import { useTranslation } from "react-i18next";
 import CsUsePagination from "../../hook/CsUsePagination";
 import { ListDisplayOption, ListOnHands } from "../../utils/constain";
 import FilterRadio from "../../components/filters/FilterRadio";
 import AddProduct from "./AddProduct";
+
+import ActionProduct from "../purchaseOrder/ActionProduct";
 
 function Products() {
   const { t } = useTranslation("product");
@@ -26,7 +27,7 @@ function Products() {
   const [filters, setFilters] = useState({
     categoryID: 0,
     supplierIDs: [],
-    displayOption: 0,
+    status: 0,
     onHand: 0,
   });
 
@@ -58,10 +59,10 @@ function Products() {
           supplierIDs: value,
         }));
         break;
-      case "displayOption":
+      case "status":
         setFilters((state) => ({
           ...state,
-          displayOption: value,
+          status: value,
         }));
 
         break;
@@ -113,7 +114,7 @@ function Products() {
             <FilterRadio
               data={ListDisplayOption}
               handleGetValue={handleSetFilter}
-              keyFilter={"displayOption"}
+              keyFilter={"status"}
             />
           </Box>
         </Box>

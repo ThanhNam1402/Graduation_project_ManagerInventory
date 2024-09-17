@@ -2,12 +2,12 @@ import { styled } from "@mui/material/styles";
 import { Box, Button } from "@mui/material";
 
 const CsDialogTitle = styled(Box)(({ theme }) => ({
-  background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
-  color: theme.palette.common.white,
   borderTopLeftRadius: "8px",
   borderTopRightRadius: "8px",
-  fontSize: 22,
+  fontSize: 18,
+  fontWeight: "bold",
   textAlign: "center",
+  borderBottom: "1px solid",
   padding: theme.spacing(2),
 }));
 

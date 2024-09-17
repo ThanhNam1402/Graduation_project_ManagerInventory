@@ -14,7 +14,6 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
-import { Link } from "react-router-dom";
 
 import SearchProduct from "../../components/filters/SearchProduct";
 

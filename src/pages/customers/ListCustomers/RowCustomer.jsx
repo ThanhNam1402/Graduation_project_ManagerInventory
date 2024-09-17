@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import {
   Checkbox,
   Collapse,
@@ -6,15 +6,18 @@ import {
   IconButton,
   TableRow,
   TableCell,
+  Chip,
   Tab,
   Tabs,
 } from "@mui/material";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { toast } from "react-toastify";
 
-import TabPanelRowProduct from "./TabPanelRowProduct";
+import TabPanelRow from "../../../components/TabPanelRow";
 import TabInfomation from "./TabInfomatoin";
+import { customerService } from "../../../services/customer.service";
 
 function a11yProps(index) {
   return {
@@ -23,15 +26,33 @@ function a11yProps(index) {
   };
 }
 
-function RowCustomer(props) {
-  const { row, isItemSelected, handleClick, labelId } = props;
-  const [open, setOpen] = React.useState(false);
-
-  const [value, setValue] = React.useState(0);
+function RowCustomer({
+  row,
+  isItemSelected,
+  handleClick,
+  labelId,
+  onOpenModalUpdate,
+  onResetListCustomers,
+}) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  // handle delete customer
+  const handelDeleteCustomer = async (id) => {
+    try {
+      let res = await customerService.handleDeleteCustomer(id);
+      console.log(res);
+      toast.success("Delete supplier Successful");
+      onResetListCustomers();
+    } catch (error) {
+      toast.error("Delete supplier Failded");
+    }
+  };
+
   return (
     <>
       <TableRow
@@ -62,10 +83,13 @@ function RowCustomer(props) {
           {row.name}
         </TableCell>
         <TableCell align="right">{row?.email}</TableCell>
-        <TableCell align="right">{row?.carbs}</TableCell>
-        <TableCell align="right">{row?.total}</TableCell>
+        <TableCell align="right">{row?.phone}</TableCell>
         <TableCell align="right">
-          {row?.status === 1 ? "Đang hoạt động" : "Ngừng hoạt động"}
+          {row?.status === "0" ? (
+            <Chip label="Đang hoạt động" color="primary" />
+          ) : (
+            <Chip label="Ngừng hoạt động" color="error" />
+          )}
         </TableCell>
       </TableRow>
 
@@ -81,15 +105,15 @@ function RowCustomer(props) {
                     aria-label="basic tabs"
                   >
                     <Tab label="Thông tin" {...a11yProps(0)} />
-                    {/* <Tab label="Thẻ Kho" {...a11yProps(1)} /> */}
                   </Tabs>
                 </Box>
-                <TabPanelRowProduct value={value} index={0}>
-                  <TabInfomation item={row} />
-                </TabPanelRowProduct>
-                {/* <TabPanelRowProduct value={value} index={1}>
-                  Item Two
-                </TabPanelRowProduct> */}
+                <TabPanelRow value={value} index={0}>
+                  <TabInfomation
+                    item={row}
+                    onOpenModalUpdate={onOpenModalUpdate}
+                    onDeleteCustomer={handelDeleteCustomer}
+                  />
+                </TabPanelRow>
               </Box>
             </Box>
           </Collapse>

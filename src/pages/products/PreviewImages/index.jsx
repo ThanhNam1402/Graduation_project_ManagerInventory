@@ -60,8 +60,6 @@ function Previews(props) {
     setFiles(newFiles);
   };
 
-  console.log(files);
-
   return (
     <Box
       sx={{

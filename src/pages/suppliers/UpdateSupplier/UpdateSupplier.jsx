@@ -7,23 +7,36 @@ import {
   Typography,
   Button,
 } from "@mui/material";
+import { useEffect } from "react";
+
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import { supplierService } from "../../../services/supplier.service";
 
-function AddSupplier({ onCloseModalAdd, onAddSupplier }) {
+function UpdateSpllier(props) {
+  let { value, onCloseModal, onUpdateSupplier, onDeleteSupplier } = props;
+
+  console.log(props);
+
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    if (value) {
+      reset(value);
+    }
+  }, []);
+
   const _onSubmit = async (data) => {
-    console.log(data);
-    onAddSupplier(data);
+    onUpdateSupplier(data);
   };
 
   return (
@@ -147,7 +160,12 @@ function AddSupplier({ onCloseModalAdd, onAddSupplier }) {
             />
           </Stack>
         </Box>
-        <Stack direction="row" spacing={2} justifyContent={"flex-end"}>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ mt: 5 }}
+          justifyContent={"flex-end"}
+        >
           <Button
             variant="contained"
             type="submit"
@@ -158,11 +176,21 @@ function AddSupplier({ onCloseModalAdd, onAddSupplier }) {
           </Button>
           <Button
             variant="outlined"
-            onClick={onCloseModalAdd}
+            onClick={onCloseModal}
             startIcon={<CloseIcon />}
             color="success"
           >
             Hủy
+          </Button>
+
+          <Button
+            variant="contained"
+            startIcon={<DeleteOutlineIcon />}
+            color="error"
+            onClick={() => onDeleteSupplier(value.id)}
+            sx={{ boxShadow: 0 }}
+          >
+            Xóa
           </Button>
         </Stack>
       </form>
@@ -170,4 +198,4 @@ function AddSupplier({ onCloseModalAdd, onAddSupplier }) {
   );
 }
 
-export default AddSupplier;
+export default UpdateSpllier;

@@ -1,11 +1,8 @@
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import { Stack, Typography, Button } from "@mui/material";
+import { Stack, Typography, Button, Grid } from "@mui/material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 
-function TabInfomation(props) {
-  let { item } = props;
-
+function TabInfomation({ item, onOpenModalUpdate, onDeleteCustomer }) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={3}>
@@ -69,11 +66,23 @@ function TabInfomation(props) {
           </Stack>
         </div>
         <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
-          <Button variant="contained">Cập Nhật</Button>
-          <Button variant="contained" color="warning">
-            Ngừng Hoạt Động
+          <Button
+            variant="contained"
+            startIcon={<ChangeCircleIcon />}
+            color="primary"
+            onClick={() => onOpenModalUpdate(item.id)}
+            sx={{ boxShadow: 0 }}
+          >
+            Cập nhật
           </Button>
-          <Button variant="contained" color="error">
+
+          <Button
+            variant="contained"
+            startIcon={<DeleteOutlineIcon />}
+            color="error"
+            onClick={() => onDeleteCustomer(item.id)}
+            sx={{ boxShadow: 0 }}
+          >
             Xóa
           </Button>
         </Stack>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, memo } from "react";
 
 import { useTranslation } from "react-i18next";
 
@@ -19,7 +19,6 @@ import {
 } from "@mui/material";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 
 import { Delete } from "@mui/icons-material";
 
@@ -31,10 +30,15 @@ const headCells = [
   {
     id: "name",
     numeric: false,
-    disablePadding: false,
-    label: "Tên Khách Hàng",
+    disablePadding: true,
+    label: "Tên Cung Cấp",
   },
-
+  {
+    id: "tax_code",
+    numeric: true,
+    disablePadding: false,
+    label: "Mã Nhà Cung Cấp ",
+  },
   {
     id: "email",
     numeric: true,
@@ -42,27 +46,27 @@ const headCells = [
     label: "Email",
   },
   {
-    id: "fat",
+    id: "phone",
     numeric: true,
     disablePadding: false,
     label: "Điện Thoại",
   },
 
   {
-    id: "total",
+    id: "status",
     numeric: true,
     disablePadding: false,
-    label: "Tổng Bán",
+    label: "Trạng Thái",
   },
   {
-    id: "totalFindal",
+    id: "action",
     numeric: true,
     disablePadding: false,
-    label: "Tổng Bán trừ nợ",
+    label: "Thao Tác",
   },
 ];
 
-export function EnhancedTableHead(props) {
+function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
     order,
@@ -78,7 +82,6 @@ export function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell></TableCell>
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
@@ -129,7 +132,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export function EnhancedTableToolbar(props) {
+function EnhancedTableToolbar(props) {
   const { t } = useTranslation("product");
   const tAction = useTranslation("action").t;
 
@@ -172,7 +175,7 @@ export function EnhancedTableToolbar(props) {
         </Typography>
       ) : (
         <Typography variant="h6" id="tableTitle" component="div">
-          Danh Sách Khách Hàng
+          Danh Sách Nhà Cung Cấp
         </Typography>
       )}
 
@@ -207,13 +210,6 @@ export function EnhancedTableToolbar(props) {
           >
             <MenuItem>
               <ListItemIcon>
-                <FileDownloadOutlinedIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Xuất File</ListItemText>
-            </MenuItem>
-
-            <MenuItem>
-              <ListItemIcon>
                 <Delete fontSize="small" />
               </ListItemIcon>
               <ListItemText>Xóa </ListItemText>
@@ -224,3 +220,7 @@ export function EnhancedTableToolbar(props) {
     </Toolbar>
   );
 }
+
+export { EnhancedTableHead };
+
+export default memo(EnhancedTableToolbar);

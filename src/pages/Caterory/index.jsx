@@ -23,10 +23,10 @@ import { toast } from "react-toastify";
 
 import LoadingBackdrop from "../../components/BackDrop";
 import { categoryService } from "../../services/category.service";
-import ModalCmp from "../../components/modalContent/modalContent";
 import ModeIcon from "@mui/icons-material/Mode";
 import AddCategory from "./AddCategory";
 import UpdateCategory from "./UpdateCategory";
+import ModalContent from "../../components/modalContent/modalContent";
 import "./category.scss";
 
 function Categories(props) {
@@ -118,22 +118,23 @@ function Categories(props) {
       <LoadingBackdrop loading={false} />
 
       {/* MODAL ALL CATEGORY */}
-      <ModalCmp
+      <ModalContent
         isOpen={isOpen}
-        handleCloseModal={handleCloseModal}
+        onCloseModal={handleCloseModal}
         title="Thêm danh mục"
       >
         <AddCategory
           onAddCate={handleAddCate}
           handleCloseModal={handleCloseModal}
         />
-      </ModalCmp>
+      </ModalContent>
 
       {/* MODAL UPDATE CATEGORY */}
 
-      <ModalCmp
+      <ModalContent
+        size="sm"
         isOpen={isOpenUpdate}
-        handleCloseModal={handleSetModal}
+        onCloseModal={handleSetModal}
         title="Cập nhật sản phẩm"
       >
         <UpdateCategory
@@ -142,7 +143,7 @@ function Categories(props) {
           onUpdateCate={handleUpdateCate}
           handleCloseModal={handleSetModal}
         />
-      </ModalCmp>
+      </ModalContent>
 
       <Paper elevation={2} sx={{ width: "100%", mb: 3 }}>
         <Accordion defaultExpanded>

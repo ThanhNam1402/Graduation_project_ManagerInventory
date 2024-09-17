@@ -2,8 +2,8 @@ import { useState, useRef } from "react";
 import { Stack, Typography, Button, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 
-import { REACT_APP_BACKEND_URL } from "../../config/config";
-import UpdateProduct from "./UpdateProduct";
+import { REACT_APP_BACKEND_URL } from "../../../config/config";
+import UpdateProduct from "../UpdateProduct";
 
 function TabInfomation(props) {
   let { item, handleDelProduct } = props;

@@ -6,8 +6,8 @@ const theme = extendTheme({
       palette: {
         primary: {
           main: '#2196f3',
-          light: '#e8eaed',
-          dark: '#333',
+          light: '#82a8ff',
+          dark: '#3b7aad',
           contrastText: '#fff',
         },
         warning: {
@@ -26,7 +26,11 @@ const theme = extendTheme({
           main: '#f5e0dfba',
           light: '#fea4a3',
           dark: '#f57977',
-          contrastText: '#333333d9',
+          contrastText: '#ff0000',
+        },
+        layout: {
+          main: '#e8eaed',
+          contrastText: '#333',
         }
       },
       shadows: [
@@ -59,9 +63,13 @@ const theme = extendTheme({
     },
     dark: {
       palette: {
+        layout: {
+          main: '#333',
+          contrastText: '#333',
+        },
         primary: {
           main: '#3b7aad',
-          light: '#333',
+          light: '#5b97c7',
           dark: '#548fbf',
           contrastText: '#fff',
         },
@@ -81,7 +89,7 @@ const theme = extendTheme({
           main: '#eb9898',
           light: '#fea4a3',
           dark: '#f57977',
-          contrastText: '#333333d9',
+          contrastText: '#fff',
         }
       }
     }

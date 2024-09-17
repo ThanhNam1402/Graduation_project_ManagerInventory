@@ -1,24 +1,30 @@
-import React from "react";
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Box, Typography, Stack } from "@mui/material";
 import CsUsePagination from "../../hook/CsUsePagination";
 import FilterRadio from "../../components/filters/FilterRadio";
-import ListCustomers from "./ListCustomers";
+import ListCustomers from "./ListCustomers/ListCustomers";
 import ActionCustomer from "./ActionCusomter";
 import { ListStatus, ListCustomersType } from "../../utils/constain";
-import AddCustomer from "./AddCustomer";
 
-function Customers(props) {
+function Customers() {
   const [filters, setFilters] = useState({
     status: 0,
     customer_type: 0,
   });
-
-  const [openModal, setOpenModal] = useState(false);
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("name");
   const [keyWord, setKeyWord] = useState("");
+
+  const [openModalAdd, setOpenModalAdd] = useState(false);
+
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
     CsUsePagination(0, 5);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
   const handleSearch = (value) => {
     setPage(0);
@@ -43,12 +49,10 @@ function Customers(props) {
     }
   };
 
-  // open modal
-  const handleOpenModal = () => {
-    setOpenModal(!openModal);
+  const handleOpenModalAdd = () => {
+    setOpenModalAdd(!openModalAdd);
   };
 
-  console.log(filters);
   return (
     <>
       <Stack direction="row">
@@ -89,18 +93,22 @@ function Customers(props) {
         >
           <ActionCustomer
             handleSearch={handleSearch}
-            handleOpenModal={handleOpenModal}
+            handleOpenModal={handleOpenModalAdd}
           />
           <ListCustomers
-            keyWord={keyWord}
             filters={filters}
+            order={order}
+            orderBy={orderBy}
+            keyWord={keyWord}
             pagination={pagination}
+            openModalAdd={openModalAdd}
+            onCloseModalAdd={handleOpenModalAdd}
+            handleRequestSort={handleRequestSort}
             handleChangePage={handleChangePage}
             handleChangeRowsPerPage={handleChangeRowsPerPage}
           />
         </Box>
       </Stack>
-      <AddCustomer openModal={openModal} handleOpenModal={handleOpenModal} />
     </>
   );
 }

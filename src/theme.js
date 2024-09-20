@@ -89,7 +89,7 @@ const theme = extendTheme({
           main: '#eb9898',
           light: '#fea4a3',
           dark: '#f57977',
-          contrastText: '#fff',
+          contrastText: '#ff0000',
         }
       }
     }

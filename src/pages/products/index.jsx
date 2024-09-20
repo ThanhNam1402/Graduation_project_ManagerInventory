@@ -9,7 +9,7 @@ import { ListDisplayOption, ListOnHands } from "../../utils/constain";
 import FilterRadio from "../../components/filters/FilterRadio";
 import AddProduct from "./AddProduct";
 
-import ActionProduct from "../purchaseOrder/ActionProduct";
+import ActionProduct from "./ListProducts/ActionProduct";
 
 function Products() {
   const { t } = useTranslation("product");

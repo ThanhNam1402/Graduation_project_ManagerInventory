@@ -1,60 +1,106 @@
-import { TextField, Stack, Button } from "@mui/material";
-import { useState } from "react";
+import {
+  TextField,
+  Stack,
+  Button,
+  FormControl,
+  Typography,
+} from "@mui/material";
+import { object, string } from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
-function AddCategory(props) {
-  const { handleCloseModal, onAddCate } = props;
+function AddCategory({ handleCloseModal, onAddCate }) {
+  const { t } = useTranslation("notification");
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  let userSchema = object({
+    name: string().required(t("form.required")).max(50, "Tối Đa 30 kí tự"),
+    description: string()
+      .required(t("form.required"))
+      .max(220, "Tối Đa 220 kí tự"),
+  });
 
-  const handleSubmit = () => {
-    onAddCate(name, description);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(userSchema),
+  });
+
+  const _onSubmit = (values) => {
+    onAddCate(values?.name, values?.description);
   };
 
   return (
     <>
-      <Stack
-        sx={{
-          mb: 4,
-        }}
-        spacing={2}
-      >
-        <TextField
-          fullWidth
-          id="standard-required"
-          label="Tên danh mục"
-          variant="standard"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        <TextField
-          fullWidth
-          id="outlined-multiline-flexible"
-          label="Mô tả"
-          multiline
-          variant="standard"
-          maxRows={4}
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </Stack>
-
-      <Stack direction="row" spacing={2} justifyContent={"center"}>
-        <Button variant="contained" color="success" onClick={handleSubmit}>
-          Lưu
-        </Button>
-        <Button
-          variant="outlined"
+      <form action="" onSubmit={handleSubmit(_onSubmit)}>
+        <Stack
           sx={{
-            boxShadow: 0,
+            mb: 4,
           }}
-          color="success"
-          onClick={handleCloseModal}
+          spacing={2}
         >
-          Hủy
-        </Button>
-      </Stack>
+          <FormControl>
+            <TextField
+              fullWidth
+              id="standard-required"
+              label="Tên danh mục"
+              variant="standard"
+              {...register("name")}
+            />
+
+            {errors?.name && (
+              <Typography
+                sx={{
+                  color: "error.contrastText",
+                  mt: 1,
+                }}
+              >
+                {errors?.name?.message}
+              </Typography>
+            )}
+          </FormControl>
+
+          <FormControl>
+            <TextField
+              fullWidth
+              id="outlined-multiline-flexible"
+              label="Mô tả"
+              multiline
+              variant="standard"
+              {...register("description")}
+              maxRows={4}
+            />
+            {errors?.description && (
+              <Typography
+                sx={{
+                  color: "error.contrastText",
+                  mt: 1,
+                }}
+              >
+                {errors?.description?.message}
+              </Typography>
+            )}
+          </FormControl>
+        </Stack>
+
+        <Stack direction="row" spacing={2} justifyContent={"flex-end"}>
+          <Button type="submit" variant="contained" color="success">
+            Lưu
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{
+              boxShadow: 0,
+            }}
+            color="success"
+            onClick={handleCloseModal}
+          >
+            Hủy
+          </Button>
+        </Stack>
+      </form>
     </>
   );
 }

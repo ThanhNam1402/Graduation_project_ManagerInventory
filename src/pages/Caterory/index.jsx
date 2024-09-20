@@ -11,7 +11,6 @@ import {
   RadioGroup,
   FormControlLabel,
   FormControl,
-  Button,
   Stack,
   IconButton,
 } from "@mui/material";
@@ -29,11 +28,11 @@ import UpdateCategory from "./UpdateCategory";
 import ModalContent from "../../components/modalContent/modalContent";
 import "./category.scss";
 
-function Categories(props) {
+function Categories({ handleGetValue }) {
   const { t } = useTranslation("filter");
 
-  const { handleGetValue } = props;
   const [listCate, setListCate] = useState([]);
+  const [preListCate, setPreListCate] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const refCate = useRef("");
@@ -46,9 +45,10 @@ function Categories(props) {
       let res = await categoryService.handleGetAllCate();
       if (res && res?.status) {
         setListCate(res?.data);
+        setPreListCate(res?.data);
       }
     } catch (error) {
-      toastr.error("Error getting all categories");
+      toast.error("Error getting all categories");
       console.log("error category");
     }
   };
@@ -58,6 +58,15 @@ function Categories(props) {
   }, []);
 
   const handleFindCate = (value) => {
+    // find character in list cate
+    let listFindCate = preListCate.filter((item) => item.name.includes(value));
+
+    if (listFindCate.length > 0) {
+      setListCate(listFindCate);
+    }
+    if (value === "") {
+      setListCate(preListCate);
+    }
     setSearch(value);
   };
 
@@ -80,8 +89,7 @@ function Categories(props) {
       let res = await categoryService.handleUpdateCate(id, data);
       toast.success(res?.message || "Add Category Successfully");
       handleGetAllCate();
-
-      handleCloseModal();
+      setIsOpenUpdate(false);
     } catch (error) {
       toast.error(error?.message || "Add Category Failed");
     }
@@ -90,6 +98,7 @@ function Categories(props) {
   const handleOpenAdd = () => {
     setIsOpen(true);
   };
+
   const handleCloseModal = () => {
     setIsOpen(false);
   };
@@ -97,6 +106,7 @@ function Categories(props) {
   const handleSetModal = () => {
     setIsOpenUpdate(!isOpenUpdate);
   };
+
   const handleOpenModalUpdate = (id) => {
     refCate.current = id;
     setIsOpenUpdate(!isOpenUpdate);
@@ -175,7 +185,7 @@ function Categories(props) {
                 }}
               />
 
-              <Button
+              <IconButton
                 onClick={handleOpenAdd}
                 sx={{
                   p: 1,
@@ -184,7 +194,7 @@ function Categories(props) {
                 }}
               >
                 <AddIcon />
-              </Button>
+              </IconButton>
             </Stack>
             <FormControl fullWidth>
               <RadioGroup

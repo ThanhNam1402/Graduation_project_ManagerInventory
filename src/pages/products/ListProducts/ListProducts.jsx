@@ -1,20 +1,13 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  TableContainer,
-  Typography,
-} from "@mui/material";
+import { Paper, Table, TableBody, TableContainer } from "@mui/material";
 
 import CsPagination from "../../../components/CsPagination";
 import csUseQueryString from "../../../hook/csUseQueryString";
 import { productService } from "../../../services/product.service";
 import RowProduct from "./RowProduct";
 import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListProduct";
+import TableRowNoData from "../../../components/TableRowNoData/TableRowNoData";
 import { toast } from "react-toastify";
 
 export default function ListProducts(props) {
@@ -138,11 +131,7 @@ export default function ListProducts(props) {
                 })
               ) : (
                 <>
-                  <TableRow>
-                    <TableCell style={{ p: 1 }} colSpan={6} align="center">
-                      <Typography>nodata</Typography>
-                    </TableCell>
-                  </TableRow>
+                  <TableRowNoData />
                 </>
               )}
             </TableBody>

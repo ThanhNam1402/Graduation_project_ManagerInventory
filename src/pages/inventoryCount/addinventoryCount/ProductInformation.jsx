@@ -5,6 +5,7 @@ import {
   TableCell,
   TableBody,
   IconButton,
+  Button,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -18,9 +19,9 @@ function Product_information({
 }) {
   return (
     <>
-      <Table sx={{ width: 800 }}>
+      <Table sx={{ width: 800, border: "1px solid black", mt: 2 }}>
         <TableHead>
-          <TableRow>
+          <TableRow sx={{ backgroundColor: "#2196f3" }}>
             <TableCell>Kiểm gần đây</TableCell>
             <TableCell>Số lượng</TableCell>
             <TableCell>Giá bán</TableCell>
@@ -44,14 +45,19 @@ function Product_information({
                   <AddIcon />
                 </IconButton>
               </TableCell>
-              <TableCell>{handleformat.formatPrice(product.sale_price)}</TableCell>
               <TableCell>
-                <IconButton
+                {handleformat.formatPrice(product.sale_price)}
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="contained"
                   color="error"
+                  sx={{ mr: 1 }}
+                  startIcon={<DeleteIcon />}
                   onClick={() => handleDelete(product.id)}
                 >
-                  <DeleteIcon />
-                </IconButton>
+                  Xóa
+                </Button>
               </TableCell>
             </TableRow>
           ))}

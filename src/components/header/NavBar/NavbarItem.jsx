@@ -7,6 +7,10 @@ import AddCardOutlinedIcon from "@mui/icons-material/AddCardOutlined";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import LoyaltyIcon from "@mui/icons-material/Loyalty";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import GroupIcon from '@mui/icons-material/Group';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
 
 export const ListMenu = [
   {
@@ -71,6 +75,32 @@ export const ListMenu = [
         title: "navbar.purchase-order",
         icon: <AddBusinessIcon />,
         link: path.SYSTEM + "/purchaseOrder",
+      },
+    ],
+  },
+  {
+    title: "navbar.employee",
+    icon: <GroupIcon />,
+    children: [
+      {
+        title: "navbar.employee",
+        link: path.SYSTEM + "/employee",
+        icon: <GroupIcon />,
+      },
+      {
+        title: "navbar.calender",
+        icon: <CalendarMonthIcon/>,
+        link: path.SYSTEM + "/timeSheet",
+      },
+      {
+        title: "navbar.timeSheet",
+        icon: <EditCalendarIcon />,
+        link: path.SYSTEM + "/timekeeping",
+      },
+      {
+        title: "navbar.payroll",
+        icon: <EditCalendarIcon />,
+        link: path.SYSTEM + "/paysheet",
       },
     ],
   },

@@ -51,50 +51,53 @@ function ListInventoryCount(props) {
 
   useEffect(() => {
     fetchData();
-  }, [filters, pagination?.page, keyword]);
+  }, []);
 
   const fetchData = async () => {
     try {
-      let filterParams = csUseQueryString({
-        ...filters,
-        ...pagination,
-        keyword,
-      });
+      // let filterParams = csUseQueryString({
+      //   ...filters,
+      //   ...pagination,
+      //   keyword,
+      // });
 
-      const res = await invertoryService.handleGetAll(filterParams);
+      const res = await invertoryService.handleGetAll();
       let data = res.data;
 
-      const groupedData = data.reduce((acc, item) => {
-        const id = item.id;
+      console.log("Check data call API", data[1]);
+      
 
-        if (!acc[id]) {
-          acc[id] = {
-            id,
-            code: item.code,
-            createdAt: item.createdAt,
-            qty: 0,
-            sale_price: 0,
-            items: [],
-          };
-        }
+      // const groupedData = data.reduce((acc, item) => {
+      //   const id = item.id;
 
-        acc[id].qty += item.Products.Inventory_Detail.qty;
-        acc[id].sale_price += item.Products.Inventory_Detail.sale_price;
+      //   if (!acc[id]) {
+      //     acc[id] = {
+      //       id,
+      //       code: item.code,
+      //       createdAt: item.createdAt,
+      //       qty: 0,
+      //       sale_price: 0,
+      //       items: [],
+      //     };
+      //   }
 
-        acc[id].items.push({
-          code: item.Products.code,
-          name: item.Products.name,
-          qty: item.Products.Inventory_Detail.qty,
-          description: item.Products.description,
-          sale_price: item.Products.sale_price,
-          endingStocks: item.Products.Inventory_Detail.EndingStocks,
-        });
+      //   acc[id].qty += item.Products.Inventory_Detail.qty;
+      //   acc[id].sale_price += item.Products.Inventory_Detail.sale_price;
 
-        return acc;
-      }, {});
+      //   acc[id].items.push({
+      //     code: item.Products.code,
+      //     name: item.Products.name,
+      //     qty: item.Products.Inventory_Detail.qty,
+      //     description: item.Products.description,
+      //     sale_price: item.Products.sale_price,
+      //     endingStocks: item.Products.Inventory_Detail.EndingStocks,
+      //   });
 
-      const filteredData = Object.values(groupedData);
-      setData(filteredData);
+      //   return acc;
+      // }, {});
+
+      // const filteredData = Object.values(data);
+      setData(data);
     } catch (error) {
       console.log(error);
     }
@@ -166,6 +169,10 @@ function ListInventoryCount(props) {
                   {t("inventorycount.table.tableHead.total")}
                 </TableCell>
                 <TableCell>
+                  {/* {t("inventorycount.table.tableHead.status")} */}
+                  Tổng chênh lệch
+                </TableCell>
+                <TableCell>
                   {t("inventorycount.table.tableHead.status")}
                 </TableCell>
                 <TableCell />
@@ -196,11 +203,14 @@ function ListInventoryCount(props) {
                     </TableCell>
                     <TableCell>{row.code}</TableCell>
                     <TableCell>
-                      {handleformat.formatDate(row.createdAt)}
+                      {handleformat.formatDate(row.created_at)}
                     </TableCell>
-                    <TableCell>{row.qty}</TableCell>
+                    <TableCell>{row.ac_number}</TableCell>
                     <TableCell>
-                      {handleformat.formatPrice(row.qty * row.sale_price)}
+                      {row.ac_total}
+                    </TableCell>
+                    <TableCell>
+                      {row.total_difference}
                     </TableCell>
                     <TableCell>
                       {row.status === 0 ? "Đã cân bằng" : "Chưa cân bằng"}
@@ -264,7 +274,7 @@ function ListInventoryCount(props) {
                               </Typography>
                             </Box>
                             <TableContainer component={Paper} sx={{ mt: 3 }}>
-                              <Product_details row={row.items} />
+                              <Product_details row={row.detail_stock} />
                             </TableContainer>
 
                             <Grid

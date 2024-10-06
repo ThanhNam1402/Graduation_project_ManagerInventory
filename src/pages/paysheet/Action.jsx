@@ -14,7 +14,7 @@ function ActionTransaction({ selectedCount }) {
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
-    navigate("/system/orders/add");
+    navigate("/system/employee/add");
   };
 
   return (
@@ -41,7 +41,8 @@ function ActionTransaction({ selectedCount }) {
             startIcon={<AddOutlinedIcon />}
             onClick={() => handleButtonClick()}
           >
-            {t("orders.action.order")}
+            {/* {t("orders.action.order")} */}
+            Thêm bảng lương
           </Button>
 
           <div>

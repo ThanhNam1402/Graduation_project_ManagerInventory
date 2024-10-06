@@ -1,42 +1,22 @@
 import {
   Box,
-  TextField,
-  IconButton,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Paper,
   Typography,
-  Button,
   CircularProgress,
   Backdrop,
   Grid,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  FormControl,
 } from "@mui/material";
 
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-import PrintIcon from "@mui/icons-material/Print";
-import CheckIcon from "@mui/icons-material/Check";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-
 import { productService } from "./../../../services/product.service";
 import { orderService } from "./../../../services/order.service";
-import { handleformat } from "./../../../utils/format";
 import { delay } from "../../../utils/func";
 
-import { useAppContext } from "../../../context/AppContent";
-
+import Find from "./Fine";
+import Product_information from "./Productinformation";
+import Inventory_check_sheet from "./Inventory_check_sheet";
 const AddTransaction = () => {
-  const appContext = useAppContext();
 
   const [data, setData] = useState([]);
   const [purchasedProducts, setPurchasedProducts] = useState([]);
@@ -44,18 +24,14 @@ const AddTransaction = () => {
   const [note, setNote] = useState("");
   const [status, setStatus] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
-
+  const [value, setValue] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [options, setOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   let filters = "";
   let keyWord = "";
   let pagination = 0;
-
-  useEffect(() => {
-    console.log(userName);
-    console.log("Note", note);
-    console.log("status", status);
-  }, [userName, note, status]);
 
   useEffect(() => {
     GetAllProducts();
@@ -74,20 +50,55 @@ const AddTransaction = () => {
         rowsPerPage: pagination?.rowsPerPage || 15,
       }).toString();
 
-      console.log(filterParams);
-
       const response = await productService.handleGetAllProduct(filterParams);
       console.log("Check data get Pb", response.data);
 
       if (response && response.success === true) {
-        const filteredData = response.data.filter(
-          (item) => item.onHand !== null && item.onHand !== 0
-        );
-        setData(filteredData);
+        setData(response.data);
+        setOptions(response.data);
       }
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleAutocompleteChange = (event, newValue) => {
+    setValue(newValue);
+    if (newValue) {
+      setSelectedProducts((prev) => {
+        const existingProductIndex = prev.findIndex(
+          (item) => item.id === newValue.id
+        );
+        let updatedProducts;
+        if (existingProductIndex !== -1) {
+          // Check xem có bị trùng sản phẩm không, nếu trùng thì tăng SL lên 1 và cập nhật lại tổng giá
+          updatedProducts = [...prev];
+          updatedProducts[existingProductIndex].qty += 1;
+          updatedProducts[existingProductIndex].totalPrice =
+            updatedProducts[existingProductIndex].qty *
+            updatedProducts[existingProductIndex].sale_price;
+        } else {
+          // Nếu không thì thêm vào arr 1 sp mới
+          const updatedProduct = {
+            ...newValue,
+            qty: 1,
+            totalPrice: newValue.sale_price,
+          };
+          updatedProducts = [...prev, updatedProduct];
+        }
+        updateTotalPrice(updatedProducts);
+        return updatedProducts;
+      });
+      setValue(null);
+    }
+  };
+
+  const updateTotalPrice = (products) => {
+    const total = products.reduce(
+      (acc, item) => acc + item.qty * item.sale_price,
+      0
+    );
+    setTotalPrice(total);
   };
 
   const handleNameChange = (event) => {
@@ -102,70 +113,30 @@ const AddTransaction = () => {
     setStatus(parseInt(event.target.value, 10));
   };
 
-  const handlePurchase = (product) => {
-    setPurchasedProducts((prev) => {
-      const existingProduct = prev.find((item) => item.id === product.id);
-      let updatedProducts;
-
-      if (existingProduct) {
-        updatedProducts = prev.map((item) =>
-          item.id === product.id ? { ...item, qty: item.qty + 1 } : item
-        );
-      } else {
-        updatedProducts = [...prev, { ...product, qty: 1 }];
-      }
-
-      // Cập nhật tổng giá
-      const total = updatedProducts.reduce(
-        (acc, item) => acc + item.qty * item.sale_price,
-        0
-      );
-      setTotalPrice(total);
-
-      return updatedProducts;
-    });
-  };
-
   const handleIncrease = (productId) => {
-    setPurchasedProducts((prev) =>
-      prev.map((item) =>
-        item.id === productId ? { ...item, qty: item.qty + 1 } : item
-      )
+    const updatedProducts = selectedProducts.map((item) =>
+      item.id === productId ? { ...item, qty: item.qty + 1 } : item
     );
+    setSelectedProducts(updatedProducts);
+    updateTotalPrice(updatedProducts);
   };
 
   const handleDecrease = (productId) => {
-    setPurchasedProducts((prev) => {
-      const updatedProducts = prev.map((item) =>
-        item.id === productId && item.qty > 1
-          ? { ...item, qty: item.qty - 1 }
-          : item
-      );
-
-      // Cập nhật tổng giá
-      const total = updatedProducts.reduce(
-        (acc, item) => acc + item.qty * item.sale_price,
-        0
-      );
-      setTotalPrice(total);
-
-      return updatedProducts;
-    });
+    const updatedProducts = selectedProducts.map((item) =>
+      item.id === productId && item.qty > 1
+        ? { ...item, qty: item.qty - 1 }
+        : item
+    );
+    setSelectedProducts(updatedProducts);
+    updateTotalPrice(updatedProducts);
   };
 
   const handleDelete = (productId) => {
-    setPurchasedProducts((prev) => {
-      const updatedProducts = prev.filter((item) => item.id !== productId);
-
-      // Cập nhật tổng giá
-      const total = updatedProducts.reduce(
-        (acc, item) => acc + item.qty * item.sale_price,
-        0
-      );
-      setTotalPrice(total);
-
-      return updatedProducts;
-    });
+    const updatedProducts = selectedProducts.filter(
+      (item) => item.id !== productId
+    );
+    setSelectedProducts(updatedProducts);
+    updateTotalPrice(updatedProducts);
   };
 
   const handleGetCode = async () => {
@@ -300,153 +271,35 @@ const AddTransaction = () => {
       <Grid container spacing={2}>
         <Grid item xs={7}>
           <Box sx={{ p: 2, border: 1 }}>
-            <Paper>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>STT</TableCell>
-                    <TableCell>Mã hàng</TableCell>
-                    <TableCell>Tên hàng</TableCell>
-                    <TableCell>Giá</TableCell>
-                    <TableCell>Giá giảm</TableCell>
-                    <TableCell>Thao tác</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.map((item, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{item.code}</TableCell>
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell>{item.price}</TableCell>
-                      <TableCell>{item.sale_price}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outlined"
-                          onClick={() => handlePurchase(item)}
-                        >
-                          Mua
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Paper>
+            <Find
+              value={value}
+              handleAutocompleteChange={handleAutocompleteChange}
+              options={options}
+            />
+
+            <Product_information
+              selectedProducts={selectedProducts}
+              handleDecrease={handleDecrease}
+              handleIncrease={handleIncrease}
+              handleDelete={handleDelete}
+            />
           </Box>
         </Grid>
 
         <Grid item xs={5}>
-          <Box sx={{ p: 2, border: 1 }}>
-            <Typography variant="h6">
-              {appContext?.userInfo?.data?.name}
-            </Typography>
-            <Typography>Mã kiểm dặt hàng: Mã phiếu tự động</Typography>
-            <Typography>
-              Tổng SL thực tế:
-              {purchasedProducts.reduce((acc, item) => acc + item.qty, 0)}
-            </Typography>
-            <Typography variant="p">
-              Tổng giá: {handleformat.formatPrice(totalPrice)}
-            </Typography>
-            <TextField
-              label="Tên người mua"
-              variant="outlined"
-              fullWidth
-              value={userName}
-              onChange={handleNameChange}
-              sx={{ my: 2 }}
-            />
-            <FormControl>
-              <Typography variant="p">Trạng thái phiếu</Typography>
-              <RadioGroup
-                aria-labelledby="radio-buttons-group-label"
-                name="radio-buttons-group"
-                value={status}
-                onChange={handleStatusChange}
-              >
-                <FormControlLabel
-                  value={1}
-                  control={<Radio />}
-                  label="Hoàn thành"
-                />
-                <FormControlLabel
-                  value={0}
-                  control={<Radio />}
-                  label="Chưa thanh toán"
-                />
-              </RadioGroup>
-            </FormControl>
-            <TextField
-              label="Ghi chú"
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={3}
-              onChange={handleChageNote}
-              sx={{ my: 2 }}
-            />
-            <Box>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Kiểm gần đây</TableCell>
-                    <TableCell>Số lượng</TableCell>
-                    <TableCell>Giá bán</TableCell>
-                    <TableCell>Thao tác</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {purchasedProducts.map((product, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        {product.name} ({product.code})
-                      </TableCell>
-
-                      <TableCell>
-                        <IconButton onClick={() => handleDecrease(product.id)}>
-                          <RemoveIcon />
-                        </IconButton>
-                        {product.qty}
-
-                        <IconButton onClick={() => handleIncrease(product.id)}>
-                          <AddIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>{product.sale_price}</TableCell>
-                      <TableCell>
-                        <IconButton
-                          color="error"
-                          onClick={() => handleDelete(product.id)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-            <Box
-              sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<PrintIcon />}
-              >
-                Lưu tạm
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                startIcon={<CheckIcon />}
-                onClick={() => Addorder()}
-              >
-                Hoàn tất
-              </Button>
-            </Box>
-          </Box>
+        <Inventory_check_sheet
+        handleChageNote={handleChageNote}
+        handleStatusChange={handleStatusChange}
+        handleNameChang={handleNameChange}
+        userName={userName}
+        purchasedProducts={purchasedProducts}
+        status={status}
+        totalPrice={totalPrice}
+        handleDecrease={handleDecrease}
+        handleIncrease={handleIncrease}
+        handleDelete={handleDelete}
+        Addorder={Addorder}
+        />
         </Grid>
       </Grid>
     </>

@@ -8,7 +8,10 @@ export const handleformat = {
   },
 
   formatPrice(price) {
-    if (!price) return null
-    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-  }
-}
+    if (price === null || price === undefined) return null;
+    return price.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+  },
+};

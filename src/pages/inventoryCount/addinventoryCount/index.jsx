@@ -234,7 +234,6 @@ const AddInventoryCount = () => {
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={7}>
-          {/* CODE Ở ĐÂY */}
           <Find
             value={value}
             handleAutocompleteChange={handleAutocompleteChange}

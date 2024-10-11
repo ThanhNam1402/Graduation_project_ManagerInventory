@@ -11,7 +11,7 @@ function CsUsePagination(curentPage, rowsPerpage) {
 
   const handleChangeRowsPerPage = (event) => {
     setLimit(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(1);
   };
 
   return {

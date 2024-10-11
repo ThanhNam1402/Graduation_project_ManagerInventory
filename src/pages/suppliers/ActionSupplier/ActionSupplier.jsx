@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -14,13 +14,15 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
+import PropTypes from "prop-types";
 
-import SearchProduct from "../../components/filters/SearchProduct";
+import SearchProduct from "../../../components/filters/SearchProduct";
 
-function ActionSupplier(props) {
+const ActionSupplier = memo(function ActionSupplier({
+  handleSearch,
+  handleOpenModal,
+}) {
   const { t } = useTranslation("action");
-
-  let { handleSearch, handleOpenModal } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -102,6 +104,11 @@ function ActionSupplier(props) {
       </Stack>
     </Stack>
   );
-}
+});
+
+ActionSupplier.propTypes = {
+  handleSearch: PropTypes.func.isRequired,
+  handleOpenModal: PropTypes.func.isRequired,
+};
 
 export default ActionSupplier;

@@ -1,23 +1,19 @@
-import {
-  Dialog,
-  DialogContent,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { CsDialogTitle } from "../CustomMui/Dialog";
-
+import { Dialog, DialogContent, IconButton, Stack } from "@mui/material";
+import PropTypes from "prop-types";
 import ClearIcon from "@mui/icons-material/Clear";
 
+import { CsDialogTitle } from "../CustomMui/Dialog";
 import "./modalContent.scss";
 
-export default function ModalContent({
-  children,
-  isOpen,
-  onCloseModal,
-  title,
-  size,
-}) {
+ModalContent.propTypes = {
+  children: PropTypes.element,
+  isOpen: PropTypes.bool,
+  onCloseModal: PropTypes.func,
+  title: PropTypes.string,
+  size: PropTypes.string,
+};
+
+function ModalContent({ children, isOpen, onCloseModal, title, size }) {
   return (
     <Dialog
       fullWidth
@@ -50,3 +46,5 @@ export default function ModalContent({
     </Dialog>
   );
 }
+
+export default ModalContent;

@@ -4,7 +4,6 @@ import AllInboxRoundedIcon from "@mui/icons-material/AllInboxRounded";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import AddCardOutlinedIcon from "@mui/icons-material/AddCardOutlined";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import LoyaltyIcon from "@mui/icons-material/Loyalty";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 

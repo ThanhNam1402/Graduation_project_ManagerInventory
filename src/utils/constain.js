@@ -7,7 +7,7 @@ export const path = {
 export const ListProductTypes = {
     title: "filter.product-type",
     data: [
-        { value: 0, name: 'Hàng Hóa' },
+        { value: '', name: 'Hàng Hóa' },
         { value: 1, name: 'Dịch Vụ' },
         { value: 2, name: 'Compo  Gói' },
     ]
@@ -16,7 +16,7 @@ export const ListProductTypes = {
 export const ListDisplayOption = {
     title: "filter.display-option",
     data: [
-        { value: 0, name: "All" },
+        { value: '', name: "All" },
         { value: 1, name: "Đang Kinh Doanh" },
         { value: 2, name: "Ngừng Kinh Doanh" }
     ]
@@ -25,7 +25,7 @@ export const ListDisplayOption = {
 export const ListOnHands = {
     title: "filter.on-hand",
     data: [
-        { value: 0, name: "All" },
+        { value: '', name: "All" },
         { value: 1, name: "Còn Hàng" },
         { value: 2, name: "Hết Hàng" }
 
@@ -44,16 +44,24 @@ export const ListGender = {
 export const ListCustomersType = {
     title: "filter.customer-type",
     data: [
-        { value: 0, name: "All" },
-        { value: 1, name: "Cá Nhân" },
-        { value: 2, name: "Công Ty" }
+        { value: "", name: "All" },
+        { value: 0, name: "Cá Nhân" },
+        { value: 1, name: "Công Ty" }
+    ]
+}
+export const ListStatusCustomer = {
+    title: "filter.customer-type",
+    data: [
+        { value: "", name: "All" },
+        { value: 0, name: "Đang Hoạt động" },
+        { value: 1, name: "Ngừng Hoạt Động" }
     ]
 }
 
 export const ListStatus = {
     title: "filter.status",
     data: [
-        { value: 0, name: "All" },
+        { value: "", name: "All" },
         { value: 1, name: "Đang Hoạt động" },
         { value: 2, name: "Ngừng Hoạt Động" }
     ]

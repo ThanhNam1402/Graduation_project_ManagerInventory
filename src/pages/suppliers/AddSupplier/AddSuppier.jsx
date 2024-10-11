@@ -1,10 +1,12 @@
-import DynamicForm from "../../../components/DynamicForm";
-import { object, string, number } from "yup";
-import Proptypes from "prop-types";
+import PropTypes from "prop-types";
+
+import { object, string } from "yup";
 import { useTranslation } from "react-i18next";
 
-function UpdateSpllier({ value, onCloseModal, onUpdateSupplier }) {
-  let { t } = useTranslation("notification");
+import DynamicForm from "../../../components/DynamicForm";
+
+function AddSupplier({ onAddSupplier, onCloseModalAdd }) {
+  const { t } = useTranslation("notification");
 
   let userSchema = object({
     name: string().required(t("form.required")).max(50, "Tối Đa 30 kí tự"),
@@ -12,15 +14,17 @@ function UpdateSpllier({ value, onCloseModal, onUpdateSupplier }) {
     facebook: string(),
     email: string().required(t("form.required")),
     customer_type: string(),
-    tax_code: string().nullable(),
-    address: string().nullable(),
-    notes: string().nullable().max(220, "Tối Đa 220 kí tự"),
-    id: number(),
+    tax_code: string(),
+    date_of_birth: string(),
+    notes: string(),
+    address: string(),
+    description: string().max(220, "Tối Đa 220 kí tự"),
   });
 
   const _onSubmit = async (data) => {
-    onUpdateSupplier(data);
+    onAddSupplier(data);
   };
+
   // data form
   const fields = [
     {
@@ -54,16 +58,6 @@ function UpdateSpllier({ value, onCloseModal, onUpdateSupplier }) {
       labelName: "Facebook",
     },
     {
-      name: "status",
-      label: "status",
-      type: "radio",
-      labelName: "Trạng thái",
-      options: [
-        { value: 1, label: "Đang hoạt động" },
-        { value: 2, label: "Ngừng hoạt động" },
-      ],
-    },
-    {
       name: "address",
       label: "address",
       type: "textarea",
@@ -81,19 +75,17 @@ function UpdateSpllier({ value, onCloseModal, onUpdateSupplier }) {
     <>
       <DynamicForm
         fields={fields}
-        onCloseModalAdd={onCloseModal}
+        onCloseModalAdd={onCloseModalAdd}
         onSubmit={_onSubmit}
         FormSchema={userSchema}
-        valueEdit={value}
       />
     </>
   );
 }
 
-UpdateSpllier.propTypes = {
-  value: Proptypes.object,
-  onCloseModal: Proptypes.func,
-  onUpdateSupplier: Proptypes.func,
+AddSupplier.propTypes = {
+  onCloseModalAdd: PropTypes.func,
+  onAddSupplier: PropTypes.func,
 };
 
-export default UpdateSpllier;
+export default AddSupplier;

@@ -18,6 +18,13 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { useTranslation } from "react-i18next";
+import Proptypes from "prop-types";
+
+FilterRadio.propTypes = {
+  handleGetValue: Proptypes.func,
+  keyFilter: Proptypes.string,
+  data: Proptypes.object,
+};
 
 function FilterRadio(props) {
   const { t } = useTranslation("filter");
@@ -40,11 +47,9 @@ function FilterRadio(props) {
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="0"
+              defaultValue=""
               name="radio-buttons-group"
-              onChange={(e) =>
-                handleGetValue(Number(e.target.value), keyFilter)
-              }
+              onChange={(e) => handleGetValue(e.target.value, keyFilter)}
             >
               {data &&
                 data.data.length > 0 &&

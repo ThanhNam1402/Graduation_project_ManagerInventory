@@ -1,0 +1,15 @@
+{
+    "title" : "Customers",
+    "table" : {
+        "tableHead" : {
+            "name" : "customer name",
+            "email" : "Email",
+            "phone" : "Phone number",
+            "status" : "Status"
+        }
+    },
+   "status" : {
+        "active" : "Actice",
+        "inactive" : "Inactive"
+    }
+}

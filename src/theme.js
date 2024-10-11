@@ -23,10 +23,10 @@ const theme = extendTheme({
           contrastText: '#fff',
         },
         error: {
-          main: '#f5e0dfba',
-          light: '#fea4a3',
-          dark: '#f57977',
-          contrastText: '#ff0000',
+          main: '#e91e63',
+          light: '#f06292',
+          dark: '#ec407a',
+          contrastText: '#fff',
         },
         layout: {
           main: '#e8eaed',
@@ -86,10 +86,10 @@ const theme = extendTheme({
           contrastText: '#333',
         },
         error: {
-          main: '#eb9898',
+          main: '#c2185b',
           light: '#fea4a3',
           dark: '#f57977',
-          contrastText: '#ff0000',
+          contrastText: '#fff',
         }
       }
     }

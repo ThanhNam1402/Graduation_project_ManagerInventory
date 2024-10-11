@@ -31,42 +31,38 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "Tên Cung Cấp",
+    label: "name",
   },
   {
     id: "tax_code",
     numeric: true,
     disablePadding: false,
-    label: "Mã Nhà Cung Cấp ",
+    label: "tax_code",
   },
   {
     id: "email",
     numeric: true,
     disablePadding: false,
-    label: "Email",
+    label: "email",
   },
   {
     id: "phone",
     numeric: true,
     disablePadding: false,
-    label: "Điện Thoại",
+    label: "phone",
   },
 
   {
     id: "status",
     numeric: true,
     disablePadding: false,
-    label: "Trạng Thái",
-  },
-  {
-    id: "action",
-    numeric: true,
-    disablePadding: false,
-    label: "Thao Tác",
+    label: "status",
   },
 ];
 
 function EnhancedTableHead(props) {
+  const { t } = useTranslation("supplier");
+
   const {
     onSelectAllClick,
     order,
@@ -82,6 +78,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
+        <TableCell padding="checkbox"></TableCell>
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
@@ -105,7 +102,7 @@ function EnhancedTableHead(props) {
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {t("table.tableHead." + headCell.label)}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -128,12 +125,8 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
-function EnhancedTableToolbar(props) {
-  const { t } = useTranslation("product");
+const EnhancedTableToolbar = memo(function EnhancedTableToolbar(props) {
+  const { t } = useTranslation("supplier");
   const tAction = useTranslation("action").t;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -146,8 +139,6 @@ function EnhancedTableToolbar(props) {
     setAnchorEl(null);
   };
   const { numSelected } = props;
-
-  console.log(numSelected);
 
   return (
     <Toolbar
@@ -175,7 +166,7 @@ function EnhancedTableToolbar(props) {
         </Typography>
       ) : (
         <Typography variant="h6" id="tableTitle" component="div">
-          Danh Sách Nhà Cung Cấp
+          {t("title")}
         </Typography>
       )}
 
@@ -219,8 +210,11 @@ function EnhancedTableToolbar(props) {
       )}
     </Toolbar>
   );
-}
+});
 
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+};
 export { EnhancedTableHead };
 
-export default memo(EnhancedTableToolbar);
+export default EnhancedTableToolbar;

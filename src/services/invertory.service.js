@@ -1,20 +1,16 @@
 import api from "../config/axios";
 
 export const invertoryService = {
-  handleGetAll() {
-    return api.get(`/api/checkstock`);
+  handleGetAll(page) {
+    return api.get(`/api/checkstock?page=${page}`);
   },
   handleGetOne(id) {
     return api.get(`/api/checkstock/${id}`);
   },
   hendleCreat(data) {
-    return api.post(`/api/invertory`, {
+    return api.post(`/api/checkstock/create`, {
       ...data,
     });
-  },
-
-  handleGetCode() {
-    return api.get(`/api/invertory/code`);
   },
 
   handleDelInvertory(id) {

@@ -13,9 +13,9 @@ function Print_Footer({ row, user }) {
           </Grid>
           <Grid item xs={5}>
             <Typography sx={{ p: 1 }}>
-              Cần Thơ ngày {handleformat.formatDate(row.createdAt)}
+              Cần Thơ ngày {handleformat.formatDate(row?.createdAt)}
             </Typography>
-            <Typography sx={{ p: 1 }}>Người tạo phiếu: {user.email}</Typography>
+            <Typography sx={{ p: 1 }}>Người tạo phiếu: {user?.email}</Typography>
           </Grid>
         </Grid>
       </Box>

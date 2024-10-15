@@ -1,33 +1,24 @@
-import {
-  Box,
-  Typography,
-  CircularProgress,
-  Backdrop,
-  Grid,
-} from "@mui/material";
+import { Typography, Grid } from "@mui/material";
 
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 import { productService } from "./../../../services/product.service";
-import { orderService } from "./../../../services/order.service";
-import { delay } from "../../../utils/func";
+import { invertoryService } from "./../../../services/invertory.service";
 
-import Find from "./Fine";
+import Order_check_sheet from "./Order_check_sheet";
 import Product_information from "./Productinformation";
-import Inventory_check_sheet from "./Inventory_check_sheet";
-const AddTransaction = () => {
+import Find from "./Fine";
+import LoadingBackdrop from "../../../components/BackDrop";
 
+const AddOrder = () => {
   const [data, setData] = useState([]);
-  const [purchasedProducts, setPurchasedProducts] = useState([]);
-  const [userName, setUserName] = useState("");
-  const [note, setNote] = useState("");
-  const [status, setStatus] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [value, setValue] = useState(null);
-  const [selectedProducts, setSelectedProducts] = useState([]);
   const [options, setOptions] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [status, setStatus] = useState("1");
+  const [loading, setLoading] = useState(false);
 
   let filters = "";
   let keyWord = "";
@@ -40,20 +31,15 @@ const AddTransaction = () => {
   const GetAllProducts = async () => {
     try {
       let filterParams = new URLSearchParams({
-        categoryID: filters.categoryID || 0,
-        displayOption: filters.displayOption || 0,
         keyWord: keyWord || "",
-        onHand: filters.onHand || 0,
-        order: pagination?.order || "asc",
-        orderBy: pagination?.orderBy || "name",
-        page: pagination?.page || 0,
-        rowsPerPage: pagination?.rowsPerPage || 15,
+        page: pagination?.page || 1,
+        rowsPerPage: pagination?.rowsPerPage || 100,
       }).toString();
 
-      const response = await productService.handleGetAllProduct(filterParams);
-      console.log("Check data get Pb", response.data);
+      console.log("check filterParams", filterParams);
 
-      if (response && response.success === true) {
+      const response = await productService.handleGetAllProduct(filterParams);
+      if (response) {
         setData(response.data);
         setOptions(response.data);
       }
@@ -62,6 +48,7 @@ const AddTransaction = () => {
     }
   };
 
+  // Dùng đẻ push data vào 1 arr khi người dùng chọn sản phẩm:
   const handleAutocompleteChange = (event, newValue) => {
     setValue(newValue);
     if (newValue) {
@@ -93,42 +80,25 @@ const AddTransaction = () => {
     }
   };
 
-  const updateTotalPrice = (products) => {
-    const total = products.reduce(
-      (acc, item) => acc + item.qty * item.sale_price,
-      0
-    );
-    setTotalPrice(total);
-  };
+  const handleQtyChange = (productId, qty) => {
+    if (qty === "") {
+      const updatedProducts = selectedProducts.map((item) =>
+        item.id === productId ? { ...item, qty: "" } : item
+      );
+      setSelectedProducts(updatedProducts);
+      return; // Dừng lại để không xử lý tiếp.
+    }
+    // Chuyển đổi giá trị input thành số nguyên
+    const newQty = parseInt(qty, 10);
 
-  const handleNameChange = (event) => {
-    setUserName(event.target.value);
-  };
-
-  const handleChageNote = (event) => {
-    setNote(event.target.value);
-  };
-
-  const handleStatusChange = (event) => {
-    setStatus(parseInt(event.target.value, 10));
-  };
-
-  const handleIncrease = (productId) => {
-    const updatedProducts = selectedProducts.map((item) =>
-      item.id === productId ? { ...item, qty: item.qty + 1 } : item
-    );
-    setSelectedProducts(updatedProducts);
-    updateTotalPrice(updatedProducts);
-  };
-
-  const handleDecrease = (productId) => {
-    const updatedProducts = selectedProducts.map((item) =>
-      item.id === productId && item.qty > 1
-        ? { ...item, qty: item.qty - 1 }
-        : item
-    );
-    setSelectedProducts(updatedProducts);
-    updateTotalPrice(updatedProducts);
+    // Kiểm tra giá trị hợp lệ (không nhỏ hơn 1)
+    if (newQty >= 0) {
+      const updatedProducts = selectedProducts.map((item) =>
+        item.id === productId ? { ...item, qty: newQty } : item
+      );
+      setSelectedProducts(updatedProducts);
+      updateTotalPrice(updatedProducts);
+    }
   };
 
   const handleDelete = (productId) => {
@@ -139,171 +109,87 @@ const AddTransaction = () => {
     updateTotalPrice(updatedProducts);
   };
 
-  const handleGetCode = async () => {
-    try {
-      const response = await orderService.handleGetCode();
-      if (response) {
-        return response.data;
-      } else {
-        throw new Error("Failed to retrieve code");
-      }
-    } catch (error) {
-      console.error("Error fetching code:", error);
-      throw error;
-    }
+  const updateTotalPrice = (products) => {
+    const total = products.reduce((acc, item) => {
+      console.log("Check item", item);
+
+      // Tính tổng sale_price cho mỗi product_sku
+      const totalSalePriceForSku = item.product_sku.reduce((skuAcc, sku) => {
+        const salePrice = sku.sale_price || 0; // Nếu sale_price không tồn tại, sử dụng 0
+        return skuAcc + salePrice;
+      }, 0);
+
+      console.log("Total sale price for SKU", totalSalePriceForSku);
+
+      // Cộng tổng giá của các product_sku cho từng item
+      return acc + item.qty * totalSalePriceForSku;
+    }, 0);
+
+    console.log("Total price", total);
+    setTotalPrice(total);
   };
 
-  const Addorder = async () => {
-    try {
-      // Lấy code hiện tại
+  const AddOrder = async () => {
+    setLoading(true);
+    const dataCreat = {
+      // status: status, // Trường status hiện có từ state
+      // cart: selectedProducts.flatMap((product) =>
+      //   product.product_sku.map((sku) => ({
+      //     quantity: product.qty, // Số lượng sản phẩm
+      //     sku_id: sku.id, // ID của SKU
+      //   }))
+      // ),
+    };
 
-      setIsLoading(true);
-      await delay(1500);
-      const currentCode = await handleGetCode();
-      console.log(currentCode);
-      if (!currentCode) {
-        throw new Error("Current code is not available");
-      }
+    console.log("Check dataCreat", dataCreat);
 
-      let code = currentCode.code;
-
-      // Tách phần chữ và phần số trong mã
-      const match = code.match(/^([A-Za-z]*)(\d+)$/);
-      if (!match) {
-        throw new Error("Invalid code format");
-      }
-
-      const prefix = match[1];
-      const numberPart = match[2];
-
-      // Tăng số lên 1
-      const newNumber = (parseInt(numberPart, 10) + 1)
-        .toString()
-        .padStart(numberPart.length, "0");
-
-      // Kết hợp phần chữ với số mới
-      const FNcode = `${prefix}${newNumber}`;
-      const client_name = userName || "Khách lẽ";
-      const FNnote = note || "Không có";
-      const FNstatus = status || 0;
-
-      let dataCreat = {
-        client_name: client_name,
-        client_paid: totalPrice,
-        code: FNcode,
-        status: FNstatus,
-        note: FNnote,
-      };
-
-      if (purchasedProducts.length > 0) {
-        const response = await orderService.hendleCreat(dataCreat);
-        console.log(response);
-        toast.success(response.messges);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    await handleCreatOrderDetail();
-
-    setPurchasedProducts([]);
+    // try {
+    //   await new Promise((resolve) => setTimeout(resolve, 2000));
+    //   setLoading(false);
+    //   const response = await invertoryService.hendleCreat(dataCreat);
+    //   console.log(response.data);
+    //   toast.success(response.data.message);
+    // } catch (error) {
+    //   toast.success(error);
+    //   console.log(error);
+    // }
+    setSelectedProducts([]);
     setTotalPrice(0);
-    setIsLoading(false);
-  };
-
-  const handleCreatOrderDetail = async () => {
-    try {
-      console.log(purchasedProducts.length);
-      if (purchasedProducts.length === 0) {
-        return toast.error("No products were added to the order!");
-      }
-
-      const currentCode = await handleGetCode();
-      const order_id = currentCode.id;
-
-      const promises = purchasedProducts.map(async (item) => {
-        console.log(item);
-
-        let data = {
-          order_id: order_id,
-          product_id: item.id,
-          qty: item.qty,
-          total: item.qty * item.sale_price,
-          price: item.price,
-          sale_price: item.sale_price,
-          type: 0,
-        };
-
-        try {
-          const response = await orderService.handleCreatOrderDetail(data);
-          console.log("Response for item", item.id, ":", response);
-        } catch (error) {
-          console.error(
-            `Error creating inventory detail for item ${item.id}:`,
-            error
-          );
-          throw error; // Ném lỗi ra ngoài để Addorder có thể xử lý
-        }
-      });
-
-      await Promise.all(promises);
-      console.log("All inventory details have been created successfully.");
-    } catch (error) {
-      console.error("Error in handleCreatOrderDetail:", error);
-      throw error; // Ném lỗi ra ngoài để Addorder có thể xử lý
-    }
   };
 
   return (
     <>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-
       <Grid container spacing={2}>
         <Grid item xs={2} sx={{ p: 2, m: 2 }}>
-          <Typography variant="h5">ĐẶT HÀNG</Typography>
+          <Typography variant="h5">Đặt hàng</Typography>
         </Grid>
       </Grid>
-
       <Grid container spacing={2}>
         <Grid item xs={7}>
-          <Box sx={{ p: 2, border: 1 }}>
-            <Find
-              value={value}
-              handleAutocompleteChange={handleAutocompleteChange}
-              options={options}
-            />
-
-            <Product_information
-              selectedProducts={selectedProducts}
-              handleDecrease={handleDecrease}
-              handleIncrease={handleIncrease}
-              handleDelete={handleDelete}
-            />
-          </Box>
+          <Find
+            value={value}
+            handleAutocompleteChange={handleAutocompleteChange}
+            options={options}
+          />
+          <Product_information
+            selectedProducts={selectedProducts}
+            handleQtyChange={handleQtyChange}
+            handleDelete={handleDelete}
+          />
         </Grid>
 
         <Grid item xs={5}>
-        <Inventory_check_sheet
-        handleChageNote={handleChageNote}
-        handleStatusChange={handleStatusChange}
-        handleNameChang={handleNameChange}
-        userName={userName}
-        purchasedProducts={purchasedProducts}
-        status={status}
-        totalPrice={totalPrice}
-        handleDecrease={handleDecrease}
-        handleIncrease={handleIncrease}
-        handleDelete={handleDelete}
-        Addorder={Addorder}
-        />
+          <LoadingBackdrop loading={loading} />
+          <Order_check_sheet
+            status={status}
+            totalPrice={totalPrice}
+            selectedProducts={selectedProducts}
+            AddOrder={AddOrder}
+          />
         </Grid>
       </Grid>
     </>
   );
 };
 
-export default AddTransaction;
+export default AddOrder;

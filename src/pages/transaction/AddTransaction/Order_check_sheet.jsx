@@ -14,13 +14,15 @@ import CheckIcon from "@mui/icons-material/Check";
 import { useState, useEffect } from "react";
 import { handleformat } from "../../../utils/format";
 
-function Inventory_check_sheet({
+function Order_check_sheet({
   status,
   totalPrice,
   selectedProducts,
-  AddInventory,
+  AddOrder,
 }) {
   const [productPrices, setProductPrices] = useState([]);
+  const [userName, setUserName] = useState("");
+  const [note, setNote] = useState("");
 
   useEffect(() => {
     // Tính tổng giá của từng sản phẩm dựa vào qty và sale_price
@@ -37,20 +39,31 @@ function Inventory_check_sheet({
     setProductPrices(updatedPrices);
   }, [selectedProducts]);
 
+  const handleNameChange = (event) => {
+    setUserName(event.target.value);
+  };
+
+  const handleChageNote = (event) => {
+    setNote(event.target.value);
+  };
+
   console.log("Check selectedProducts", selectedProducts);
 
   return (
     <>
       <Box sx={{ p: 2, border: 1 }}>
         <Typography variant="h6">Người tạo: ThanhNam</Typography>
-        <Typography>Mã kiểm kho: Mã phiếu tự động</Typography>
-        <Typography>
-          Tổng số lượng nhập:
-          {selectedProducts.reduce((acc, item) => acc + item.qty, 0)}
-        </Typography>
-        <Typography variant="p">
-          Tổng giá nhập hàng: {handleformat.formatPrice(totalPrice) || 0}
-        </Typography>
+        <Typography>Mã đặt hàng: Mã phiếu tự động</Typography>
+        <TextField
+          label="Tên người mua"
+          variant="outlined"
+          fullWidth
+          value={userName}
+          onChange={handleNameChange}
+          size="small"
+          sx={{ mt: 2 }}
+        />
+
         <TextField
           label="Ghi chú"
           variant="outlined"
@@ -58,9 +71,18 @@ function Inventory_check_sheet({
           multiline
           rows={3}
           sx={{ my: 2 }}
+          onChange={handleChageNote}
         />
 
-        <Box>
+        <Typography>
+          Tổng số lượng nhập:
+          {selectedProducts.reduce((acc, item) => acc + item.qty, 0)}
+        </Typography>
+        <Typography variant="p">
+          Tổng giá nhập hàng: {handleformat.formatPrice(totalPrice) || 0}
+        </Typography>
+
+        <Box sx={{ mt: 2 }}>
           <Table
             sx={{
               border: "1px solid #2196f3",
@@ -146,15 +168,15 @@ function Inventory_check_sheet({
 
         <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
           <Button variant="contained" color="primary" startIcon={<PrintIcon />}>
-            Lưu tạm (Chưa cân bằng)
+            Lưu tạm (Chưa thanh toán)
           </Button>
           <Button
             variant="contained"
             color="success"
             startIcon={<CheckIcon />}
-            onClick={() => AddInventory()}
+            onClick={() => AddOrder()}
           >
-            Hoàn tất (Cân bằng kho)
+            Hoàn tất (Đã thanh toán)
           </Button>
         </Box>
       </Box>
@@ -162,4 +184,4 @@ function Inventory_check_sheet({
   );
 }
 
-export default Inventory_check_sheet;
+export default Order_check_sheet;

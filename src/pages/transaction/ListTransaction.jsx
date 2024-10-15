@@ -80,57 +80,27 @@ function ListTransaction(props) {
 
   useEffect(() => {
     fetchData();
-  }, [filters, pagination?.page, keyword]);
+  }, [keyword, pagination?.page, keyword]);
+
+  let keyWord = "";
+  let limit = 2;
+  let Status = "";
 
   const fetchData = async () => {
     try {
-      let filterParams = csUseQueryString({
-        ...filters,
-        ...pagination,
-        keyword,
-      });
+      let filterParams = new URLSearchParams({
+        keyWord: keyWord || "",
+        limit: limit || 1,
+        Status: Status || "",
+      }).toString();
+
+      console.log("Check filterParams", filterParams);
 
       const res = await orderService.handleGetAll(filterParams);
-      let data = res.data;
-      const groupedData = data.reduce((acc, item) => {
-        const id = item.id;
+      let data = res.data.data;
+      console.log("Check data call API", data.length);
 
-        if (!acc[id]) {
-          acc[id] = {
-            id,
-            code: item.code,
-            createdAt: item.createdAt,
-            qty: 0,
-            total: 0,
-            price: 0,
-            client_name: item.client_name,
-            client_paid: item.client_paid,
-            status: item.status,
-            note: item.note,
-            items: [],
-          };
-        }
-
-        acc[id].qty += item.Products.Order_Detail.qty;
-        acc[id].total += item.Products.Order_Detail.total;
-        acc[id].price += item.Products.price;
-
-        acc[id].items.push({
-          code: item.Products.code,
-          name: item.Products.name,
-          qty: item.Products.Order_Detail.qty,
-          description: item.Products.description,
-          sale_price: item.Products.sale_price,
-          price: item.Products.price,
-          note: item.note,
-        });
-
-        return acc;
-      }, {});
-
-      const filteredData = Object.values(groupedData);
-      setData(filteredData);
-      console.log("Data format ", filteredData);
+      setData(data);
     } catch (error) {
       console.log(error);
     }
@@ -153,198 +123,199 @@ function ListTransaction(props) {
   return (
     <>
       <Box sx={{ mt: 2 }}>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    inputProps={{ "aria-label": "select all products" }}
-                    indeterminate={
-                      selectedProducts.length > 0 &&
-                      selectedProducts.length < data.length
-                    }
-                    checked={
-                      data.length > 0 && selectedProducts.length === data.length
-                    }
-                    onChange={(event) => {
-                      if (event.target.checked) {
-                        setSelectedProducts(data.map((row) => row.id));
-                      } else {
-                        setSelectedProducts([]);
+        {data.length === 0 ? (
+          <Typography variant="h6" align="center">
+            No data
+          </Typography>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      inputProps={{ "aria-label": "select all products" }}
+                      indeterminate={
+                        selectedProducts.length > 0 &&
+                        selectedProducts.length < data.length
                       }
-                    }}
-                  />
-                </TableCell>
-                <TableCell>{t("orders.table.tableHead.code")}</TableCell>
-                <TableCell>{t("orders.table.tableHead.time")}</TableCell>
-                <TableCell>{t("orders.table.tableHead.client")}</TableCell>
-                <TableCell>{t("orders.table.tableHead.pay")}</TableCell>
-                <TableCell>{t("orders.table.tableHead.paid")}</TableCell>
-                <TableCell>{t("orders.table.tableHead.status")}</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((row) => (
-                <React.Fragment key={row.id}>
+                      checked={
+                        data.length > 0 &&
+                        selectedProducts.length === data.length
+                      }
+                      onChange={(event) => {
+                        if (event.target.checked) {
+                          setSelectedProducts(data.map((row) => row.id));
+                        } else {
+                          setSelectedProducts([]);
+                        }
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>{t("orders.table.tableHead.code")}</TableCell>
+                  <TableCell>{t("orders.table.tableHead.time")}</TableCell>
+                  <TableCell>{t("orders.table.tableHead.client")}</TableCell>
+                  <TableCell>{t("orders.table.tableHead.pay")}</TableCell>
+                  <TableCell>{t("orders.table.tableHead.paid")}</TableCell>
+                  <TableCell>{t("orders.table.tableHead.status")}</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.length > 0 ? (
+                  data.map((row) => (
+                    <React.Fragment key={row.id}>
+                      <TableRow>
+                        <TableCell>
+                          <IconButton
+                            aria-label="expand row"
+                            size="small"
+                            onClick={() => handleRowClick(row.id)}
+                          >
+                            {selectedRowId === row.id ? (
+                              <KeyboardArrowUpIcon />
+                            ) : (
+                              <KeyboardArrowDownIcon />
+                            )}
+                          </IconButton>
+                        </TableCell>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={selectedProducts.includes(row.id)}
+                            onChange={() => handleCheckboxChange(row.id)}
+                          />
+                        </TableCell>
+                        <TableCell>{row.code}</TableCell>
+                        <TableCell>
+                          {handleformat.formatDate(row.createdAt)}
+                        </TableCell>
+                        <TableCell>{row.client_name}</TableCell>
+                        <TableCell>
+                          {handleformat.formatPrice(row.client_paid)}
+                        </TableCell>
+                        <TableCell>
+                          {handleformat.formatPrice(row.client_paid)}
+                        </TableCell>
+                        <TableCell>
+                          {row.status === 0 ? "Phiếu tạm" : "Hoàn thành"}
+                        </TableCell>
+                      </TableRow>
+                      {selectedRowId === row.id && (
+                        <TableRow>
+                          <TableCell colSpan={12}>
+                            <Collapse
+                              in={selectedRowId === row.id}
+                              timeout="auto"
+                              unmountOnExit
+                            >
+                              <Box margin={1}>
+                                {row.status === 0 ? (
+                                  // Nội dung của Phiếu tạm
+                                  <Box>
+                                    <Typography
+                                      variant="h6"
+                                      gutterBottom
+                                      component="div"
+                                    >
+                                      Thông tin
+                                    </Typography>
+                                    <Grid container spacing={3}>
+                                      <Temporary_ballot_information row={row} />
+                                      <Temporary_ticket row={row.items} />
+                                      <Grid
+                                        container
+                                        spacing={2}
+                                        justifyContent="flex-end"
+                                        sx={{ mt: 2 }}
+                                      >
+                                        <Grid item xs={12}>
+                                          <Payment_summary row={row} />
+                                        </Grid>
+                                        <Operation
+                                          handleOpenDialog={handleOpenDialog}
+                                        />
+                                        {/* Modal */}
+                                        <ModalComfirm
+                                          open={openDialog}
+                                          onClose={handleCloseDialog}
+                                          title="Xác nhận"
+                                          content="Xác nhận thay đổi trạng thái đơn hàng!"
+                                          onConfirm={() =>
+                                            handleConfirmChangeStatus(
+                                              row.id,
+                                              status
+                                            )
+                                          }
+                                          onCancel={handleCancelChangeStatus}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                  </Box>
+                                ) : (
+                                  // Nội dung của Phiếu đã thanh toán
+                                  <Box>
+                                    <Tabs
+                                      value={value}
+                                      onChange={handleChange}
+                                      aria-label="basic tabs example"
+                                    >
+                                      <Tab label="Thông tin" />
+                                      <Tab label="Lịch sử hóa đơn" />
+                                      <Tab label="Thanh toán" />
+                                    </Tabs>
+                                    <Box sx={{ padding: 2 }}>
+                                      {value === 0 && (
+                                        <Box>
+                                          <Typography
+                                            variant="h6"
+                                            gutterBottom
+                                            component="div"
+                                          >
+                                            Thông tin
+                                          </Typography>
+                                          <Grid container spacing={3}>
+                                            <Information_completed row={row} />
+                                            <Ticket_completed row={row.items} />
+                                            <Grid
+                                              container
+                                              spacing={2}
+                                              justifyContent="flex-end"
+                                              sx={{ mt: 2 }}
+                                            >
+                                              <Grid item xs={12}>
+                                                <Payment_summary row={row} />
+                                              </Grid>
+                                              <Operation_completed />
+                                            </Grid>
+                                          </Grid>
+                                        </Box>
+                                      )}
+                                      {value === 1 && (
+                                        <Invoice_history row={row} />
+                                      )}
+                                      {value === 2 && <Pay_history row={row} />}
+                                    </Box>
+                                  </Box>
+                                )}
+                              </Box>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
+                  ))
+                ) : (
                   <TableRow>
-                    <TableCell>
-                      <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => handleRowClick(row.id)}
-                      >
-                        {selectedRowId === row.id ? (
-                          <KeyboardArrowUpIcon />
-                        ) : (
-                          <KeyboardArrowDownIcon />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selectedProducts.includes(row.id)}
-                        onChange={() => handleCheckboxChange(row.id)}
-                      />
-                    </TableCell>
-                    <TableCell>{row.code}</TableCell>
-                    <TableCell>
-                      {handleformat.formatDate(row.createdAt)}
-                    </TableCell>
-                    <TableCell>{row.client_name}</TableCell>
-                    <TableCell>
-                      {handleformat.formatPrice(row.client_paid)}
-                    </TableCell>
-                    <TableCell>
-                      {handleformat.formatPrice(row.client_paid)}
-                    </TableCell>
-                    <TableCell>
-                      {row.status === 0 ? "Phiếu tạm" : "Hoàn thành"}
+                    <TableCell colSpan={9} align="center">
+                      No Data
                     </TableCell>
                   </TableRow>
-                  {selectedRowId === row.id && (
-                    <TableRow>
-                      <TableCell colSpan={12}>
-                        <Collapse
-                          in={selectedRowId === row.id}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          <Box margin={1}>
-                            {row.status === 0 ? (
-                              <>
-                                {/* Này là khi ở Phiếu tạm */}
-                                <Box>
-                                  <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    component="div"
-                                  >
-                                    Thông tin
-                                  </Typography>
-                                  <Grid container spacing={3}>
-                                    <Temporary_ballot_information row={row} />
-                                    <Temporary_ticket row={row.items} />
-                                    <Grid
-                                      container
-                                      spacing={2}
-                                      justifyContent="flex-end"
-                                      sx={{ mt: 2 }}
-                                    >
-                                      <Grid item xs={12}>
-                                        <Payment_summary row={row} />
-                                      </Grid>
-                                      <Operation
-                                        handleOpenDialog={handleOpenDialog}
-                                      />
-                                      {/* Modal */}
-                                      <ModalComfirm
-                                        open={openDialog}
-                                        onClose={handleCloseDialog}
-                                        title="Xác nhận"
-                                        content="Xác nhận thay đổi trạng thái đơn hàng!"
-                                        onConfirm={() =>
-                                          handleConfirmChangeStatus(
-                                            row.id,
-                                            status
-                                          )
-                                        }
-                                        onCancel={handleCancelChangeStatus}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                </Box>
-                              </>
-                            ) : (
-                              // NÀY LÀ CÁI PHIẾU ĐÃ THANH TOÁN
-                              <Box>
-                                <Tabs
-                                  value={value}
-                                  onChange={handleChange}
-                                  aria-label="basic tabs example"
-                                >
-                                  <Tab label="Thông tin" />
-                                  <Tab label="Lịch sử hóa đơn" />
-                                  <Tab label="Thanh toán" />
-                                </Tabs>
-                                <Box
-                                  sx={{
-                                    padding: 2,
-                                  }}
-                                >
-                                  {value === 0 && (
-                                    <Box>
-                                      <Typography
-                                        variant="h6"
-                                        gutterBottom
-                                        component="div"
-                                      >
-                                        Thông tin
-                                      </Typography>
-                                      <Grid container spacing={3}>
-                                        <Information_completed row={row} />
-                                        <Ticket_completed row={row.items} />
-                                        <Grid
-                                          container
-                                          spacing={2}
-                                          justifyContent="flex-end"
-                                          sx={{ mt: 2 }}
-                                        >
-                                          <Grid item xs={12}>
-                                            <Payment_summary row={row} />
-                                          </Grid>
-                                          <Operation_completed />
-                                        </Grid>
-                                      </Grid>
-                                    </Box>
-                                  )}
-                                  {/* LỊCH SỬ HÓA ĐƠN */}
-                                  {value === 1 && (
-                                    <Typography>
-                                      <Invoice_history row={row} />
-                                    </Typography>
-                                  )}
-                                  {/* Lịch sử thanh toán */}
-                                  {value === 2 && (
-                                    <Typography>
-                                      <Pay_history row={row} />
-                                    </Typography>
-                                  )}
-                                </Box>
-                              </Box>
-                            )}
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </React.Fragment>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Box>
     </>
   );

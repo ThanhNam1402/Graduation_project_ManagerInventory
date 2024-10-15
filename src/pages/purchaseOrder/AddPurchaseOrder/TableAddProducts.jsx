@@ -14,34 +14,33 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-import { TotalRowCount } from "../../../utils/func";
 import { purchaseOrderService } from "../../../services/purchaseOrder.service";
+import PropTypes from "prop-types";
+import TableRowNoData from "../../../components/TableRowNoData/TableRowNoData";
 
-function TableAddProducts(props) {
+function TableAddProducts({ value, getTableProducts }) {
   let { id } = useParams();
-
-  let { value, getTableProducts } = props;
   const [data, setData] = useState([]);
 
   const handleSave = (index, newPrice, field) => {
     const newData = [...data];
-
     newData[index][field] = Number(newPrice);
+    newData[index].total_price =
+      newData[index].price * newData[index].qty - newData[index].discount;
     setData(newData);
   };
 
   useEffect(() => {
     const newData = [...data];
     if (value) {
-      let checkID = data.find((item) => item.id === value.id);
+      let checkID = data.find((item) => item.product_id === value.product_id);
       if (checkID) {
-        const index = newData.findIndex((item) => item.id === checkID.id);
+        const index = newData.findIndex(
+          (item) => item.product_id === checkID.product_id
+        );
         newData[index].qty = newData[index].qty + 1;
       } else {
         value.qty = 1;
-
-        console.log(value);
-
         newData.push(value);
       }
       setData(newData);
@@ -80,13 +79,12 @@ function TableAddProducts(props) {
 
   const handelDelItems = (id) => {
     const newData = [...data];
-    let a = newData.filter((item) => item.id !== id);
+    let a = newData.filter((item) => item.product_id !== id);
     setData(a);
   };
 
-  useEffect(() => {
-    console.log("map");
-  }, []);
+  console.log(data);
+
   return (
     <div>
       <TableContainer component={Paper}>
@@ -95,7 +93,6 @@ function TableAddProducts(props) {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>Stt</TableCell>
-              <TableCell>Mã hàng</TableCell>
               <TableCell align="left">Tên hàng</TableCell>
               <TableCell align="left">Số lượng</TableCell>
               <TableCell align="left">Giá</TableCell>
@@ -108,12 +105,11 @@ function TableAddProducts(props) {
               data.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell>
-                    <IconButton onClick={() => handelDelItems(row.id)}>
+                    <IconButton onClick={() => handelDelItems(row.product_id)}>
                       <DeleteForeverIcon />
                     </IconButton>
                   </TableCell>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{row?.code}</TableCell>
                   <TableCell align="left">{row?.name}</TableCell>
 
                   <TableCell align="left">
@@ -166,9 +162,9 @@ function TableAddProducts(props) {
                       placeholder="Nhập Giá Vốn Sản Phẩm"
                       size="small"
                       onChange={(e) => {
-                        handleSave(index, e.target.value, "sale_price");
+                        handleSave(index, e.target.value, "discount");
                       }}
-                      value={row?.sale_price}
+                      value={row?.discount}
                     />
                   </TableCell>
                   <TableCell align="right">
@@ -181,19 +177,14 @@ function TableAddProducts(props) {
                       variant="standard"
                       placeholder="Nhập Giá Vốn Sản Phẩm"
                       size="small"
-                      value={TotalRowCount(
-                        row?.price,
-                        row?.qty,
-                        row?.sale_price
-                      )}
+                      disabled
+                      value={row.total_price}
                     />
                   </TableCell>
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell align="left">no data</TableCell>
-              </TableRow>
+              <TableRowNoData colSpan={7} />
             )}
           </TableBody>
         </Table>
@@ -201,5 +192,10 @@ function TableAddProducts(props) {
     </div>
   );
 }
+
+TableAddProducts.propTypes = {
+  value: PropTypes.object,
+  getTableProducts: PropTypes.func,
+};
 
 export default TableAddProducts;

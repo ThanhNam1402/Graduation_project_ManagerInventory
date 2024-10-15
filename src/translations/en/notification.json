@@ -2,5 +2,7 @@
     "nodata" : "No data",
     "form" : {
         "required" : "required"
-    }
+    },
+    "action_success" : "Action success",
+    "action_fail" : "Action Fail"
 }

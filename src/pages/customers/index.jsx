@@ -3,22 +3,18 @@ import { Box, Typography, Stack } from "@mui/material";
 import CsUsePagination from "../../hook/CsUsePagination";
 import FilterRadio from "../../components/filters/FilterRadio";
 import ListCustomers from "./ListCustomers/ListCustomers";
-import ActionCustomer from "./ActionCusomter";
-import { ListStatus, ListCustomersType } from "../../utils/constain";
+import { ListStatusCustomer, ListCustomersType } from "../../utils/constain";
 
 function Customers() {
   const [filters, setFilters] = useState({
-    status: 0,
+    status: "1",
     customer_type: 0,
   });
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
-  const [keyWord, setKeyWord] = useState("");
-
-  const [openModalAdd, setOpenModalAdd] = useState(false);
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
-    CsUsePagination(0, 5);
+    CsUsePagination(1, 10);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -26,13 +22,8 @@ function Customers() {
     setOrderBy(property);
   };
 
-  const handleSearch = (value) => {
-    setPage(0);
-    setKeyWord(value);
-  };
-
   const handleSetFilter = (value, id) => {
-    setPage(0);
+    setPage(1);
     switch (id) {
       case "status":
         setFilters((state) => ({
@@ -49,9 +40,7 @@ function Customers() {
     }
   };
 
-  const handleOpenModalAdd = () => {
-    setOpenModalAdd(!openModalAdd);
-  };
+  console.log(filters);
 
   return (
     <>
@@ -80,7 +69,8 @@ function Customers() {
 
             {/* Status */}
             <FilterRadio
-              data={ListStatus}
+              defaultValue={"1"}
+              data={ListStatusCustomer}
               handleGetValue={handleSetFilter}
               keyFilter={"status"}
             />
@@ -91,18 +81,12 @@ function Customers() {
             width: "100%",
           }}
         >
-          <ActionCustomer
-            handleSearch={handleSearch}
-            handleOpenModal={handleOpenModalAdd}
-          />
           <ListCustomers
-            filters={filters}
             order={order}
             orderBy={orderBy}
-            keyWord={keyWord}
+            filters={filters}
             pagination={pagination}
-            openModalAdd={openModalAdd}
-            onCloseModalAdd={handleOpenModalAdd}
+            onSetPage={setPage}
             handleRequestSort={handleRequestSort}
             handleChangePage={handleChangePage}
             handleChangeRowsPerPage={handleChangeRowsPerPage}

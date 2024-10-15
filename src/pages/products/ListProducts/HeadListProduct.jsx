@@ -29,12 +29,6 @@ import { visuallyHidden } from "@mui/utils";
 
 const headCells = [
   {
-    id: "code",
-    numeric: false,
-    disablePadding: true,
-    label: "code",
-  },
-  {
     id: "name",
     numeric: false,
     disablePadding: false,
@@ -63,12 +57,6 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "sale_price",
-  },
-  {
-    id: "status",
-    numeric: true,
-    disablePadding: false,
-    label: "status",
   },
 ];
 

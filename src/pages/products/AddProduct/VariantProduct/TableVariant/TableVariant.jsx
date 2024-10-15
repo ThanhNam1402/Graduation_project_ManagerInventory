@@ -8,33 +8,25 @@ import {
   TextField,
 } from "@mui/material";
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import TableRowNoData from "../../../../../components/TableRowNoData/TableRowNoData";
 
-function TableVariant(props) {
-  let { dataTable } = props;
-
+function TableVariant({ dataTable }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData([]);
     setData(dataTable);
   }, [dataTable]);
-  console.log(dataTable);
 
   const handleChangeValue = (value, name, field) => {
     const newData = [...data];
-    console.log(newData, name);
-
     const findIndexItem = newData.findIndex((item) => item.name === name);
-    console.log(findIndexItem);
-
     if (findIndexItem !== -1) {
       newData[findIndexItem][field] = value;
     }
-
-    console.log(newData);
-
     setData(newData);
   };
+
   return (
     <div>
       <TableContainer>
@@ -81,43 +73,52 @@ function TableVariant(props) {
                     <TextField
                       type="number"
                       hiddenLabel
-                      id="code"
+                      id="price"
                       margin="dense"
                       variant="standard"
                       size="small"
                       value={row?.price}
+                      onChange={(e) =>
+                        handleChangeValue(e.target.value, row?.name, "price")
+                      }
                     />
                   </TableCell>
                   <TableCell align="left">
                     <TextField
                       type="number"
                       hiddenLabel
-                      id="code"
+                      id="sale_price"
                       margin="dense"
                       variant="standard"
                       size="small"
                       value={row?.sale_price}
+                      onChange={(e) =>
+                        handleChangeValue(
+                          e.target.value,
+                          row?.name,
+                          "sale_price"
+                        )
+                      }
                     />
                   </TableCell>
                   <TableCell align="left">
                     <TextField
                       type="number"
                       hiddenLabel
-                      id="code"
+                      id="stock"
                       margin="dense"
                       variant="standard"
                       size="small"
-                      value={row?.sale_price}
+                      value={row?.stock}
+                      onChange={(e) =>
+                        handleChangeValue(e.target.value, row?.name, "stock")
+                      }
                     />
                   </TableCell>
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell colSpan={7} align="left">
-                  no data
-                </TableCell>
-              </TableRow>
+              <TableRowNoData colSpan={6} />
             )}
           </TableBody>
         </Table>
@@ -125,5 +126,9 @@ function TableVariant(props) {
     </div>
   );
 }
+
+TableVariant.propTypes = {
+  dataTable: PropTypes.array,
+};
 
 export default TableVariant;

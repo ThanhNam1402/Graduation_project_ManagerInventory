@@ -9,20 +9,19 @@ import {
   EnhancedTableToolbar,
   EnhancedTableHead,
 } from "./HeadListPurChaseOrder";
+import PropTypes from "prop-types";
 
 import { purchaseOrderService } from "../../services/purchaseOrder.service";
 
-export default function ListPurchaseOrders(props) {
-  let {
-    filters,
-    sort,
-    keyWord,
-    pagination,
-    handleRequestSort,
-    handleChangeRowsPerPage,
-    handleChangePage,
-  } = props;
-
+function ListPurchaseOrders({
+  filters,
+  sort,
+  keyWord,
+  pagination,
+  handleRequestSort,
+  handleChangeRowsPerPage,
+  handleChangePage,
+}) {
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
   const [totalPage, setTotalPage] = useState(0); // total page
@@ -59,8 +58,6 @@ export default function ListPurchaseOrders(props) {
     fetchData();
   }, [filters, pagination?.page, pagination?.rowsPerPage, keyWord, sort]);
 
-  console.log(props);
-
   const fetchData = async () => {
     try {
       let filterParmas = csUseQueryString({
@@ -75,9 +72,9 @@ export default function ListPurchaseOrders(props) {
       const response = await purchaseOrderService.handleGetAllPurchaseorders(
         filterParmas
       );
-      if (response && response.success === true) {
+      if (response) {
         setData(response.data);
-        setTotalPage(response?.pagination?.total);
+        setTotalPage(response?.last_page);
       }
     } catch (err) {
       console.log(err);
@@ -126,13 +123,27 @@ export default function ListPurchaseOrders(props) {
         </Table>
       </TableContainer>
 
-      <CsPagination
-        totalPage={totalPage}
-        limitPage={pagination?.rowsPerPage}
-        page={pagination?.page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {data && data.length > 0 && (
+        <CsPagination
+          totalPage={totalPage}
+          limitPage={pagination?.limit}
+          page={pagination?.page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      )}
     </Paper>
   );
 }
+
+ListPurchaseOrders.propTypes = {
+  sort: PropTypes.object,
+  filters: PropTypes.object,
+  pagination: PropTypes.object,
+  onSetPage: PropTypes.func,
+  handleRequestSort: PropTypes.func,
+  handleChangePage: PropTypes.func,
+  handleChangeRowsPerPage: PropTypes.func,
+};
+
+export default ListPurchaseOrders;

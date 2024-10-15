@@ -1,23 +1,47 @@
-import { Chip, TextField, Box } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
+import ClearIcon from "@mui/icons-material/Clear";
+import "./InputTags.scss";
+import { getRandomColor } from "../../../../utils/func";
 
-const Tags = ({ data, handleDelete }) => {
+const Tags = ({ data, handleDelete, isEdit }) => {
   return (
     <Box
       sx={{
-        height: "100%",
         margin: "0.5rem 0.5rem 0.5rem  0",
+        display: "flex",
+        alignItems: "center",
+        backgroundColor: getRandomColor(),
+        py: 0.5,
+        px: 1.5,
+        color: "#fff",
+        borderRadius: 1,
       }}
     >
-      <Chip label={data} onDelete={() => handleDelete(data)} />
+      {data}
+      {!isEdit && (
+        <ClearIcon
+          sx={{
+            cursor: "pointer",
+            ml: 1,
+          }}
+          onClick={() => handleDelete(data)}
+        />
+      )}
     </Box>
   );
 };
 
-export default function InputTags(props) {
-  let { handleGetTags } = props;
-  const [tags, SetTags] = useState([]);
+Tags.propTypes = {
+  handleDelete: PropTypes.func,
+  data: PropTypes.string,
+  isEdit: PropTypes.bool,
+};
+
+function InputTags({ handleGetTags, defaultValue, isEdit }) {
+  const [tags, SetTags] = useState(defaultValue ? defaultValue : []);
   const tagRef = useRef();
 
   const handleDelete = (value) => {
@@ -48,12 +72,14 @@ export default function InputTags(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <TextField
+        className="tagsInput"
         fullWidth
         onKeyDown={handleOnSubmit}
         inputRef={tagRef}
+        disabled={isEdit}
         variant="standard"
         size="small"
-        sx={{ margin: "1rem 0" }}
+        sx={{ mt: "9px", mb: 1, width: "100%" }}
         margin="none"
         placeholder="Enter tags"
         InputProps={{
@@ -67,7 +93,12 @@ export default function InputTags(props) {
             >
               {tags.map((data, index) => {
                 return (
-                  <Tags data={data} handleDelete={handleDelete} key={index} />
+                  <Tags
+                    data={data}
+                    handleDelete={handleDelete}
+                    key={index}
+                    isEdit={isEdit}
+                  />
                 );
               })}
             </Box>
@@ -77,3 +108,11 @@ export default function InputTags(props) {
     </Box>
   );
 }
+
+InputTags.propTypes = {
+  handleGetTags: PropTypes.func,
+  defaultValue: PropTypes.array,
+  isEdit: PropTypes.bool,
+};
+
+export default InputTags;

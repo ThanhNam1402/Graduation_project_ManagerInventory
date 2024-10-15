@@ -1,6 +1,13 @@
 import { Stack, Typography, Button, Grid } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
+import PropTypes from "prop-types";
+
+TabInfomation.propTypes = {
+  item: PropTypes.object.isRequired,
+  onOpenModalUpdate: PropTypes.func,
+  onDeleteCustomer: PropTypes.func,
+};
 
 function TabInfomation({ item, onOpenModalUpdate, onDeleteCustomer }) {
   return (
@@ -13,18 +20,17 @@ function TabInfomation({ item, onOpenModalUpdate, onDeleteCustomer }) {
       </Grid>
       <Grid item xs={9}>
         <div>
-          <Typography variant="h6" component={"h6"}>
-            {item.name}
-          </Typography>
+          <Typography variant="h6" component={"h6"}></Typography>
+
           <Stack mt={2} direction="row">
             <Typography
               sx={{ width: "110px" }}
               variant="subtitle2"
               component={"p"}
             >
-              Mã Khách Hàng
+              Tên Khách Hàng
             </Typography>
-            <p>{item?.code}</p>
+            <p>{item.name}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -70,7 +76,7 @@ function TabInfomation({ item, onOpenModalUpdate, onDeleteCustomer }) {
             variant="contained"
             startIcon={<ChangeCircleIcon />}
             color="primary"
-            onClick={() => onOpenModalUpdate(item.id)}
+            onClick={() => onOpenModalUpdate(item?.id)}
             sx={{ boxShadow: 0 }}
           >
             Cập nhật
@@ -80,7 +86,7 @@ function TabInfomation({ item, onOpenModalUpdate, onDeleteCustomer }) {
             variant="contained"
             startIcon={<DeleteOutlineIcon />}
             color="error"
-            onClick={() => onDeleteCustomer(item.id)}
+            onClick={() => onDeleteCustomer(item?.id)}
             sx={{ boxShadow: 0 }}
           >
             Xóa

@@ -7,28 +7,39 @@ import {
   Autocomplete,
   FormControl,
 } from "@mui/material";
-
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import { supplierService } from "../../../services/supplier.service";
 import { purchaseOrderService } from "../../../services/purchaseOrder.service";
-
-import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppContext } from "../../../context/AppContent";
+// import { useAppContext } from "../../../context/AppContent";
 
-function AddDetail(props) {
+import PropTypes from "prop-types";
+
+function AddDetail({ total, data }) {
   let { id } = useParams();
-  const appContext = useAppContext();
+  // const appContext = useAppContext();
 
   const navigate = useNavigate();
   const [note, setNote] = useState("");
   const [code, setCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [finalTotal, setFinalTotal] = useState(0);
 
   const [options, setOption] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
-  let { allPrice, data } = props;
   const [supplier, setSupplier] = useState(null);
+
+  useEffect(() => {
+    console.log(total, discount);
+
+    if (total !== 0) {
+      let finalTotal = total - discount;
+      setFinalTotal(finalTotal);
+    }
+  }, [discount, total]);
 
   useEffect(() => {
     if (id) {
@@ -53,9 +64,7 @@ function AddDetail(props) {
     setInputValue(value);
     if (value !== "") {
       let res = await supplierService.handleGetComplete(value);
-      if (res && res.success === true) {
-        setOption(res.data);
-      }
+      setOption(res.data.data);
     } else {
       setOption([]);
     }
@@ -66,39 +75,29 @@ function AddDetail(props) {
   };
 
   const handelAddPurchaseOrder = async (status) => {
-    console.log(code, supplier);
-
     if (!supplier) {
       toast.error("Vui lòng chọn nhà cung cấp !!");
       return;
     }
 
-    let purchase = {
+    let newData = {
       supplier_id: supplier?.id,
-      total: allPrice.total,
-      totalSalePrice: allPrice.totalSalePrice,
-      note: note,
       code: code,
       status: status,
-      user_id: appContext?.userInfo?.data?.id,
-    };
-    let detail = {
-      data: data,
+      total_goods: finalTotal,
+      discount: discount,
+      supplier_payments: 200000,
+      description: note,
+      detail_import_goods: data,
     };
 
-    let res = await purchaseOrderService.handleAddPurChaseOrder(
-      purchase,
-      detail
-    );
+    let res = await purchaseOrderService.handleAddPurChaseOrder(newData);
 
     if (res && res.success === true) {
       toast.success(res?.message);
-
       navigate("/system/purchaseOrder/");
     }
   };
-
-  console.log(supplier);
 
   return (
     <div>
@@ -120,6 +119,7 @@ function AddDetail(props) {
         sx={{ mb: 3 }}
         getOptionLabel={(option) => (option?.name ? option?.name : null)}
         renderOption={(props, option) => {
+          // eslint-disable-next-line react/prop-types
           const { key, ...optionProps } = props;
           return (
             <Box
@@ -175,18 +175,25 @@ function AddDetail(props) {
         justifyContent="space-between"
       >
         <Typography>Tổng Tiền Hàng</Typography>
-        <Typography>{allPrice?.subTotal}</Typography>
+        <Typography>{total}</Typography>
       </Stack>
       <hr />
 
       <Stack
         my={2}
         direction="row"
-        alignItems="center"
+        alignItems="flex-end"
         justifyContent="space-between"
       >
         <Typography>Tiền Giảm</Typography>
-        <Typography>{allPrice?.totalSalePrice}</Typography>
+        <TextField
+          id="standard-basic"
+          hiddenLabel
+          variant="standard"
+          value={discount}
+          type="number"
+          onChange={(e) => setDiscount(Number(e.target.value))}
+        />
       </Stack>
 
       <hr />
@@ -198,7 +205,7 @@ function AddDetail(props) {
         justifyContent="space-between"
       >
         <Typography>Tiền Cần Thanh Toán</Typography>
-        <Typography>{allPrice?.total}</Typography>
+        <Typography>{finalTotal}</Typography>
       </Stack>
 
       <hr />
@@ -230,5 +237,10 @@ function AddDetail(props) {
     </div>
   );
 }
+
+AddDetail.propTypes = {
+  total: PropTypes.number,
+  data: PropTypes.array,
+};
 
 export default AddDetail;

@@ -1,14 +1,11 @@
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Stack, Typography, Button } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 
 import TableProductOrders from "./TableProductOrders";
 import { handleformat } from "../../utils/format";
+import PropTypes from "prop-types";
 
-function TabInfomation(props) {
-  let { item } = props;
-
+function TabInfomation({ item }) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={6}>
@@ -31,7 +28,7 @@ function TabInfomation(props) {
             >
               Thời gian
             </Typography>
-            <p>{handleformat.formatDate(item.createdAt)}</p>
+            <p>{handleformat.formatDate(item.created_at)}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -41,7 +38,7 @@ function TabInfomation(props) {
             >
               Nhà cung cấp
             </Typography>
-            <p>{item?.Supplier?.name}</p>
+            <p>{item?.supplier?.name}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -64,7 +61,7 @@ function TabInfomation(props) {
           >
             Trạng thái
           </Typography>
-          <p>{item?.status === 1 ? "Phiếu Tạm" : "Đã Nhập Hàng"}</p>
+          <p>{item?.status === 1 ? "Đã Nhập Hàng" : "Phiếu Tạm"}</p>
         </Stack>
         <Stack mt={2} direction="row">
           <Typography
@@ -88,7 +85,7 @@ function TabInfomation(props) {
         </Stack>
       </Grid>
       <Grid item xs={12}>
-        <TableProductOrders idPurchaseOrder={item.id} />
+        <TableProductOrders tableProducts={item.detail_import_goods} />
       </Grid>
       <Grid item xs={12}>
         <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
@@ -101,5 +98,9 @@ function TabInfomation(props) {
     </Grid>
   );
 }
+
+TabInfomation.propTypes = {
+  item: PropTypes.object,
+};
 
 export default TabInfomation;

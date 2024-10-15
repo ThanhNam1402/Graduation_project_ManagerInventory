@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import _ from "lodash";
+import { useEffect, useState } from "react";
 import {
   Paper,
   Grid,
@@ -16,29 +15,48 @@ import AddDetail from "./AddDetail";
 import TableAddProducts from "./TableAddProducts";
 import { purchaseOrderService } from "../../../services/purchaseOrder.service";
 import { REACT_APP_BACKEND_URL } from "../../../config/config";
-import { TotalSalePrice, TotalPrice, SubTotal } from "../../../utils/func";
+import { TotalPrice } from "../../../utils/func";
 
-function AddPurChaseOrder(props) {
+function AddPurChaseOrder() {
   const [options, setOption] = useState([]);
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
-  const [dataTable, setDataTable] = useState(0);
+  const [dataTable, setDataTable] = useState([]);
 
-  const [allPrice, setAllPrice] = useState({
-    total: 0,
-    subTotal: 0,
-    totalSalePrice: 0,
-  });
+  const [total, setTotal] = useState(0);
 
+  // func find all product, set option input
   const handleOnChange = async (value) => {
     setInputValue(value);
 
-    console.log(value);
     if (value !== "") {
-      let res = await purchaseOrderService.handleGetComplete(value);
-      if (res && res.success === true && res.data) {
-        setOption(res.data);
-      }
+      let res = await purchaseOrderService.handleGetAllProduct(value);
+
+      let newData = res.data.map((item) => {
+        let nameProduct = item.name;
+        return item.product_sku.map((sku) => {
+          return {
+            price: sku?.price,
+            discount: 0,
+            total_price: sku?.price * 1,
+            qty: 1,
+            product_id: sku?.id,
+            inventory: sku?.inventory,
+            name:
+              sku.option_value.length > 0
+                ? nameProduct.concat(
+                    " - ",
+                    sku.option_value.map((item) => item.name).join(" - ")
+                  )
+                : nameProduct,
+          };
+        });
+      });
+
+      const newArray = newData.reduce((accumulator, currentValue) => {
+        return accumulator.concat(currentValue);
+      }, []);
+      setOption(newArray);
     } else {
       setOption([]);
     }
@@ -53,16 +71,8 @@ function AddPurChaseOrder(props) {
   };
 
   useEffect(() => {
-    let a = SubTotal(dataTable);
-    let b = TotalPrice(dataTable);
-    let c = TotalSalePrice(dataTable);
-
-    setAllPrice((state) => ({
-      ...state,
-      total: b,
-      subTotal: a,
-      totalSalePrice: c,
-    }));
+    let a = TotalPrice(dataTable);
+    setTotal(a);
   }, [dataTable]);
 
   return (
@@ -95,6 +105,7 @@ function AddPurChaseOrder(props) {
             autoHighlight
             getOptionLabel={(option) => (option?.name ? option?.name : null)}
             renderOption={(props, option) => {
+              // eslint-disable-next-line react/prop-types
               const { key, ...optionProps } = props;
               return (
                 <Box
@@ -112,7 +123,7 @@ function AddPurChaseOrder(props) {
                   <Box sx={{ width: "100%" }}>
                     {option?.name}
                     <Typography variant="caption" component={"p"}>
-                      Tồn Kho : {option?.onHand}
+                      Tồn Kho : {option?.inventory}
                     </Typography>
                     <hr />
                   </Box>
@@ -126,7 +137,7 @@ function AddPurChaseOrder(props) {
                 placeholder="Tìm kiếm sản phẩm"
                 inputProps={{
                   ...params.inputProps,
-                  autoComplete: "new-password", // disable autocomplete and autofill
+                  autoComplete: "new-password",
                 }}
               />
             )}
@@ -139,7 +150,7 @@ function AddPurChaseOrder(props) {
       </Grid>
       <Grid item xs={4}>
         <Paper elevation={2} sx={{ p: 3 }}>
-          <AddDetail allPrice={allPrice} data={dataTable} />
+          <AddDetail total={total} data={dataTable} />
         </Paper>
       </Grid>
     </Grid>

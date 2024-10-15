@@ -40,18 +40,18 @@ export const TotalPrice = (items) => {
   if (items.length > 0) {
     let c = 0;
     items.forEach((item) => {
-      c += TotalRowCount(item?.price, item?.qty, item?.sale_price);
+      c += TotalRowCount(item?.price, item?.qty, item?.discount);
     });
     return c;
   }
-  return null;
+  return 0;
 };
 
 export const TotalSalePrice = (items) => {
   if (items.length > 0) {
     let c = 0;
     items.forEach((item) => {
-      c += item?.sale_price;
+      c += item?.discount;
     });
     return c;
   }
@@ -78,4 +78,30 @@ export const a11yProps = (index) => {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   };
+}
+
+
+/* 
+
+key defalut = price
+key = price or sale_price trung với item trong mãng để + 
+
+*/
+
+export const averagePrice = (arrayPrice, key = "price") => {
+  let average = 0
+  arrayPrice.forEach((item) => {
+    average += item[key]
+  })
+  return average / arrayPrice.length
+
+}
+
+export const getRandomColor = () => {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }

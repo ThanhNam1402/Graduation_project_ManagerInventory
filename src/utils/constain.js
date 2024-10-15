@@ -16,7 +16,6 @@ export const ListProductTypes = {
 export const ListDisplayOption = {
     title: "filter.display-option",
     data: [
-        { value: '', name: "All" },
         { value: 1, name: "Đang Kinh Doanh" },
         { value: 2, name: "Ngừng Kinh Doanh" }
     ]
@@ -50,11 +49,11 @@ export const ListCustomersType = {
     ]
 }
 export const ListStatusCustomer = {
-    title: "filter.customer-type",
+    title: "filter.status",
     data: [
-        { value: "", name: "All" },
-        { value: 0, name: "Đang Hoạt động" },
-        { value: 1, name: "Ngừng Hoạt Động" }
+        { value: 0, name: "Tất cả" },
+        { value: 1, name: "Đang hoạt động" },
+        { value: 2, name: "Ngừng hoạt Động" }
     ]
 }
 

@@ -1,271 +1,128 @@
-import {
-  TextField,
-  Stack,
-  FormControl,
-  InputLabel,
-  Box,
-  Typography,
-  Radio,
-  Button,
-  FormControlLabel,
-  RadioGroup,
-} from "@mui/material";
-import { useEffect } from "react";
+import { object, string, number } from "yup";
+import { useTranslation } from "react-i18next";
 
-import { useForm } from "react-hook-form";
+import PropTypes from "prop-types";
+import DynamicForm from "../../../components/DynamicForm";
 
-export default function UpdateCustomer({
-  value,
-  onCloseModal,
-  onUpdateCustomer,
-}) {
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+function UpdateCustomer({ value, onCloseModal, onUpdateCustomer }) {
+  const { t } = useTranslation("notification");
 
-  useEffect(() => {
-    if (value) {
-      reset(value);
-    }
-  }, []);
+  let userSchema = object({
+    name: string().required(t("form.required")).max(50, "Tối Đa 30 kí tự"),
+    phone: string().nullable(),
+    facebook: string().nullable(),
+    email: string().required(t("form.required")).email(),
+    customer_type: string(),
+    tax_code: string().nullable(),
+    status: string().nullable(),
+    date_of_birth: string().nullable(),
+    notes: string().nullable(),
+    id: number().nullable(),
+    address: string().nullable(),
+    description: string().max(220, "Tối Đa 220 kí tự").nullable(),
+  });
+
+  // data form
+  const fields = [
+    {
+      name: "name",
+      label: "name",
+      type: "text",
+      labelName: "Tên Khách Hàng",
+    },
+    {
+      name: "email",
+      label: "email",
+      type: "text",
+      labelName: "Email",
+    },
+    {
+      name: "phone",
+      label: "phone",
+      type: "text",
+      labelName: "Điện thoại",
+    },
+    {
+      name: "city_name",
+      label: "city_name",
+      type: "text",
+      labelName: "Tên Thành Phố",
+    },
+    {
+      name: "customer_type",
+      label: "customer_type",
+      type: "radio",
+      labelName: "Loại Khách Hàng",
+      options: [
+        { value: 1, label: "Công ty" },
+        { value: 2, label: "Cá Nhân" },
+      ],
+    },
+    {
+      name: "tax_code",
+      label: "tax_code",
+      type: "text",
+      labelName: "Mã số thuế",
+    },
+    {
+      name: "facebook",
+      label: "facebook",
+      type: "text",
+      labelName: "Facebook",
+    },
+    {
+      name: "date_of_birth",
+      label: "date_of_birth",
+      type: "date",
+      labelName: "Ngày Sinh",
+    },
+    {
+      name: "status",
+      label: "status",
+      type: "radio",
+      labelName: "Trạng Thái",
+      options: [
+        { value: 1, label: "Đang hoạt động" },
+        { value: 2, label: "Ngừng hoạt động" },
+      ],
+    },
+    {
+      name: "address",
+      label: "address",
+      type: "textarea",
+      labelName: "Địa Chỉ",
+    },
+    {
+      name: "notes",
+      label: "notes",
+      type: "textarea",
+      labelName: "Ghi Chú",
+    },
+  ];
 
   const _onSubmit = async (data) => {
+    console.log(data);
+
     onUpdateCustomer(data?.id, data);
   };
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit(_onSubmit)}
-        encType="multipart/form-data"
-        method="POST"
-      >
-        <div>
-          <Box elevation={2} sx={{ p: 2, mb: 2 }}>
-            <Stack mb={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="name">
-                Tên Khách Hàng
-              </InputLabel>
-              <FormControl fullWidth>
-                <TextField
-                  {...register("name")}
-                  hiddenLabel
-                  fullWidth
-                  id="name"
-                  margin="dense"
-                  variant="standard"
-                  size="small"
-                />
-
-                {errors.name && (
-                  <Typography color="error" variant="body2">
-                    {errors?.name?.message}
-                  </Typography>
-                )}
-              </FormControl>
-            </Stack>
-            <Stack mb={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="phone">
-                Điện thoại
-              </InputLabel>
-              <TextField
-                {...register("phone")}
-                hiddenLabel
-                type="text"
-                fullWidth
-                id="phone"
-                margin="dense"
-                variant="standard"
-                size="small"
-              />
-            </Stack>
-            <Stack my={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="city_name">
-                Tên Thành Phố
-              </InputLabel>
-              <FormControl fullWidth>
-                <TextField
-                  {...register("city_name")}
-                  type="text"
-                  hiddenLabel
-                  fullWidth
-                  id="city_name"
-                  margin="dense"
-                  variant="standard"
-                  size="small"
-                />
-                {errors.price && (
-                  <Typography color="error" variant="body2">
-                    {errors?.price?.message}
-                  </Typography>
-                )}
-              </FormControl>
-            </Stack>
-            <Stack mb={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="email">
-                Email
-              </InputLabel>
-              <FormControl fullWidth>
-                <TextField
-                  {...register("email")}
-                  type="email"
-                  hiddenLabel
-                  fullWidth
-                  id="code"
-                  margin="dense"
-                  variant="standard"
-                  size="small"
-                />
-
-                {errors.sale_price && (
-                  <Typography color="error" variant="body2">
-                    {errors?.sale_price?.message}
-                  </Typography>
-                )}
-              </FormControl>
-            </Stack>
-
-            <Stack mb={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="tax_code">
-                Loại Khách Hàng
-              </InputLabel>
-              <FormControl>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-row-radio-buttons-group-label"
-                  name="row-radio-buttons-group"
-                >
-                  <FormControlLabel value="0" control={<Radio />} label="0" />
-                  <FormControlLabel value="1" control={<Radio />} label="1" />
-                  <FormControlLabel value="2" control={<Radio />} label="2" />
-                </RadioGroup>
-              </FormControl>
-            </Stack>
-
-            <Stack mb={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="tax_code">
-                Mã số thuế
-              </InputLabel>
-              <FormControl fullWidth>
-                <TextField
-                  {...register("tax_code")}
-                  type="number"
-                  hiddenLabel
-                  fullWidth
-                  id="tax_code"
-                  margin="dense"
-                  variant="standard"
-                  size="small"
-                />
-
-                {errors.sale_price && (
-                  <Typography color="error" variant="body2">
-                    {errors?.sale_price?.message}
-                  </Typography>
-                )}
-              </FormControl>
-            </Stack>
-
-            <Stack mb={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="facebook">
-                Facebook
-              </InputLabel>
-              <FormControl fullWidth>
-                <TextField
-                  {...register("facebook")}
-                  type="text"
-                  hiddenLabel
-                  fullWidth
-                  id="facebook"
-                  margin="dense"
-                  variant="standard"
-                  size="small"
-                />
-
-                {errors.sale_price && (
-                  <Typography color="error" variant="body2">
-                    {errors?.sale_price?.message}
-                  </Typography>
-                )}
-              </FormControl>
-            </Stack>
-
-            <Stack mb={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="date_of_birth">
-                Ngày Sinh
-              </InputLabel>
-              <FormControl fullWidth>
-                <TextField
-                  {...register("date_of_birth")}
-                  type="date"
-                  hiddenLabel
-                  fullWidth
-                  id="date_of_birth"
-                  margin="dense"
-                  variant="standard"
-                  size="small"
-                />
-
-                {errors.sale_price && (
-                  <Typography color="error" variant="body2">
-                    {errors?.sale_price?.message}
-                  </Typography>
-                )}
-              </FormControl>
-            </Stack>
-
-            <Stack mb={2} direction="row" alignItems="center">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="address">
-                Địa Chỉ
-              </InputLabel>
-              <TextField
-                {...register("address")}
-                hiddenLabel
-                fullWidth
-                id="address"
-                margin="dense"
-                variant="standard"
-                multiline
-                size="small"
-                maxRows={20}
-              />
-            </Stack>
-
-            <Stack mb={2} direction="row" alignItems="self-start">
-              <InputLabel sx={{ minWidth: 150 }} htmlFor="notes">
-                Ghi Chú
-              </InputLabel>
-              <TextField
-                {...register("notes")}
-                hiddenLabel
-                fullWidth
-                id="notes"
-                variant="standard"
-                multiline
-                size="small"
-                minRows={4}
-                maxRows={20}
-              />
-            </Stack>
-          </Box>
-        </div>
-        <Stack
-          spacing={2}
-          direction="row"
-          justifyContent={"flex-end"}
-          alignItems={"center"}
-        >
-          <Button type="submit" variant="contained">
-            Lưu
-          </Button>
-          <Button onClick={onCloseModal} variant="outlined">
-            Hủy
-          </Button>
-        </Stack>
-      </form>
+      <DynamicForm
+        valueEdit={value}
+        fields={fields}
+        onSubmit={_onSubmit}
+        FormSchema={userSchema}
+        onCloseModal={onCloseModal}
+      />
     </>
   );
 }
+
+UpdateCustomer.propTypes = {
+  value: PropTypes.object,
+  onCloseModal: PropTypes.func,
+  onUpdateCustomer: PropTypes.func,
+};
+
+export default UpdateCustomer;

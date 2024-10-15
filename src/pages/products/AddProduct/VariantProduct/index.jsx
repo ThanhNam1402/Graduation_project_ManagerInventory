@@ -1,32 +1,22 @@
-import { useEffect, useState } from "react";
-import { nanoid } from "nanoid";
+import { useCallback, useEffect, useState } from "react";
 
-import ListOption from "./ListOption/ListOption";
+import ListVariant from "./ListOption/ListVariant";
 import TableVariant from "./TableVariant/TableVariant";
-import _ from "lodash";
+import PropTypes from "prop-types";
 
-function VariantProduct() {
+function VariantProduct({ onGetVariants }) {
   const [dataTable, setDataTable] = useState([]);
 
   //   get data option in list option
-  const handleGetData = (data) => {
-    console.log("data option ==", data);
-
-    console.log("curent data table == ", dataTable);
-
-    let resuft = createCombinations(data);
-    console.log("new data table ==", resuft);
-
-    setDataTable(resuft?.variants);
-
-    // new data
-    // let a = createNewCombinedArray(dataTable, resuft?.variants);
-
-    // console.log("custom 2 ==", a);
-    // setDataTable(a);
-  };
+  const handleGetData = useCallback((data) => {
+    let rawData = createCombinations(data);
+    setDataTable(rawData?.variants);
+  }, []);
 
   const createCombinations = (inputData) => {
+    if (inputData.length <= 0) {
+      return [];
+    }
     function combine(current, remaining) {
       if (remaining.length === 0) {
         combinations.push(current);
@@ -34,9 +24,9 @@ function VariantProduct() {
       }
       const first = remaining[0];
       const rest = remaining.slice(1);
-      if (first?.value?.value?.length > 0) {
-        first.value.value.forEach((value) => {
-          combine([...current, { id: first.value.id, value }], rest);
+      if (first?.value?.length > 0) {
+        first.value.forEach((value) => {
+          combine([...current, { id: first.id, value }], rest);
         });
       }
     }
@@ -57,35 +47,22 @@ function VariantProduct() {
     };
   };
 
-  const createNewCombinedArray = (currentArr, newData) => {
-    let combinedArray = [...currentArr, ...newData];
-
-    console.log(combinedArray);
-
-    if (combinedArray.length > 0) {
-      const uniqueNames = new Set();
-      const result = [];
-
-      combinedArray.forEach((item) => {
-        if (!uniqueNames.has(item.name)) {
-          uniqueNames.add(item.name);
-          result.push(item);
-        }
-      });
-
-      return result;
-    }
-
-    return null;
-  };
+  useEffect(() => {
+    onGetVariants(dataTable);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataTable]);
 
   return (
     <div>
-      <ListOption handleGetData={handleGetData} />
+      <ListVariant handleGetData={handleGetData} />
 
       <TableVariant dataTable={dataTable} />
     </div>
   );
 }
+
+VariantProduct.propTypes = {
+  onGetVariants: PropTypes.func,
+};
 
 export default VariantProduct;

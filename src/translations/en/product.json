@@ -11,5 +11,9 @@
             "onhand" : "Onhand",
             "status" : "Status"
         }
+    },
+    "status" : {
+        "active" : "Actice",
+        "inactive" : "Inactive"
     }
 }

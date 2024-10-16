@@ -28,7 +28,7 @@ function Product_information({
           <TableHead>
             <TableRow sx={{ backgroundColor: "#2196f3" }}>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
-                Kiểm gần đây
+                Tên sản phẩm
               </TableCell>
               <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
                 Số lượng

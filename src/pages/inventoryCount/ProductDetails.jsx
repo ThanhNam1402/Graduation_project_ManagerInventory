@@ -32,11 +32,11 @@ function Product_details({ row }) {
                 backgroundColor: itemIndex % 2 === 0 ? "white" : "lightgray",
               }}
             >
-              <TableCell>{item.code ? item.code : "No data"}</TableCell>
-              <TableCell>{item.name ? item.name : "No data"}</TableCell>
-              <TableCell>{item.qty}</TableCell>
+              <TableCell>{item.product_sku.code ? item.product_sku.code : "No data"}</TableCell>
+              <TableCell>{item.product_sku.product.name ? item.product_sku.product.name : "No data"}</TableCell>
+              <TableCell>{item.ac_number}</TableCell>
               <TableCell>
-                {handleformat.formatPrice(item.qty * item.sale_price)}
+                {handleformat.formatPrice(item.value)}
               </TableCell>
               <TableCell>{item.note ? item.note : "No data"}</TableCell>
             </TableRow>

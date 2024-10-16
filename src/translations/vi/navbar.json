@@ -11,7 +11,10 @@
         "orders": "Đơn Hàng",
         "transaction" : "Giao Dịch",
         "invoices" : "Hóa Đơn",
-        "purchase-order" : "Đặt Hàng"
-
+        "purchase-order" : "Đặt Hàng",
+        "employee": "Nhân Viên",
+        "calender": "Lịch Làm Việc",
+        "timeSheet": "Chấm Công",
+        "payroll": "Bảng Tính Lương"
     }
 }

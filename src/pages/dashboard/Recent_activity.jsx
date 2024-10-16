@@ -17,14 +17,15 @@ function Recent_activities() {
           width: "100%",
           maxWidth: "90%",
           bgcolor: "background.paper",
-         overflowY : 'auto',
-          maxHeight: 800,
-          pt: 0
+          height: "100vh",
+          overflowY: "auto", 
+          pt: 0,
         }}
       >
         <ListSubheader component="div" id="nested-list-subheader">
-          <Typography variant="h6" component={"h6"}>RECENT ACTIVITIES</Typography>
-
+          <Typography variant="h6" component={"h6"}>
+            RECENT ACTIVITIES
+          </Typography>
         </ListSubheader>
         <hr />
         <ListItem>
@@ -48,9 +49,10 @@ function Recent_activities() {
             </Avatar>
           </ListItemAvatar>
           <div>
-            <ListItemText 
-            primary="Nguyễn Trọng Phúc" 
-            secondary="just created an invoice with a total of 32,504,600" />
+            <ListItemText
+              primary="Nguyễn Trọng Phúc"
+              secondary="just created an invoice with a total of 32,504,600"
+            />
             <div href="#">10 ngày trước</div>
           </div>
         </ListItem>
@@ -61,9 +63,10 @@ function Recent_activities() {
             </Avatar>
           </ListItemAvatar>
           <div>
-            <ListItemText 
-            primary="Nguyễn Trọng Phúc" 
-            secondary="just created an invoice with a total of 32,504,600" />
+            <ListItemText
+              primary="Nguyễn Trọng Phúc"
+              secondary="just created an invoice with a total of 32,504,600"
+            />
             <div href="#">10 ngày trước</div>
           </div>
         </ListItem>
@@ -75,9 +78,10 @@ function Recent_activities() {
             </Avatar>
           </ListItemAvatar>
           <div>
-            <ListItemText 
-            primary="Nguyễn Trọng Phúc" 
-            secondary="just created an invoice with a total of 32,504,600" />
+            <ListItemText
+              primary="Nguyễn Trọng Phúc"
+              secondary="just created an invoice with a total of 32,504,600"
+            />
             <div href="#">10 ngày trước</div>
           </div>
         </ListItem>

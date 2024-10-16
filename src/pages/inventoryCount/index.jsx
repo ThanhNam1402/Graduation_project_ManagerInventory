@@ -15,10 +15,10 @@ function InventoryCount() {
   const [selectedCount, setSelectedCount] = useState(0);
 
   const [filters, setFilters] = useState({
-    status: '',
+    status: "",
   });
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
-  CsUsePagination(0, 5);
+    CsUsePagination(0, 5);
 
   const handleSetFilter = (value, id) => {
     console.log(id, value, typeof value);
@@ -46,8 +46,8 @@ function InventoryCount() {
               mr: 3,
             }}
           >
-            <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
-            {t("inventorycount.title")}
+            <Typography sx={{ mb: 4 }} variant="h5" component={"h5"}>
+              {t("inventorycount.title")}
             </Typography>
             <Time />
             <Status />

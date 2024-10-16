@@ -11,11 +11,11 @@ function Information({ row }) {
               <Typography sx={{ p: 1 }}>Mã kiểm kho: {row.code}</Typography>
               <Divider />
               <Typography sx={{ p: 1 }}>
-                Thời gian: {handleformat.formatDate(row.createdAt)}
+                Thời gian: {handleformat.formatDate(row.created_at)}
               </Typography>
               <Divider />
               <Typography sx={{ p: 1 }}>
-                Ngày cân bằng: {handleformat.formatDate(row.createdAt)}
+                Ngày cân bằng: {handleformat.formatDate(row.updated_at)}
               </Typography>
             </Grid>
             <Grid item xs={6}>

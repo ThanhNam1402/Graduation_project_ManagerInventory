@@ -4,7 +4,17 @@ import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-function Action({handlePrint, handleDelInvertory, row}) {
+
+import PropTypes from "prop-types";
+
+Action.propTypes = {
+  handlePrint: PropTypes.func,
+  handleDelInvertory: PropTypes.func,
+  handleUpdateStatus: PropTypes.func,
+  row: PropTypes.object,
+};
+
+function Action({ handlePrint, handleDelInvertory, handleUpdateStatus, row }) {
   return (
     <>
       <Box
@@ -15,6 +25,17 @@ function Action({handlePrint, handleDelInvertory, row}) {
         }}
         className="print-hidden"
       >
+        {/* Hiển thị nút "Cập nhật trạng thái" nếu chưa cân bằng */}
+        {row.status === 1 && (
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mr: 1 }}
+            onClick={() => handleUpdateStatus(row.id)}
+          >
+            Cập nhật trạng thái
+          </Button>
+        )}
         <Button
           variant="contained"
           color="primary"

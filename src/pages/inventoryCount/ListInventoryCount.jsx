@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress
 
 import csUseQueryString from "../../hook/csUseQueryString";
 import { invertoryService } from "./../../services/invertory.service";
@@ -31,6 +32,8 @@ import Payment_summary from "./PaymentSummary";
 import Print_Header from "../../utils/print/Header";
 import Print_Footer from "../../utils/print/Footer";
 
+import Pagination from "./pagination";
+
 function ListInventoryCount(props) {
   const { t } = useTranslation("inventorycount");
 
@@ -38,6 +41,11 @@ function ListInventoryCount(props) {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [data, setData] = useState([]);
   const [user, setUser] = useState([]);
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState();
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const { componentRef, handlePrint } = usePrint();
   let { filters, keyword, pagination } = props;
@@ -50,53 +58,23 @@ function ListInventoryCount(props) {
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [filters, pagination?.page, keyword]);
+    fetchData(page);
+  }, [page, rowsPerPage]);
 
-  const fetchData = async () => {
+  const fetchData = async (page) => {
+    setLoading(true); // Bắt đầu loading
     try {
-      let filterParams = csUseQueryString({
-        ...filters,
-        ...pagination,
-        keyword,
-      });
-
-      const res = await invertoryService.handleGetAll(filterParams);
+      const res = await invertoryService.handleGetAll(page);
       let data = res.data;
-
-      const groupedData = data.reduce((acc, item) => {
-        const id = item.id;
-
-        if (!acc[id]) {
-          acc[id] = {
-            id,
-            code: item.code,
-            createdAt: item.createdAt,
-            qty: 0,
-            sale_price: 0,
-            items: [],
-          };
-        }
-
-        acc[id].qty += item.Products.Inventory_Detail.qty;
-        acc[id].sale_price += item.Products.Inventory_Detail.sale_price;
-
-        acc[id].items.push({
-          code: item.Products.code,
-          name: item.Products.name,
-          qty: item.Products.Inventory_Detail.qty,
-          description: item.Products.description,
-          sale_price: item.Products.sale_price,
-          endingStocks: item.Products.Inventory_Detail.EndingStocks,
-        });
-
-        return acc;
-      }, {});
-
-      const filteredData = Object.values(groupedData);
-      setData(filteredData);
+      console.log("Check data call API", res);
+      setData(data);
+      setPage(res.current_page);
+      setLastPage(res.last_page);
+      setTotalPages(res.total); // Tổng số bản ghi
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false); // Kết thúc loading
     }
   };
 
@@ -105,7 +83,7 @@ function ListInventoryCount(props) {
       let res = await invertoryService.handleDelInvertory(id);
       if (res) {
         toast.success(res.messges);
-        fetchData();
+        fetchData(page + 1);
       }
     } catch (error) {
       console.log(error);
@@ -124,6 +102,17 @@ function ListInventoryCount(props) {
 
       return newSelected;
     });
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage + 1); // Điều chỉnh vì MUI bắt đầu từ 0
+    fetchData(newPage + 1); // Gọi API để lấy dữ liệu trang mới
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(1); // Quay về trang 1 khi thay đổi số bản ghi trên mỗi trang
+    fetchData(1); // Gọi API để cập nhật dữ liệu
   };
 
   return (
@@ -166,141 +155,156 @@ function ListInventoryCount(props) {
                   {t("inventorycount.table.tableHead.total")}
                 </TableCell>
                 <TableCell>
+                  {/* {t("inventorycount.table.tableHead.status")} */}
+                  Tổng chênh lệch
+                </TableCell>
+                <TableCell>
                   {t("inventorycount.table.tableHead.status")}
                 </TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, index) => (
-                <React.Fragment key={index}>
-                  <TableRow>
-                    <TableCell>
-                      <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => handleRowClick(row.id)}
-                      >
-                        {selectedRowId === row.id ? (
-                          <KeyboardArrowUpIcon />
-                        ) : (
-                          <KeyboardArrowDownIcon />
-                        )}
-                      </IconButton>
-                    </TableCell>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selectedProducts.includes(row.id)}
-                        onChange={() => handleCheckboxChange(row.id)}
-                      />
-                    </TableCell>
-                    <TableCell>{row.code}</TableCell>
-                    <TableCell>
-                      {handleformat.formatDate(row.createdAt)}
-                    </TableCell>
-                    <TableCell>{row.qty}</TableCell>
-                    <TableCell>
-                      {handleformat.formatPrice(row.qty * row.sale_price)}
-                    </TableCell>
-                    <TableCell>
-                      {row.status === 0 ? "Đã cân bằng" : "Chưa cân bằng"}
-                    </TableCell>
-                  </TableRow>
-                  {selectedRowId === row.id && (
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
+                    <CircularProgress />
+                  </TableCell>
+                </TableRow>
+              ) : (
+                data.map((row, index) => (
+                  <React.Fragment key={index}>
                     <TableRow>
-                      <TableCell colSpan={12}>
-                        <Collapse
-                          in={selectedRowId === row.id}
-                          timeout="auto"
-                          unmountOnExit
+                      <TableCell>
+                        <IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={() => handleRowClick(row.id)}
                         >
-                          <Box margin={1} ref={componentRef}>
-                            <Typography
-                              variant="h6"
-                              gutterBottom
-                              component="div"
-                            >
-                              <span className="screen-text">Thông tin</span>
-                            </Typography>
-                            {/* HEADER PHIẾU IN */}
-                            <Print_Header />
-                            <Box
-                              sx={{ mb: 3, textAlign: "center" }}
-                              className="print-text"
-                            >
-                              <Typography
-                                variant="h4"
-                                component="h2"
-                                align="center"
-                                sx={{
-                                  fontFamily: "Times New Roman",
-                                  fontWeight: "bold",
-                                  color: "#2196f3",
-                                }}
-                              >
-                                Phiếu Kiểm Kho
-                              </Typography>
-                            </Box>
-                            {/* Body PHIẾU IN */}
-                            <Box sx={{ mt: 3 }} className="print-text">
-                              <Typography
-                                variant="h5"
-                                component="p"
-                                gutterBottom
-                              >
-                                Thông tin phiếu kiểm
-                              </Typography>
-                            </Box>
-                            <hr className="print-text" />
-                            <Information row={row} />
-                            <hr className="print-text" />
-                            <Box sx={{ mt: 3 }} className="print-text">
-                              <Typography
-                                variant="h5"
-                                component="div"
-                                gutterBottom
-                              >
-                                Thông tin sản phẩm
-                              </Typography>
-                            </Box>
-                            <TableContainer component={Paper} sx={{ mt: 3 }}>
-                              <Product_details row={row.items} />
-                            </TableContainer>
-
-                            <Grid
-                              container
-                              spacing={2}
-                              justifyContent="flex-end"
-                              sx={{ mt: 2 }}
-                            >
-                              <Grid item xs={12}>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    justifyContent: "flex-end",
-                                    width: "100%",
-                                  }}
-                                >
-                                  <Payment_summary row={row} />
-                                </Box>
-                                {/* FOOTER PHIẾU IN */}
-                                <Print_Footer row={row} user={user} />
-                              </Grid>
-                            </Grid>
-                            <Action
-                              handlePrint={handlePrint}
-                              handleDelInvertory={handleDelInvertory}
-                              row={row}
-                            />
-                          </Box>
-                        </Collapse>
+                          {selectedRowId === row.id ? (
+                            <KeyboardArrowUpIcon />
+                          ) : (
+                            <KeyboardArrowDownIcon />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={selectedProducts.includes(row.id)}
+                          onChange={() => handleCheckboxChange(row.id)}
+                        />
+                      </TableCell>
+                      <TableCell>{row.code}</TableCell>
+                      <TableCell>
+                        {handleformat.formatDate(row.created_at)}
+                      </TableCell>
+                      <TableCell>{row.ac_number}</TableCell>
+                      <TableCell>{row.ac_total}</TableCell>
+                      <TableCell>{row.total_difference}</TableCell>
+                      <TableCell>
+                        {row.status === 0 ? "Đã cân bằng" : "Chưa cân bằng"}
                       </TableCell>
                     </TableRow>
-                  )}
-                </React.Fragment>
-              ))}
+                    {selectedRowId === row.id && (
+                      <TableRow>
+                        <TableCell colSpan={12}>
+                          <Collapse
+                            in={selectedRowId === row.id}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <Box margin={1} ref={componentRef}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                component="div"
+                              >
+                                <span className="screen-text">Thông tin</span>
+                              </Typography>
+                              {/* HEADER PHIẾU IN */}
+                              <Print_Header />
+                              <Box
+                                sx={{ mb: 3, textAlign: "center" }}
+                                className="print-text"
+                              >
+                                <Typography
+                                  variant="h4"
+                                  component="h2"
+                                  align="center"
+                                  sx={{
+                                    fontFamily: "Times New Roman",
+                                    fontWeight: "bold",
+                                    color: "#2196f3",
+                                  }}
+                                >
+                                  Phiếu Kiểm Kho
+                                </Typography>
+                              </Box>
+                              {/* Body PHIẾU IN */}
+                              <Box sx={{ mt: 3 }} className="print-text">
+                                <Typography
+                                  variant="h5"
+                                  component="p"
+                                  gutterBottom
+                                >
+                                  Thông tin phiếu kiểm
+                                </Typography>
+                              </Box>
+                              <hr className="print-text" />
+                              <Information row={row} />
+                              <hr className="print-text" />
+                              <Box sx={{ mt: 3 }} className="print-text">
+                                <Typography
+                                  variant="h5"
+                                  component="div"
+                                  gutterBottom
+                                >
+                                  Thông tin sản phẩm
+                                </Typography>
+                              </Box>
+                              <TableContainer component={Paper} sx={{ mt: 3 }}>
+                                <Product_details row={row.detail_stock} />
+                              </TableContainer>
+
+                              <Grid
+                                container
+                                spacing={2}
+                                justifyContent="flex-end"
+                                sx={{ mt: 2 }}
+                              >
+                                <Grid item xs={12}>
+                                  <Box
+                                    display="flex"
+                                    justifyContent="flex-end"
+                                    sx={{ mb: 2 }}
+                                  >
+                                    <Action
+                                     handlePrint={handlePrint}
+                                      row={row}
+                                      handleDelInvertory={handleDelInvertory}
+                                      fetchData={fetchData}
+                                    />
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                              <Print_Footer row={row} user={user}/>
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
+                ))
+              )}
             </TableBody>
           </Table>
+          <Pagination
+            page={page - 1} // Page từ API thường bắt đầu từ 1, nhưng MUI Pagination bắt đầu từ 0
+            rowsPerPage={rowsPerPage}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            count={totalPages} // Tổng số bản ghi
+          />
         </TableContainer>
       </Box>
     </>

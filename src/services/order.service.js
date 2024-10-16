@@ -2,7 +2,7 @@ import api from "../config/axios";
 
 export const orderService = {
   handleGetAll(filter) {
-    return api.get(`/api/order?${filter}`);
+    return api.get(`/api/orders?${filter}`);
   },
   hendleCreat(data) {
     return api.post(`/api/order`, {

@@ -11,8 +11,11 @@
         "orders": "Orders",
         "transaction": "Transaction",
         "invoices" : "Invoices",
-        "purchase-order" : "Purchase Order"
-
+        "purchase-order" : "Purchase Order",
+        "employee": "Employee",
+        "calender": "Calender",
+        "timeSheet": "Time Sheet",
+        "payroll": "Payroll"
     }
 }
  

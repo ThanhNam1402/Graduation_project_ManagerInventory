@@ -22,6 +22,9 @@ import Customers from "../pages/customers";
 import Suppliers from "../pages/suppliers";
 import Invoices from "../pages/invoices";
 
+import Employee from "../pages/employee";
+import Paysheet from "../pages/paysheet";
+
 import TestCpm from "../components/testCpm";
 
 function MainRouters(props) {
@@ -56,6 +59,12 @@ function MainRouters(props) {
           <Route path="purchaseOrder" element={<PurchaseOrder />} />
           <Route path="purchaseOrder/new" element={<AddPurChaseOrder />} />
           <Route path="purchaseOrder/:id" element={<AddPurChaseOrder />} />
+
+
+          <Route path="employee" element={<Employee />} />
+          <Route path="paysheet" element={<Paysheet />} />
+          
+
           <Route path="testcmp" element={<TestCpm />} />
         </Routes>
       </Container>

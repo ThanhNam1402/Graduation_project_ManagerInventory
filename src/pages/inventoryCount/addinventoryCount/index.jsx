@@ -17,7 +17,7 @@ const AddInventoryCount = () => {
   const [value, setValue] = useState(null);
   const [options, setOptions] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [status, setStatus] = useState("0");
+  const [status, setStatus] = useState("1");
   const [loading, setLoading] = useState(false);
 
   let filters = "";
@@ -31,22 +31,15 @@ const AddInventoryCount = () => {
   const GetAllProducts = async () => {
     try {
       let filterParams = new URLSearchParams({
-        categoryID: filters.categoryID || 0,
-        displayOption: filters.displayOption || 0,
         keyWord: keyWord || "",
-        onHand: filters.onHand || 0,
-        order: pagination?.order || "asc",
-        orderBy: pagination?.orderBy || "name",
-        page: pagination?.page || 0,
-        rowsPerPage: pagination?.rowsPerPage || 5,
+        page: pagination?.page || 1,
+        rowsPerPage: pagination?.rowsPerPage || 100,
       }).toString();
 
-      console.log(filterParams);
+      console.log("check filterParams", filterParams);
 
       const response = await productService.handleGetAllProduct(filterParams);
-      console.log(response);
-
-      if (response && response.success === true) {
+      if (response) {
         setData(response.data);
         setOptions(response.data);
       }
@@ -87,23 +80,27 @@ const AddInventoryCount = () => {
     }
   };
 
-  const handleIncrease = (productId) => {
-    const updatedProducts = selectedProducts.map((item) =>
-      item.id === productId ? { ...item, qty: item.qty + 1 } : item
-    );
-    setSelectedProducts(updatedProducts);
-    updateTotalPrice(updatedProducts);
+  const handleQtyChange = (productId, qty) => {
+    if (qty === "") {
+      const updatedProducts = selectedProducts.map((item) =>
+        item.id === productId ? { ...item, qty: "" } : item
+      );
+      setSelectedProducts(updatedProducts);
+      return; // Dừng lại để không xử lý tiếp.
+    }
+    // Chuyển đổi giá trị input thành số nguyên
+    const newQty = parseInt(qty, 10);
+  
+    // Kiểm tra giá trị hợp lệ (không nhỏ hơn 1)
+    if (newQty >= 0) {
+      const updatedProducts = selectedProducts.map((item) =>
+        item.id === productId ? { ...item, qty: newQty } : item
+      );
+      setSelectedProducts(updatedProducts);
+      updateTotalPrice(updatedProducts);
+    }
   };
-
-  const handleDecrease = (productId) => {
-    const updatedProducts = selectedProducts.map((item) =>
-      item.id === productId && item.qty > 1
-        ? { ...item, qty: item.qty - 1 }
-        : item
-    );
-    setSelectedProducts(updatedProducts);
-    updateTotalPrice(updatedProducts);
-  };
+  
 
   const handleDelete = (productId) => {
     const updatedProducts = selectedProducts.filter(
@@ -114,115 +111,51 @@ const AddInventoryCount = () => {
   };
 
   const updateTotalPrice = (products) => {
-    const total = products.reduce(
-      (acc, item) => acc + item.qty * item.sale_price,
-      0
-    );
+    const total = products.reduce((acc, item) => {
+      console.log("Check item", item);
+
+      // Tính tổng sale_price cho mỗi product_sku
+      const totalSalePriceForSku = item.product_sku.reduce((skuAcc, sku) => {
+        const salePrice = sku.sale_price || 0; // Nếu sale_price không tồn tại, sử dụng 0
+        return skuAcc + salePrice;
+      }, 0);
+
+      console.log("Total sale price for SKU", totalSalePriceForSku);
+
+      // Cộng tổng giá của các product_sku cho từng item
+      return acc + item.qty * totalSalePriceForSku;
+    }, 0);
+
+    console.log("Total price", total);
     setTotalPrice(total);
-  };
-
-  const handleGetCode = async () => {
-    try {
-      const response = await invertoryService.handleGetCode();
-      console.log("Check code", response);
-
-      if (response) {
-        return response.data;
-      } else {
-        throw new Error("Failed to retrieve code");
-      }
-    } catch (error) {
-      console.error("Error fetching code:", error);
-      throw error;
-    }
   };
 
   const AddInventory = async () => {
     setLoading(true);
+    const dataCreat = {
+      status: status, // Trường status hiện có từ state
+      cart: selectedProducts.flatMap((product) =>
+        product.product_sku.map((sku) => ({
+          quantity: product.qty, // Số lượng sản phẩm
+          sku_id: sku.id, // ID của SKU
+        }))
+      ),
+    };
+
+    console.log("Check dataCreat", dataCreat);
+
     try {
-      //Lấy code hiện tại
-      const currentCode = await handleGetCode();
-      console.log(currentCode);
-      if (!currentCode) {
-        throw new Error("Current code is not available");
-      }
-      let code = currentCode.code;
-
-      // Tách phần chữ và phần số trong mã
-      const match = code.match(/^([A-Za-z]*)(\d+)$/);
-      if (!match) {
-        throw new Error("Invalid code format");
-      }
-
-      const prefix = match[1];
-      const numberPart = match[2];
-
-      // Tăng số lên 1
-      const newNumber = (parseInt(numberPart, 10) + 1)
-        .toString()
-        .padStart(numberPart.length, "0");
-
-      // Kết hợp phần chữ với số mới
-      const FNcode = `${prefix}${newNumber}`;
-      let dataCreat = {
-        status: 0,
-        code: FNcode,
-      };
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setLoading(false);
       const response = await invertoryService.hendleCreat(dataCreat);
-      console.log(response);
-      toast.success(response.messges);
+      console.log(response.data);
+      toast.success(response.data.message);
     } catch (error) {
       toast.success(error);
       console.log(error);
     }
-
-    handleCreatInventoryDetail();
     setSelectedProducts([]);
     setTotalPrice(0);
-  };
-
-  const handleCreatInventoryDetail = async () => {
-    try {
-      const currentCode = await handleGetCode();
-      const inventory_count_id = currentCode.id;
-
-      const promises = selectedProducts.map(async (item) => {
-        console.log(item);
-        let data = {
-          inventory_count_id: inventory_count_id,
-          product_id: item.id,
-          qty: item.qty,
-          price: item.price,
-          sale_price: item.sale_price,
-          type: 0,
-          EndingStocks: 10,
-        };
-
-        try {
-          const response = await invertoryService.handleCreatInventoryDetail(
-            data
-          );
-          console.log("Response for item", item.id, ":", response);
-        } catch (error) {
-          console.error(
-            "Error creating inventory detail for item",
-            item.id,
-            ":",
-            error
-          );
-        }
-      });
-      await Promise.all(promises);
-      console.log("All inventory details have been created successfully.");
-    } catch (error) {
-      console.error("Error in handleCreatInventoryDetail:", error);
-    }
-  };
-
-  const handleChange = (event) => {
-    setStatus(event.target.value);
   };
 
   return (
@@ -234,7 +167,6 @@ const AddInventoryCount = () => {
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={7}>
-          {/* CODE Ở ĐÂY */}
           <Find
             value={value}
             handleAutocompleteChange={handleAutocompleteChange}
@@ -242,8 +174,7 @@ const AddInventoryCount = () => {
           />
           <Product_information
             selectedProducts={selectedProducts}
-            handleDecrease={handleDecrease}
-            handleIncrease={handleIncrease}
+            handleQtyChange={handleQtyChange}
             handleDelete={handleDelete}
           />
         </Grid>
@@ -252,7 +183,7 @@ const AddInventoryCount = () => {
           <LoadingBackdrop loading={loading} />
           <Inventory_check_sheet
             status={status}
-            handleChange={handleChange}
+            // handleChange={handleChange}
             totalPrice={totalPrice}
             selectedProducts={selectedProducts}
             AddInventory={AddInventory}

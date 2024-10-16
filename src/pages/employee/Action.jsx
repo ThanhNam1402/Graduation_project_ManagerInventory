@@ -1,20 +1,28 @@
-import { Box, Typography, Paper, Stack } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-
+import React, { useState } from "react";
+import { Stack, Button } from "@mui/material";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import Button from "@mui/material/Button";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-
 import CsSearch from "../../components/filters/SearchProduct";
 import { useTranslation } from "react-i18next";
+import AddEmployeeDialog from "./Add/dialog_Add";
 
-function ActionTransaction({ selectedCount }) {
+function ActionTransaction() {
   const { t } = useTranslation("order");
 
-  const navigate = useNavigate();
+  // State to handle dialog open/close
+  const [open, setOpen] = useState(false);
 
   const handleButtonClick = () => {
-    navigate("/system/orders/add");
+    setOpen(true); // Open the modal when button is clicked
+  };
+
+  const handleClose = () => {
+    setOpen(false); // Close the modal
+  };
+
+  const handleSave = () => {
+    // Logic to save employee data
+    setOpen(false);
   };
 
   return (
@@ -39,9 +47,9 @@ function ActionTransaction({ selectedCount }) {
             variant="contained"
             color="success"
             startIcon={<AddOutlinedIcon />}
-            onClick={() => handleButtonClick()}
+            onClick={handleButtonClick}
           >
-            {t("orders.action.order")}
+            Thêm nhân viên
           </Button>
 
           <div>
@@ -55,6 +63,13 @@ function ActionTransaction({ selectedCount }) {
           </div>
         </Stack>
       </Stack>
+
+      {/* Import Dialog component */}
+      <AddEmployeeDialog
+        open={open}
+        handleClose={handleClose}
+        handleSave={handleSave}
+      />
     </>
   );
 }

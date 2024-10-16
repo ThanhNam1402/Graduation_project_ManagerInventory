@@ -1,201 +1,99 @@
-import {
-  TextField,
-  Stack,
-  FormControl,
-  InputLabel,
-  Box,
-  Typography,
-  Button,
-} from "@mui/material";
-import { useEffect } from "react";
+import DynamicForm from "../../../components/DynamicForm";
+import { object, string, number } from "yup";
+import Proptypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+function UpdateSpllier({ value, onCloseModal, onUpdateSupplier }) {
+  let { t } = useTranslation("notification");
 
-import { supplierService } from "../../../services/supplier.service";
-
-function UpdateSpllier(props) {
-  let { value, onCloseModal, onUpdateSupplier, onDeleteSupplier } = props;
-
-  console.log(props);
-
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  useEffect(() => {
-    if (value) {
-      reset(value);
-    }
-  }, []);
+  let userSchema = object({
+    name: string().required(t("form.required")).max(50, "Tối Đa 30 kí tự"),
+    phone: string(),
+    facebook: string(),
+    email: string().required(t("form.required")),
+    customer_type: string(),
+    tax_code: string().nullable(),
+    address: string().nullable(),
+    notes: string().nullable().max(220, "Tối Đa 220 kí tự"),
+    id: number(),
+  });
 
   const _onSubmit = async (data) => {
     onUpdateSupplier(data);
   };
+  // data form
+  const fields = [
+    {
+      name: "name",
+      label: "name",
+      type: "text",
+      labelName: "Tên nhà cung cấp",
+    },
+    {
+      name: "email",
+      label: "email",
+      type: "text",
+      labelName: "Email",
+    },
+    {
+      name: "phone",
+      label: "phone",
+      type: "text",
+      labelName: "Điện thoại",
+    },
+    {
+      name: "tax_code",
+      label: "tax_code",
+      type: "text",
+      labelName: "Mã số thuế",
+    },
+    {
+      name: "facebook",
+      label: "facebook",
+      type: "text",
+      labelName: "Facebook",
+    },
+    {
+      name: "status",
+      label: "status",
+      type: "radio",
+      labelName: "Trạng thái",
+      options: [
+        { value: 1, label: "Đang hoạt động" },
+        { value: 2, label: "Ngừng hoạt động" },
+      ],
+    },
+    {
+      name: "address",
+      label: "address",
+      type: "textarea",
+      labelName: "Địa Chỉ",
+    },
+    {
+      name: "notes",
+      label: "notes",
+      type: "textarea",
+      labelName: "Ghi Chú",
+    },
+  ];
 
   return (
     <>
-      <form
-        onSubmit={handleSubmit(_onSubmit)}
-        encType="multipart/form-data"
-        method="POST"
-      >
-        <Box elevation={2} sx={{ mb: 4 }}>
-          <Stack mb={2} direction="row" alignItems="center">
-            <InputLabel sx={{ minWidth: 150 }} htmlFor="name">
-              Tên Nhà Cung Cấp
-            </InputLabel>
-            <FormControl fullWidth>
-              <TextField
-                {...register("name")}
-                hiddenLabel
-                id="name"
-                margin="dense"
-                variant="standard"
-                size="small"
-              />
-
-              {errors.name && (
-                <Typography color="error" variant="body2">
-                  {errors?.name?.message}
-                </Typography>
-              )}
-            </FormControl>
-          </Stack>
-
-          <Stack mb={2} direction="row" alignItems="center">
-            <InputLabel sx={{ minWidth: 150 }} htmlFor="phone">
-              Điện Thoại
-            </InputLabel>
-            <TextField
-              {...register("phone")}
-              hiddenLabel
-              fullWidth
-              id="phone"
-              margin="dense"
-              variant="standard"
-              size="small"
-            />
-          </Stack>
-
-          <Stack my={2} direction="row" alignItems="center">
-            <InputLabel sx={{ minWidth: 150 }} htmlFor="email">
-              Email
-            </InputLabel>
-            <FormControl fullWidth>
-              <TextField
-                {...register("email")}
-                type="text"
-                hiddenLabel
-                fullWidth
-                id="email"
-                margin="dense"
-                variant="standard"
-                size="small"
-              />
-              {errors.price && (
-                <Typography color="error" variant="body2">
-                  {errors?.price?.message}
-                </Typography>
-              )}
-            </FormControl>
-          </Stack>
-
-          <Stack mb={2} direction="row" alignItems="center">
-            <InputLabel sx={{ minWidth: 150 }} htmlFor="tax_code">
-              Mã số thuế
-            </InputLabel>
-            <FormControl fullWidth>
-              <TextField
-                {...register("tax_code")}
-                type="text"
-                hiddenLabel
-                fullWidth
-                id="tax_code"
-                margin="dense"
-                variant="standard"
-                size="small"
-              />
-
-              {errors.tax_code && (
-                <Typography color="error" variant="body2">
-                  {errors?.tax_code?.message}
-                </Typography>
-              )}
-            </FormControl>
-          </Stack>
-
-          <Stack mb={2} direction="row" alignItems="center">
-            <InputLabel sx={{ minWidth: 150 }} htmlFor="address">
-              Địa chỉ
-            </InputLabel>
-            <TextField
-              {...register("address")}
-              hiddenLabel
-              fullWidth
-              id="address"
-              margin="dense"
-              variant="standard"
-              size="small"
-            />
-          </Stack>
-
-          <Stack my={2} direction="row" alignItems="center">
-            <InputLabel sx={{ minWidth: 150 }} htmlFor="notes">
-              Mô tả
-            </InputLabel>
-            <TextField
-              {...register("notes")}
-              id="notes"
-              multiline
-              fullWidth
-              variant="standard"
-              maxRows={20}
-            />
-          </Stack>
-        </Box>
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{ mt: 5 }}
-          justifyContent={"flex-end"}
-        >
-          <Button
-            variant="contained"
-            type="submit"
-            startIcon={<CheckIcon />}
-            color="success"
-          >
-            Lưu
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={onCloseModal}
-            startIcon={<CloseIcon />}
-            color="success"
-          >
-            Hủy
-          </Button>
-
-          <Button
-            variant="contained"
-            startIcon={<DeleteOutlineIcon />}
-            color="error"
-            onClick={() => onDeleteSupplier(value.id)}
-            sx={{ boxShadow: 0 }}
-          >
-            Xóa
-          </Button>
-        </Stack>
-      </form>
+      <DynamicForm
+        fields={fields}
+        onCloseModalAdd={onCloseModal}
+        onSubmit={_onSubmit}
+        FormSchema={userSchema}
+        valueEdit={value}
+      />
     </>
   );
 }
+
+UpdateSpllier.propTypes = {
+  value: Proptypes.object,
+  onCloseModal: Proptypes.func,
+  onUpdateSupplier: Proptypes.func,
+};
 
 export default UpdateSpllier;

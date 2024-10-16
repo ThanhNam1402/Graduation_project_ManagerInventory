@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
 import {
@@ -14,51 +14,14 @@ import {
 } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-import { TotalRowCount } from "../../../utils/func";
+import PropTypes from "prop-types";
 import { purchaseOrderService } from "../../../services/purchaseOrder.service";
+import TableRowNoData from "../../../components/TableRowNoData/TableRowNoData";
 
-function TableAddProducts(props) {
+function TableAddProducts({ dataTable, onDelItems, onEditFeild }) {
   let { id } = useParams();
 
-  let { value, getTableProducts } = props;
-  const [data, setData] = useState([]);
-
-  const handleSave = (index, newPrice, field) => {
-    const newData = [...data];
-
-    newData[index][field] = Number(newPrice);
-    setData(newData);
-  };
-
-  useEffect(() => {
-    const newData = [...data];
-    if (value) {
-      let checkID = data.find((item) => item.id === value.id);
-      if (checkID) {
-        const index = newData.findIndex((item) => item.id === checkID.id);
-        newData[index].qty = newData[index].qty + 1;
-      } else {
-        value.qty = 1;
-
-        console.log(value);
-
-        newData.push(value);
-      }
-      setData(newData);
-    }
-  }, [value]);
-
-  useEffect(() => {
-    getTableProducts(data);
-  }, [data]);
-
-  useEffect(() => {
-    if (id) {
-      fetchOneData();
-    }
-  }, []);
-
-  const fetchOneData = async () => {
+  const fetchOneData = useCallback(async () => {
     let res = await purchaseOrderService.handleGetOrderProducts(id);
 
     let data = res?.data;
@@ -76,17 +39,14 @@ function TableAddProducts(props) {
     });
 
     setData(flattenedData?.Products);
-  };
-
-  const handelDelItems = (id) => {
-    const newData = [...data];
-    let a = newData.filter((item) => item.id !== id);
-    setData(a);
-  };
+  }, [id]);
 
   useEffect(() => {
-    console.log("map");
-  }, []);
+    if (id) {
+      fetchOneData();
+    }
+  }, [fetchOneData, id]);
+
   return (
     <div>
       <TableContainer component={Paper}>
@@ -95,7 +55,6 @@ function TableAddProducts(props) {
             <TableRow>
               <TableCell></TableCell>
               <TableCell>Stt</TableCell>
-              <TableCell>Mã hàng</TableCell>
               <TableCell align="left">Tên hàng</TableCell>
               <TableCell align="left">Số lượng</TableCell>
               <TableCell align="left">Giá</TableCell>
@@ -104,16 +63,15 @@ function TableAddProducts(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data && data.length > 0 ? (
-              data.map((row, index) => (
+            {dataTable && dataTable.length > 0 ? (
+              dataTable.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell>
-                    <IconButton onClick={() => handelDelItems(row.id)}>
+                    <IconButton onClick={() => onDelItems(row.product_id)}>
                       <DeleteForeverIcon />
                     </IconButton>
                   </TableCell>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{row?.code}</TableCell>
                   <TableCell align="left">{row?.name}</TableCell>
 
                   <TableCell align="left">
@@ -128,7 +86,7 @@ function TableAddProducts(props) {
                       InputProps={{ inputProps: { min: 1 } }}
                       value={row?.qty ? row?.qty : 1}
                       onChange={(e) => {
-                        handleSave(index, e.target.value, "qty");
+                        onEditFeild(index, e.target.value, "qty");
                       }}
                       sx={{
                         width: "80px",
@@ -148,7 +106,7 @@ function TableAddProducts(props) {
                       placeholder="Nhập Giá Vốn Sản Phẩm"
                       size="small"
                       onChange={(e) => {
-                        handleSave(index, e.target.value, "price");
+                        onEditFeild(index, e.target.value, "price");
                       }}
                       value={row?.price}
                     />
@@ -166,9 +124,9 @@ function TableAddProducts(props) {
                       placeholder="Nhập Giá Vốn Sản Phẩm"
                       size="small"
                       onChange={(e) => {
-                        handleSave(index, e.target.value, "sale_price");
+                        onEditFeild(index, e.target.value, "discount");
                       }}
-                      value={row?.sale_price}
+                      value={row?.discount}
                     />
                   </TableCell>
                   <TableCell align="right">
@@ -181,19 +139,14 @@ function TableAddProducts(props) {
                       variant="standard"
                       placeholder="Nhập Giá Vốn Sản Phẩm"
                       size="small"
-                      value={TotalRowCount(
-                        row?.price,
-                        row?.qty,
-                        row?.sale_price
-                      )}
+                      disabled
+                      value={row.total_price}
                     />
                   </TableCell>
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell align="left">no data</TableCell>
-              </TableRow>
+              <TableRowNoData colSpan={7} />
             )}
           </TableBody>
         </Table>
@@ -201,5 +154,11 @@ function TableAddProducts(props) {
     </div>
   );
 }
+
+TableAddProducts.propTypes = {
+  onDelItems: PropTypes.func,
+  onEditFeild: PropTypes.func,
+  dataTable: PropTypes.array,
+};
 
 export default TableAddProducts;

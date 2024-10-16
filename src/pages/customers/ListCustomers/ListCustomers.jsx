@@ -1,59 +1,96 @@
 import { toast } from "react-toastify";
-import { useState, useRef, useEffect } from "react";
-import { Paper, Table, TableBody, TableContainer } from "@mui/material";
+import PropTypes from "prop-types";
+import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
 import RowCustomer from "./RowCustomer";
 import AddCustomer from "../AddCustomer/AddCustomer";
 import UpdateCustomer from "../UpdateCustomer/UpdateCustomer";
 import { customerService } from "../../../services/customer.service";
-import { EnhancedTableHead } from "./HeadListCustomer";
-import EnhancedTableToolbar from "./HeadListCustomer";
+import EnhancedTableToolbar, { EnhancedTableHead } from "./HeadListCustomer";
 import ModalContent from "../../../components/modalContent/modalContent";
 import CsPagination from "../../../components/CsPagination";
 import csUseQueryString from "../../../hook/csUseQueryString";
+import ActionCustomer from "../ActionCustomer/ActionCusomter";
+import TableRowNoData from "../../../components/TableRowNoData/TableRowNoData";
 
-export default function ListCustomers({
+function ListCustomers({
   order,
   filters,
-  keyWord,
   orderBy,
-  openModalAdd,
-  onCloseModalAdd,
   pagination,
-  handleRequestSort,
+  onSetPage,
   handleChangePage,
   handleChangeRowsPerPage,
+  handleRequestSort,
 }) {
   const [data, setData] = useState([]);
   const [total, setTotalPage] = useState(0);
+
+  const [keyword, setKeyword] = useState([]);
+
   const [valueEdit, setValueEdit] = useState();
   const idRefUpdate = useRef();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
 
   const [selected, setSelected] = useState([]);
 
-  useEffect(() => {
-    handleGetAllCustomers();
-  }, [filters, order, orderBy, pagination?.page, pagination?.limit, keyWord]);
+  // func search
+  const handleSearch = useCallback(
+    (value) => {
+      onSetPage(1);
+      setKeyword(value);
+    },
+    [onSetPage]
+  );
 
-  const handleGetAllCustomers = async () => {
+  // open modal add
+  const handleOpenModalAdd = useCallback(() => {
+    setOpenModalAdd(true);
+  }, []);
+
+  // close modal update
+  const handleCloseModalAdd = useCallback(() => {
+    setOpenModalAdd(false);
+  }, []);
+
+  // get all
+  const handleGetAllCustomers = useCallback(async () => {
     try {
+      setIsLoading(true);
       let filterParmas = csUseQueryString({
         ...filters,
         ...pagination,
-        keyWord,
+        keyword,
       });
       const response = await customerService.handleGetAllCustomers(
         filterParmas
       );
       if (response && response.status) {
-        setData(response.data);
-        setTotalPage(response?.pagination?.total);
+        setData(response?.data?.data);
+        setTotalPage(response?.data.last_page);
+        setIsLoading(false);
       }
     } catch (err) {
+      setIsLoading(false);
       console.log(err);
     }
-  };
+  }, [filters, keyword, pagination]);
+
+  useEffect(() => {
+    handleGetAllCustomers();
+  }, [handleGetAllCustomers]);
 
   // handel update supplier
   const handleUpdateCustomer = async (id, data) => {
@@ -68,14 +105,16 @@ export default function ListCustomers({
     }
   };
 
-  const handleCloseModalUpdate = () => {
+  // handel close modal update
+  const handleCloseModalUpdate = useCallback(() => {
     setOpenModalUpdate(false);
-  };
+  }, []);
 
-  const handleOpenModalUpdate = (id) => {
+  // handel open modal update
+  const handleOpenModalUpdate = useCallback((id) => {
     idRefUpdate.current = id;
     handleGetOneCustomer();
-  };
+  }, []);
 
   // handle get one customer
   const handleGetOneCustomer = async () => {
@@ -89,12 +128,13 @@ export default function ListCustomers({
     }
   };
 
+  // handle add customer
   const handelAddCustomer = async (data) => {
     try {
       let res = await customerService.handleAddCustomer(data);
       if (res && res.status) {
         toast.success(res?.message || "Add customer successfully");
-        onCloseModalAdd();
+        handleCloseModalAdd();
         handleGetAllCustomers();
       } else {
         toast.warning(res?.message || "Add customer Failed");
@@ -105,6 +145,7 @@ export default function ListCustomers({
     }
   };
 
+  // handle get all row checkbox
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = data.map((n) => n.id);
@@ -142,11 +183,11 @@ export default function ListCustomers({
         size="md"
         title="Thêm Khách Hàng"
         isOpen={openModalAdd}
-        onCloseModal={onCloseModalAdd}
+        onCloseModal={handleCloseModalAdd}
       >
         <AddCustomer
           onAddCustomer={handelAddCustomer}
-          onCloseModalAdd={onCloseModalAdd}
+          onCloseModalAdd={handleCloseModalAdd}
         />
       </ModalContent>
 
@@ -164,55 +205,90 @@ export default function ListCustomers({
         />
       </ModalContent>
 
+      <ActionCustomer
+        handleSearch={handleSearch}
+        handleOpenModal={handleOpenModalAdd}
+      />
+
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer sx={{ maxHeight: "60vh" }}>
-          <Table
-            stickyHeader
-            sx={{ width: "100%" }}
-            aria-labelledby="tableTitle"
-            size={"medium"}
+
+        {isLoading ? (
+          <Box
+            sx={{
+              p: 3,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={data?.length}
+            <CircularProgress size="30px" />
+          </Box>
+        ) : (
+          <>
+            <TableContainer>
+              <Table
+                stickyHeader
+                sx={{ width: "100%" }}
+                aria-labelledby="tableTitle"
+                size={"medium"}
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={data?.length}
+                />
+
+                <TableBody sx={{ width: "100%" }}>
+                  {data && data.length > 0 ? (
+                    data.map((row, index) => {
+                      const isItemSelected = isSelected(row.id);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+
+                      return (
+                        <RowCustomer
+                          labelId={labelId}
+                          key={index}
+                          row={row}
+                          isItemSelected={isItemSelected}
+                          handleClick={handleSelectRow}
+                          onOpenModalUpdate={handleOpenModalUpdate}
+                          onResetListCustomers={handleGetAllCustomers}
+                        />
+                      );
+                    })
+                  ) : (
+                    <TableRowNoData colSpan={9} />
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <CsPagination
+              totalPage={total}
+              page={pagination.page}
+              limitPage={pagination.limit}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
             />
-
-            <TableBody sx={{ width: "100%" }}>
-              {data &&
-                data.length > 0 &&
-                data.map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <RowCustomer
-                      labelId={labelId}
-                      key={index}
-                      row={row}
-                      handleClick={handleSelectRow}
-                      isItemSelected={isItemSelected}
-                      onOpenModalUpdate={handleOpenModalUpdate}
-                      onResetListCustomers={handleGetAllCustomers}
-                    />
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <CsPagination
-          totalPage={total}
-          page={pagination.page}
-          limitPage={pagination.limit}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+          </>
+        )}
       </Paper>
     </>
   );
 }
+
+ListCustomers.propTypes = {
+  order: PropTypes.string,
+  filters: PropTypes.object,
+  orderBy: PropTypes.string,
+  pagination: PropTypes.object,
+  onSetPage: PropTypes.func,
+  handleRequestSort: PropTypes.func,
+  handleChangePage: PropTypes.func,
+  handleChangeRowsPerPage: PropTypes.func,
+};
+
+export default ListCustomers;

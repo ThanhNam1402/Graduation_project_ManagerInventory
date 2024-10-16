@@ -27,6 +27,11 @@ import AddCategory from "./AddCategory";
 import UpdateCategory from "./UpdateCategory";
 import ModalContent from "../../components/modalContent/modalContent";
 import "./category.scss";
+import PropTypes from "prop-types";
+
+Categories.propTypes = {
+  handleGetValue: PropTypes.func.isRequired,
+};
 
 function Categories({ handleGetValue }) {
   const { t } = useTranslation("filter");
@@ -34,6 +39,7 @@ function Categories({ handleGetValue }) {
   const [listCate, setListCate] = useState([]);
   const [preListCate, setPreListCate] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [valueEdit, setValueEdit] = useState();
   const [isOpenUpdate, setIsOpenUpdate] = useState(false);
   const refCate = useRef("");
 
@@ -44,8 +50,8 @@ function Categories({ handleGetValue }) {
     try {
       let res = await categoryService.handleGetAllCate();
       if (res && res?.status) {
-        setListCate(res?.data);
-        setPreListCate(res?.data);
+        setListCate(res?.data?.data);
+        setPreListCate(res?.data?.data);
       }
     } catch (error) {
       toast.error("Error getting all categories");
@@ -109,7 +115,7 @@ function Categories({ handleGetValue }) {
 
   const handleOpenModalUpdate = (id) => {
     refCate.current = id;
-    setIsOpenUpdate(!isOpenUpdate);
+    handleGetOneCate();
   };
 
   const handleDelCategory = async (id) => {
@@ -120,6 +126,20 @@ function Categories({ handleGetValue }) {
       handleSetModal();
     } catch (error) {
       toast.error(error?.message || "Eror ! delete category failed");
+    }
+  };
+
+  // get one Cate
+  const handleGetOneCate = async () => {
+    try {
+      let res = await categoryService.handleGetOneCate(refCate.current);
+      setValueEdit({
+        name: res?.data?.name,
+        description: res?.data?.description,
+      });
+      setIsOpenUpdate(true);
+    } catch (error) {
+      toast.error("Error getting category");
     }
   };
 
@@ -148,7 +168,8 @@ function Categories({ handleGetValue }) {
         title="Cập nhật sản phẩm"
       >
         <UpdateCategory
-          id={refCate.current}
+          id={Number(refCate.current)}
+          valueEdit={valueEdit}
           onDeleteCate={handleDelCategory}
           onUpdateCate={handleUpdateCate}
           handleCloseModal={handleSetModal}
@@ -199,12 +220,12 @@ function Categories({ handleGetValue }) {
             <FormControl fullWidth>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="0"
+                defaultValue=""
                 name="radio-buttons-group"
                 onChange={(e) => handleGetValue(e.target.value, "category")}
               >
                 <FormControlLabel
-                  value={0}
+                  value={""}
                   control={<Radio color="secondary" />}
                   label={"all"}
                 />

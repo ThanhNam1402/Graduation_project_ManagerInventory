@@ -1,7 +1,6 @@
 import {
   TextField,
   Paper,
-  Grid,
   Stack,
   AccordionDetails,
   Accordion,
@@ -15,30 +14,74 @@ import {
   Button,
   Dialog,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+
+import { object, string, number } from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
 
 import Previews from "../PreviewImages";
 import { productService } from "../../../services/product.service";
 import { delay } from "../../../utils/func";
 
 import VariantProduct from "./VariantProduct";
+import FormGroup from "../../../components/FormGroup/FormGroup";
+import { supplierService } from "../../../services/supplier.service";
+import { categoryService } from "../../../services/category.service";
 
-function AddProduct(props) {
-  let { openModal, handleOpenModal } = props;
+function AddProduct({ openModal, handleOpenModal }) {
+  const { t } = useTranslation("notification");
+  let userSchema = object({
+    name: string().required(t("form.required")),
+    price: number()
+      .transform((value) => (Number.isNaN(value) ? null : value))
+      .nullable()
+      .required(t("form.required")),
+    sale_price: number()
+      .transform((value) => (Number.isNaN(value) ? null : value))
+      .nullable()
+      .required(t("form.required")),
+    stock: number()
+      .transform((value) => (Number.isNaN(value) ? null : value))
+      .nullable()
+      .required(t("form.required")),
+    category_id: number()
+      .transform((value) => (Number.isNaN(value) ? null : value))
+      .nullable()
+      .required(t("form.required")),
+    supplier_id: number()
+      .transform((value) => (Number.isNaN(value) ? null : value))
+      .nullable(),
+    description: string().max(220, "Tối Đa 220 kí tự"),
+  });
+
+  const [variants, setVariants] = useState([]);
+  const [supliers, setSuplier] = useState([]);
+  const [cate, setCate] = useState([]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(userSchema),
+  });
 
   const _onSubmit = async (data) => {
     try {
       await delay(500);
-      let res = await productService.handleNewProducts({ ...data });
+      let locations = [1, 2];
+      let newData = { ...data, locations, variants };
+
+      console.log(data);
+      console.log(newData);
+
+      let res = await productService.handleNewProducts({ ...newData });
 
       if (res && res.success) {
         toast.success(res?.message);
@@ -51,15 +94,46 @@ function AddProduct(props) {
     }
   };
 
+  const handleGetVariants = (data) => {
+    setVariants(data);
+  };
+
+  useEffect(() => {
+    handleGetAllSuppliers();
+    handleGetAllCate();
+  }, []);
+
+  const handleGetAllSuppliers = async () => {
+    try {
+      const response = await supplierService.handleGetAllSuppliers("");
+
+      setSuplier(response.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleGetAllCate = async () => {
+    try {
+      let res = await categoryService.handleGetAllCate();
+      if (res && res?.status) {
+        setCate(res?.data?.data);
+      }
+    } catch (error) {
+      toast.error("Error getting all categories");
+      console.log("error category");
+    }
+  };
+
   return (
     <>
-      <Dialog fullWidth maxWidth="lg" open={openModal}>
+      <Dialog fullWidth maxWidth="md" open={openModal}>
         <form
           onSubmit={handleSubmit(_onSubmit)}
           encType="multipart/form-data"
           method="POST"
         >
-          <Paper elevation={2} sx={{ p: 5 }}>
+          <Paper elevation={2} sx={{ p: 2 }}>
             <div>
               <Stack
                 direction="row"
@@ -70,212 +144,135 @@ function AddProduct(props) {
               </Stack>
             </div>
 
-            <div>
-              <Grid container spacing={2}>
-                <Grid item xs={8}>
-                  <Box sx={{ p: 2, mb: 2 }}>
-                    <Stack mb={2} direction="row" alignItems="center">
-                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Tên Sản Phẩm
-                      </InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          {...register("name")}
-                          hiddenLabel
-                          fullWidth
-                          id="code"
-                          margin="dense"
-                          variant="standard"
-                          placeholder="Nhập Mã Sản Phẩm"
-                          size="small"
-                        />
+            <Box sx={{ p: 2, mb: 2 }}>
+              <FormGroup
+                name="name"
+                label="Tên sản phẩm"
+                register={register}
+                errors={errors}
+              />
+              <FormGroup
+                name="price"
+                label="Giá vốn"
+                register={register}
+                type="number"
+                errors={errors}
+              />
+              <FormGroup
+                name="sale_price"
+                label="Giá bán"
+                type="number"
+                register={register}
+                errors={errors}
+              />
+              <FormGroup
+                name="stock"
+                label="Tồn kho"
+                register={register}
+                errors={errors}
+                type="number"
+              />
 
-                        {errors.name && (
-                          <Typography color="error" variant="body2">
-                            {errors?.name?.message}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    </Stack>
-
-                    <Stack mb={2} direction="row" alignItems="center">
-                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Mã vạch
-                      </InputLabel>
-                      <TextField
-                        {...register("barcode")}
-                        hiddenLabel
-                        fullWidth
-                        id="code"
-                        margin="dense"
-                        variant="standard"
-                        placeholder="Nhập Mã vạch Sản Phẩm"
-                        size="small"
-                      />
-                    </Stack>
-
-                    <Stack my={2} direction="row" alignItems="center">
-                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Giá Vốn
-                      </InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          {...register("price")}
-                          type="number"
-                          hiddenLabel
-                          fullWidth
-                          id="code"
-                          margin="dense"
-                          variant="standard"
-                          placeholder="Nhập Giá Vốn Sản Phẩm"
-                          size="small"
-                        />
-                        {errors.price && (
-                          <Typography color="error" variant="body2">
-                            {errors?.price?.message}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    </Stack>
-
-                    <Stack mb={2} direction="row" alignItems="center">
-                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Giá Bán
-                      </InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          {...register("sale_price")}
-                          type="number"
-                          hiddenLabel
-                          InputProps={{ inputProps: { min: 0 } }}
-                          fullWidth
-                          id="code"
-                          margin="dense"
-                          variant="standard"
-                          placeholder="Nhập Bán Vốn Sản Phẩm"
-                          size="small"
-                        />
-
-                        {errors.sale_price && (
-                          <Typography color="error" variant="body2">
-                            {errors?.sale_price?.message}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    </Stack>
-
-                    <Stack mb={2} direction="row" alignItems="center">
-                      <InputLabel sx={{ minWidth: 150 }} htmlFor="code">
-                        Tồn Kho
-                      </InputLabel>
-                      <FormControl fullWidth>
-                        <TextField
-                          {...register("sale_price")}
-                          type="number"
-                          hiddenLabel
-                          InputProps={{ inputProps: { min: 0 } }}
-                          fullWidth
-                          id="code"
-                          margin="dense"
-                          variant="standard"
-                          placeholder="Nhập Bán Vốn Sản Phẩm"
-                          size="small"
-                        />
-
-                        {errors.sale_price && (
-                          <Typography color="error" variant="body2">
-                            {errors?.sale_price?.message}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    </Stack>
-
-                    <Previews />
-
-                    <Stack mt={2} direction="row" alignItems="center">
-                      <TextField
-                        {...register("description")}
-                        id="standard-multiline-flexible"
-                        multiline
-                        placeholder="Mô Tả"
-                        fullWidth
-                        minRows={4}
-                        maxRows={20}
-                      />
-                    </Stack>
-                  </Box>
-                </Grid>
-
-                <Grid item xs={4}>
-                  <Paper elevation={2} sx={{ px: 2, py: 3, my: 2 }}>
-                    <Box>
-                      <Typography
-                        variant="button"
-                        component={"p"}
-                        sx={{ borderBottom: 1 }}
-                      >
-                        Phân Loại
+              {/* <Stack my={2} direction="row" alignItems="center">
+                  <InputLabel sx={{ minWidth: 150 }}>Vị trí</InputLabel>
+                  <FormControl size="small" sx={{ m: 1 }} fullWidth>
+                    <Select
+                      displayEmpty
+                      defaultValue={1}
+                      inputProps={{ "aria-label": "Without label" }}
+                      {...register("locations")}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={1}>Kệ 1</MenuItem>
+                      <MenuItem value={2}>Kệ 2</MenuItem>
+                    </Select>
+                    {errors.category_id && (
+                      <Typography color="error" variant="body2">
+                        {errors?.category_id?.message}
                       </Typography>
+                    )}
+                  </FormControl>
+                </Stack> */}
 
-                      <Stack my={2} direction="row" alignItems="center">
-                        <InputLabel sx={{ minWidth: 100 }}>
-                          Nhóm hàng
-                        </InputLabel>
-                        <FormControl size="small" sx={{ m: 1 }} fullWidth>
-                          <Select
-                            displayEmpty
-                            defaultValue={10}
-                            inputProps={{ "aria-label": "Without label" }}
-                            {...register("category_id", {
-                              required: {
-                                value: true,
-                                message: "Trường Dữ Liệu Không Được Trống !!",
-                              },
-                            })}
-                          >
-                            <MenuItem value="">
-                              <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={10}>Thời Trang Nam</MenuItem>
-                            <MenuItem value={2}>Thời Trang Nữ</MenuItem>
-                          </Select>
-                          {errors.category_id && (
-                            <Typography color="error" variant="body2">
-                              {errors?.category_id?.message}
-                            </Typography>
-                          )}
-                        </FormControl>
-                      </Stack>
-                    </Box>
+              <Stack my={2} direction="row" alignItems="center">
+                <InputLabel sx={{ minWidth: 150 }}>Nhóm hàng</InputLabel>
+                <FormControl size="small" fullWidth>
+                  <Select
+                    displayEmpty
+                    defaultValue={""}
+                    inputProps={{ "aria-label": "Without label" }}
+                    {...register("category_id")}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
 
-                    <Stack my={2} direction="row" alignItems="center">
-                      <InputLabel sx={{ minWidth: 100 }}>
-                        Nhà Cung Cấp
-                      </InputLabel>
-                      <FormControl size="small" sx={{ m: 1 }} fullWidth>
-                        <Select
-                          displayEmpty
-                          defaultValue={10}
-                          inputProps={{ "aria-label": "Without label" }}
-                          {...register("category_id")}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
+                    {cate &&
+                      cate.length > 0 &&
+                      cate.map((item) => {
+                        return (
+                          <MenuItem key={item.id} value={item.id}>
+                            {item.name}
                           </MenuItem>
-                          <MenuItem value={10}>Thời Trang Nam</MenuItem>
-                          <MenuItem value={2}>Thời Trang Nữ</MenuItem>
-                        </Select>
-                        {errors.category_id && (
-                          <Typography color="error" variant="body2">
-                            {errors?.category_id?.message}
-                          </Typography>
-                        )}
-                      </FormControl>
-                    </Stack>
-                  </Paper>
-                </Grid>
-              </Grid>
-            </div>
+                        );
+                      })}
+                  </Select>
+                  {errors.category_id && (
+                    <Typography color="error" variant="body2">
+                      {errors?.category_id?.message}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Stack>
+
+              <Stack my={2} direction="row" alignItems="center">
+                <InputLabel sx={{ minWidth: 150 }}>Nhà Cung Cấp</InputLabel>
+                <FormControl size="small" fullWidth>
+                  <Select
+                    displayEmpty
+                    defaultValue={""}
+                    inputProps={{ "aria-label": "Without label" }}
+                    {...register("supplier_id")}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+
+                    {supliers &&
+                      supliers.length > 0 &&
+                      supliers.map((item) => {
+                        return (
+                          <MenuItem key={item.id} value={item.id}>
+                            {item.name}
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+
+                  {errors.supplier_id && (
+                    <Typography color="error" variant="body2">
+                      {errors?.supplier_id?.message}
+                    </Typography>
+                  )}
+                </FormControl>
+              </Stack>
+
+              <Previews />
+
+              <Stack mt={2} direction="row" alignItems="center">
+                <TextField
+                  {...register("description")}
+                  id="standard-multiline-flexible"
+                  multiline
+                  placeholder="Mô Tả"
+                  fullWidth
+                  minRows={4}
+                  maxRows={20}
+                />
+              </Stack>
+            </Box>
 
             <Box
               sx={{
@@ -294,7 +291,7 @@ function AddProduct(props) {
                   Thuộc Tính
                 </AccordionSummary>
                 <AccordionDetails>
-                  <VariantProduct />
+                  <VariantProduct onGetVariants={handleGetVariants} />
                 </AccordionDetails>
               </Accordion>
             </Box>
@@ -323,5 +320,10 @@ function AddProduct(props) {
     </>
   );
 }
+
+AddProduct.propTypes = {
+  openModal: PropTypes.bool,
+  handleOpenModal: PropTypes.func,
+};
 
 export default AddProduct;

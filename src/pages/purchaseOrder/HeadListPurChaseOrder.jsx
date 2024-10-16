@@ -47,10 +47,22 @@ const headCells = [
     label: "Nhà Cung Cấp",
   },
   {
+    id: "supplier_payments",
+    numeric: true,
+    disablePadding: false,
+    label: "Tiền trả nhà cung cấp",
+  },
+  {
     id: "total",
     numeric: true,
     disablePadding: false,
     label: "Tổng Giá",
+  },
+  {
+    id: "owe",
+    numeric: true,
+    disablePadding: false,
+    label: "Cần trả NCC",
   },
   {
     id: "status",

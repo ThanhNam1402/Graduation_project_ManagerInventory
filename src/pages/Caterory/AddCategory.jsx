@@ -9,6 +9,12 @@ import { object, string } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import PropTypes from "prop-types";
+
+AddCategory.propTypes = {
+  handleCloseModal: PropTypes.func.isRequired,
+  onAddCate: PropTypes.func.isRequired,
+};
 
 function AddCategory({ handleCloseModal, onAddCate }) {
   const { t } = useTranslation("notification");
@@ -53,7 +59,7 @@ function AddCategory({ handleCloseModal, onAddCate }) {
             {errors?.name && (
               <Typography
                 sx={{
-                  color: "error.contrastText",
+                  color: "error.dark",
                   mt: 1,
                 }}
               >
@@ -74,8 +80,8 @@ function AddCategory({ handleCloseModal, onAddCate }) {
             />
             {errors?.description && (
               <Typography
+                color="error"
                 sx={{
-                  color: "error.contrastText",
                   mt: 1,
                 }}
               >

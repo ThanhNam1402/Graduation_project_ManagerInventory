@@ -10,13 +10,11 @@ import FilterRadio from "../../components/filters/FilterRadio";
 import { ListStatusPurchaseOrder } from "../../utils/constain";
 import CsUsePagination from "../../hook/CsUsePagination";
 
-
-
-function PurchaseOrder(props) {
-  const { t } = useTranslation("product");
+function PurchaseOrder() {
+  const { t } = useTranslation("purchaseOrder");
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
-    CsUsePagination(0, 5);
+    CsUsePagination(1, 10);
 
   const [filters, setFilters] = useState({
     status: 0,
@@ -29,14 +27,11 @@ function PurchaseOrder(props) {
   const [keyWord, setKeyWord] = useState("");
 
   const handleSearch = (value) => {
-    console.log("value", value);
-    setPage(0);
-
+    setPage(1);
     setKeyWord(value);
   };
   const handleSetFilter = (value, id) => {
-    setPage(0);
-
+    setPage(1);
     switch (id) {
       case "status":
         setFilters((state) => ({
@@ -50,7 +45,7 @@ function PurchaseOrder(props) {
 
   const handleRequestSort = (event, property) => {
     const isAsc = sort.orderBy === property && sort.order === "asc";
-    setSort((state) => ({
+    setSort(() => ({
       order: isAsc ? "desc" : "asc",
       orderBy: property,
     }));
@@ -70,13 +65,14 @@ function PurchaseOrder(props) {
           }}
         >
           <Box>
-            <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
+            <Typography sx={{ mb: 3 }} variant="h5" component={"h5"}>
               Phiếu nhập hàng
             </Typography>
 
             {/* Status */}
 
             <FilterRadio
+              defaultValue={""}
               data={ListStatusPurchaseOrder}
               handleGetValue={handleSetFilter}
               keyFilter={"status"}

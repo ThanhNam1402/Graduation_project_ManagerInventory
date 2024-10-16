@@ -1,0 +1,16 @@
+{
+    "title" : "Danh sách nhà cung cấp",
+    "table" : {
+        "tableHead" : {
+            "name" : "Tên nhà cung cấp",
+            "tax_code" : "Mã số thuế",
+            "email" : "Email",
+            "phone" : "Số điện thoại",
+            "status" : "Trạng thái"
+        }
+    },
+    "status" : {
+        "active" : "Đang hoạt động",
+        "inactive" : "Ngừng hoạt động"
+    }
+}

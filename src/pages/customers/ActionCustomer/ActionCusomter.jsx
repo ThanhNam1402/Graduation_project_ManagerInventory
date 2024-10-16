@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -14,14 +14,15 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
-import { Link } from "react-router-dom";
 
-import SearchProduct from "../../components/filters/SearchProduct";
+import SearchProduct from "../../../components/filters/SearchProduct";
+import PropTypes from "prop-types";
 
-function ActionCustomer(props) {
+const ActionCustomer = memo(function ActionCustomer({
+  handleSearch,
+  handleOpenModal,
+}) {
   const { t } = useTranslation("action");
-
-  let { handleSearch, handleOpenModal } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -32,6 +33,7 @@ function ActionCustomer(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  console.log("re-render");
 
   return (
     <Stack
@@ -53,7 +55,7 @@ function ActionCustomer(props) {
           variant="contained"
           color="success"
           startIcon={<AddRoundedIcon />}
-          onClick={handleOpenModal}
+          onClick={() => handleOpenModal()}
         >
           {t("new")}
         </Button>
@@ -103,6 +105,10 @@ function ActionCustomer(props) {
       </Stack>
     </Stack>
   );
-}
+});
 
+ActionCustomer.propTypes = {
+  handleSearch: PropTypes.func.isRequired,
+  handleOpenModal: PropTypes.func.isRequired,
+};
 export default ActionCustomer;

@@ -1,26 +1,14 @@
-import {
-  Paper,
-  TextField,
-  InputAdornment,
-  InputBase,
-  IconButton,
-} from "@mui/material";
+import { Paper, InputBase, IconButton } from "@mui/material";
 import _ from "lodash";
-
-import { useCallback } from "react";
 
 import SearchIcon from "@mui/icons-material/Search";
 import { useTranslation } from "react-i18next";
+import PropType from "prop-types";
 
-function CsSearch(props) {
+function CsSearch({ handleSearch }) {
   const { t } = useTranslation("filter");
 
-  let { handleSearch } = props;
-
-  const handleOnChange = useCallback(
-    _.debounce((e) => handleSearch(e.target.value), 1000),
-    []
-  );
+  const handleOnChange = _.debounce((e) => handleSearch(e.target.value), 1000);
   return (
     <div>
       <Paper
@@ -39,26 +27,16 @@ function CsSearch(props) {
         <InputBase
           onChange={(event) => handleOnChange(event)}
           sx={{ ml: 1, flex: 1 }}
-          placeholder="Tìm Kiếm..."
+          placeholder={t("search")}
           inputProps={{ "aria-label": "Tìm Kiếm..." }}
         />
-
-        {/* <TextField
-          sx={{ width: { xs: "100%", sm: "480px" } }}
-          id="input-with-icon-textfield"
-          size="small"
-          placeholder={t("search")}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        /> */}
       </Paper>
     </div>
   );
 }
+
+CsSearch.propTypes = {
+  handleSearch: PropType.func,
+};
 
 export default CsSearch;

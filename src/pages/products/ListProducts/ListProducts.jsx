@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { Paper, Table, TableBody, TableContainer } from "@mui/material";
 
@@ -9,59 +9,71 @@ import RowProduct from "./RowProduct";
 import { EnhancedTableToolbar, EnhancedTableHead } from "./HeadListProduct";
 import TableRowNoData from "../../../components/TableRowNoData/TableRowNoData";
 import { toast } from "react-toastify";
+import ActionProduct from "../ActionProduct/ActionProduct";
+import PropTypes from "prop-types";
+import AddProduct from "../AddProduct";
 
-export default function ListProducts(props) {
-  let {
-    filters,
-    sort,
-    keyWord,
-    pagination,
-    handleChangeRowsPerPage,
-    handleChangePage,
-    handleRequestSort,
-  } = props;
-
+function ListProducts({
+  filters,
+  sort,
+  onSetPage,
+  pagination,
+  handleChangeRowsPerPage,
+  handleChangePage,
+  handleRequestSort,
+}) {
   const [data, setData] = useState([]);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [keyword, setKeyword] = useState("");
   const [totalPage, setTotalPage] = useState(0); // total page
   const [selected, setSelected] = useState([]);
 
-  useEffect(() => {
-    fetchData();
-  }, [filters, sort, pagination?.page, pagination?.limit, keyWord]);
-
-  const fetchData = async () => {
+  const handleGetAllProduct = useCallback(async () => {
     try {
       let filterParmas = csUseQueryString({
         ...filters,
         ...pagination,
         ...sort,
-        keyWord,
+        keyword,
       });
 
       const response = await productService.handleGetAllProduct(filterParmas);
       if (response) {
         setData(response.data);
-        setTotalPage(response?.total);
+        setTotalPage(response?.last_page);
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err);
     }
-  };
+  }, [filters, keyword, pagination, sort]);
+
+  useEffect(() => {
+    handleGetAllProduct();
+  }, [handleGetAllProduct]);
 
   const handleDelProduct = async (id) => {
     try {
       let res = await productService.handleDelProducts(id);
-
-      console.log(res);
-
-      if (res && res.success === true) {
-        toast.success(res.message);
-        fetchData();
-      }
+      toast.success(res.message);
+      handleGetAllProduct();
     } catch (error) {
       console.log(error);
     }
   };
+
+  // handle search
+  const handleSearch = (value) => {
+    onSetPage(1);
+    setKeyword(value);
+  };
+
+  // open modal
+  const handleOpenModal = () => {
+    setOpenModal(!openModal);
+  };
+
+ 
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -95,9 +107,16 @@ export default function ListProducts(props) {
 
   return (
     <>
+      <AddProduct openModal={openModal} handleOpenModal={handleOpenModal} />
+
+      <ActionProduct
+        handleOpenModal={handleOpenModal}
+        handleSearch={handleSearch}
+      />
+
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer sx={{ maxHeight: "60vh" }}>
+        <TableContainer>
           <Table
             stickyHeader
             sx={{ width: "100%" }}
@@ -125,27 +144,41 @@ export default function ListProducts(props) {
                       row={row}
                       handleClick={handleSelectRow}
                       handleDelProduct={handleDelProduct}
+                      onResetListProducts={handleGetAllProduct}
                       isItemSelected={isItemSelected}
                     />
                   );
                 })
               ) : (
                 <>
-                  <TableRowNoData />
+                  <TableRowNoData colSpan={9} />
                 </>
               )}
             </TableBody>
           </Table>
         </TableContainer>
-
-        <CsPagination
-          totalPage={totalPage}
-          limitPage={pagination?.limit}
-          page={pagination?.page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        {data && data.length > 0 && (
+          <CsPagination
+            totalPage={totalPage}
+            limitPage={pagination?.limit}
+            page={pagination?.page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        )}
       </Paper>
     </>
   );
 }
+
+ListProducts.propTypes = {
+  sort: PropTypes.object,
+  filters: PropTypes.object,
+  pagination: PropTypes.object,
+  onSetPage: PropTypes.func,
+  handleRequestSort: PropTypes.func,
+  handleChangePage: PropTypes.func,
+  handleChangeRowsPerPage: PropTypes.func,
+};
+
+export default ListProducts;

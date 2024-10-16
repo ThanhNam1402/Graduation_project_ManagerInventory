@@ -18,8 +18,7 @@ import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 
 import SearchProduct from "../../components/filters/SearchProduct";
 
-function ActionProduct(props) {
-  let { handleSearch } = props;
+function ActionProduct({ handleSearch }) {
   const { t } = useTranslation("action");
 
   const [anchorEl, setAnchorEl] = useState(null);

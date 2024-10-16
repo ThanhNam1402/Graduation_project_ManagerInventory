@@ -1,40 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Box, Typography, Stack } from "@mui/material";
-import { toast } from "react-toastify";
 
 import FilterRadio from "../../components/filters/FilterRadio";
 import ListSuppliers from "./ListSuppliers/ListSuppliers";
-import ActionCustomer from "./ActionSupplier";
 import { ListStatus } from "../../utils/constain";
 import CsUsePagination from "../../hook/CsUsePagination";
-import AddSupplier from "./AddSupplier";
-import ModalContent from "../../components/modalContent/modalContent";
-
-import { supplierService } from "../../services/supplier.service";
-import csUseQueryString from "../../hook/csUseQueryString";
+import { useTranslation } from "react-i18next";
 
 function Suppliers() {
-  const [data, setData] = useState([]);
+  const { t } = useTranslation("supplier");
+
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("name");
-  const [total, setTotalPage] = useState([]);
   const [filters, setFilters] = useState({
-    status: 0,
+    status: "1",
   });
-  const [keyWord, setKeyWord] = useState("");
-
-  const [openModalAdd, setOpenModalAdd] = useState(false);
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
-    CsUsePagination(0, 5);
-
-  const handleSearch = (value) => {
-    setPage(0);
-    setKeyWord(value);
-  };
+    CsUsePagination(1, 10);
 
   const handleSetFilter = (value, id) => {
-    setPage(0);
+    setPage(1);
     switch (id) {
       case "status":
         setFilters((state) => ({
@@ -42,54 +28,6 @@ function Suppliers() {
           status: value,
         }));
         break;
-    }
-  };
-
-  // SET MODAL ADD SUPPLIER
-  const handleSetModalAdd = () => {
-    setOpenModalAdd(!openModalAdd);
-  };
-
-  // handle add supplier
-  const handleAddSupplier = async (data) => {
-    try {
-      let res = await supplierService.handleAddSupplier(data);
-      if (res && res.status) {
-        toast.success(res?.message || "Add supplier success");
-        setOpenModalAdd(false);
-        handleGetAllSuppliers(data);
-      } else {
-        toast.error(res?.message || "Add supplier failed");
-      }
-    } catch (error) {
-      toast.error(error?.message || "Add supplier failed");
-    }
-  };
-
-  useEffect(() => {
-    handleGetAllSuppliers();
-  }, [filters, pagination?.page, pagination?.rowsPerPage, keyWord]);
-
-  // handle get all suppliers
-  const handleGetAllSuppliers = async () => {
-    try {
-      let filterParmas = csUseQueryString({
-        ...filters,
-        ...pagination,
-        keyWord,
-      });
-      const response = await supplierService.handleGetAllSuppliers(
-        filterParmas
-      );
-
-      console.log(response);
-
-      if (response && response?.status) {
-        setData(response.data);
-        setTotalPage(response?.pagination?.total);
-      }
-    } catch (err) {
-      console.log(err);
     }
   };
 
@@ -102,19 +40,6 @@ function Suppliers() {
 
   return (
     <>
-      {/* Modal Add  */}
-      <ModalContent
-        size="md"
-        isOpen={openModalAdd}
-        onCloseModal={handleSetModalAdd}
-        title="Thêm Nhà Cung Cấp"
-      >
-        <AddSupplier
-          onCloseModalAdd={handleSetModalAdd}
-          onAddSupplier={handleAddSupplier}
-        />
-      </ModalContent>
-
       <Stack direction="row">
         <Box
           sx={{
@@ -128,11 +53,12 @@ function Suppliers() {
         >
           <Box>
             <Typography sx={{ mb: 3 }} variant="h5" component={"h5"}>
-              Nhà Cung Cấp
+              {t("title")}
             </Typography>
 
             {/* Status */}
             <FilterRadio
+              defaultValue={"1"}
               data={ListStatus}
               handleGetValue={handleSetFilter}
               keyFilter={"status"}
@@ -144,20 +70,15 @@ function Suppliers() {
             width: "100%",
           }}
         >
-          <ActionCustomer
-            handleSearch={handleSearch}
-            handleOpenModal={handleSetModalAdd}
-          />
           <ListSuppliers
-            data={data}
-            total={total}
+            onSetPage={setPage}
+            filters={filters}
             order={order}
             orderBy={orderBy}
             pagination={pagination}
             handleRequestSort={handleRequestSort}
             handleChangePage={handleChangePage}
             handleChangeRowsPerPage={handleChangeRowsPerPage}
-            onResetListSupplier={handleGetAllSuppliers}
           />
         </Box>
       </Stack>

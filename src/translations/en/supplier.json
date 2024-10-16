@@ -1,0 +1,16 @@
+{
+    "title" : "Suppliers",
+    "table" : {
+        "tableHead" : {
+            "name" : "Supplier name",
+            "tax_code" : "Tax code",
+            "email" : "Email",
+            "phone" : "Phone number",
+            "status" : "Status"
+        }
+    },
+    "status" : {
+        "active" : "Actice",
+        "inactive" : "Inactive"
+    }
+}

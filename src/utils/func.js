@@ -30,7 +30,6 @@ export function stableSort(array, comparator) {
 
 }
 
-
 export const TotalRowCount = (price, qty, sale_price) => {
   let newQty = qty ? qty : 1;
   let a = price * newQty - sale_price;
@@ -40,19 +39,19 @@ export const TotalRowCount = (price, qty, sale_price) => {
 export const TotalPrice = (items) => {
   if (items.length > 0) {
     let c = 0;
-    let a = items.forEach((item) => {
-      c += TotalRowCount(item?.price, item?.qty, item?.sale_price);
+    items.forEach((item) => {
+      c += TotalRowCount(item?.price, item?.qty, item?.discount);
     });
     return c;
   }
-  return null;
+  return 0;
 };
 
 export const TotalSalePrice = (items) => {
   if (items.length > 0) {
     let c = 0;
-    let a = items.forEach((item) => {
-      c += item?.sale_price;
+    items.forEach((item) => {
+      c += item?.discount;
     });
     return c;
   }
@@ -62,7 +61,7 @@ export const TotalSalePrice = (items) => {
 export function SubTotal(items) {
   if (items.length > 0) {
     let c = 0;
-    let a = items.forEach((item) => {
+    items.forEach((item) => {
       c += item?.price;
     });
     return c;
@@ -70,7 +69,39 @@ export function SubTotal(items) {
   return null;
 }
 
-
 export const delay = (t) => {
   return new Promise(resolve => setTimeout(resolve, t));
+}
+
+export const a11yProps = (index) => {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+
+/* 
+
+key defalut = price
+key = price or sale_price trung với item trong mãng để + 
+
+*/
+
+export const averagePrice = (arrayPrice, key = "price") => {
+  let average = 0
+  arrayPrice.forEach((item) => {
+    average += item[key]
+  })
+  return average / arrayPrice.length
+
+}
+
+export const getRandomColor = () => {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { Paper, Table, TableBody, TableContainer } from "@mui/material";
 
@@ -9,20 +9,19 @@ import {
   EnhancedTableToolbar,
   EnhancedTableHead,
 } from "./HeadListPurChaseOrder";
+import PropTypes from "prop-types";
 
 import { purchaseOrderService } from "../../services/purchaseOrder.service";
 
-export default function ListPurchaseOrders(props) {
-  let {
-    filters,
-    sort,
-    keyWord,
-    pagination,
-    handleRequestSort,
-    handleChangeRowsPerPage,
-    handleChangePage,
-  } = props;
-
+function ListPurchaseOrders({
+  filters,
+  sort,
+  keyWord,
+  pagination,
+  handleRequestSort,
+  handleChangeRowsPerPage,
+  handleChangePage,
+}) {
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState([]);
   const [totalPage, setTotalPage] = useState(0); // total page
@@ -54,14 +53,7 @@ export default function ListPurchaseOrders(props) {
     }
     setSelected(newSelected);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [filters, pagination?.page, pagination?.rowsPerPage, keyWord, sort]);
-
-  console.log(props);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       let filterParmas = csUseQueryString({
         ...filters,
@@ -70,19 +62,19 @@ export default function ListPurchaseOrders(props) {
         keyWord,
       });
 
-      console.log(filterParmas);
-
       const response = await purchaseOrderService.handleGetAllPurchaseorders(
         filterParmas
       );
-      if (response && response.success === true) {
-        setData(response.data);
-        setTotalPage(response?.pagination?.total);
-      }
+      setData(response.data);
+      setTotalPage(response?.last_page);
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [filters, keyWord, pagination, sort]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
@@ -126,13 +118,28 @@ export default function ListPurchaseOrders(props) {
         </Table>
       </TableContainer>
 
-      <CsPagination
-        totalPage={totalPage}
-        limitPage={pagination?.rowsPerPage}
-        page={pagination?.page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {data && data.length > 0 && (
+        <CsPagination
+          totalPage={totalPage}
+          limitPage={pagination?.limit}
+          page={pagination?.page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      )}
     </Paper>
   );
 }
+
+ListPurchaseOrders.propTypes = {
+  sort: PropTypes.object,
+  filters: PropTypes.object,
+  pagination: PropTypes.object,
+  onSetPage: PropTypes.func,
+  keyWord: PropTypes.string,
+  handleRequestSort: PropTypes.func,
+  handleChangePage: PropTypes.func,
+  handleChangeRowsPerPage: PropTypes.func,
+};
+
+export default ListPurchaseOrders;

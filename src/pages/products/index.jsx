@@ -1,50 +1,34 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Box, Typography, Stack } from "@mui/material";
 
 import ListProducts from "./ListProducts/ListProducts";
-import Categories from "../Caterory";
+import Categories from "../caterory";
 import { useTranslation } from "react-i18next";
 import CsUsePagination from "../../hook/CsUsePagination";
 import { ListDisplayOption, ListOnHands } from "../../utils/constain";
 import FilterRadio from "../../components/filters/FilterRadio";
-import AddProduct from "./AddProduct";
-
-import ActionProduct from "./ListProducts/ActionProduct";
 
 function Products() {
   const { t } = useTranslation("product");
 
-  const [openModal, setOpenModal] = useState(false);
-  const [keyWord, setKeyWord] = useState("");
   const [sort, setSort] = useState({
     order: "asc",
     orderBy: "name",
   });
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
-    CsUsePagination(0, 5);
+    CsUsePagination(1, 10);
 
   const [filters, setFilters] = useState({
-    categoryID: 0,
+    categoryID: "",
     supplierIDs: [],
-    status: 0,
+    status: 1,
     onHand: 0,
   });
 
-  // handle search
-  const handleSearch = (value) => {
-    setPage(0);
-    setKeyWord(value);
-  };
-
-  // open modal
-  const handleOpenModal = () => {
-    setOpenModal(!openModal);
-  };
-
   // handle set filters
   const handleSetFilter = (value, id) => {
-    setPage(0);
+    setPage(1);
     switch (id) {
       case "category":
         setFilters((state) => ({
@@ -78,7 +62,7 @@ function Products() {
   // handle request sort
   const handleRequestSort = (event, property) => {
     const isAsc = sort.orderBy === property && sort.order === "asc";
-    setSort((state) => ({
+    setSort(() => ({
       order: isAsc ? "desc" : "asc",
       orderBy: property,
     }));
@@ -106,12 +90,14 @@ function Products() {
             {/* onHands */}
 
             <FilterRadio
+              defaultValue={"1"}
               data={ListOnHands}
               handleGetValue={handleSetFilter}
               keyFilter={"onHand"}
             />
 
             <FilterRadio
+              defaultValue={"1"}
               data={ListDisplayOption}
               handleGetValue={handleSetFilter}
               keyFilter={"status"}
@@ -123,13 +109,9 @@ function Products() {
             width: "100%",
           }}
         >
-          <ActionProduct
-            handleOpenModal={handleOpenModal}
-            handleSearch={handleSearch}
-          />
           <ListProducts
             sort={sort}
-            keyWord={keyWord}
+            onSetPage={setPage}
             filters={filters}
             pagination={pagination}
             handleRequestSort={handleRequestSort}
@@ -138,8 +120,6 @@ function Products() {
           />
         </Box>
       </Stack>
-
-      <AddProduct openModal={openModal} handleOpenModal={handleOpenModal} />
     </>
   );
 }

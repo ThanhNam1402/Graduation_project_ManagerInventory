@@ -1,7 +1,8 @@
+import PropTypes from "prop-types";
 import { object, string } from "yup";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -12,34 +13,22 @@ import {
   Typography,
 } from "@mui/material";
 
-import { categoryService } from "../../services/category.service";
+UpdateCategory.propTypes = {
+  handleCloseModal: PropTypes.func.isRequired,
+  onUpdateCate: PropTypes.func.isRequired,
+  onDeleteCate: PropTypes.func.isRequired,
+  id: PropTypes.number.isRequired,
+  valueEdit: PropTypes.object,
+};
 
-function UpdateCategory({ handleCloseModal, id, onUpdateCate, onDeleteCate }) {
+function UpdateCategory({
+  handleCloseModal,
+  id,
+  onUpdateCate,
+  onDeleteCate,
+  valueEdit,
+}) {
   const { t } = useTranslation("notification");
-
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    if (id) {
-      handleGetOneCate();
-    }
-  }, []);
-
-  const handleGetOneCate = async () => {
-    try {
-      let res = await categoryService.handleGetOneCate(id);
-      setName(res?.data?.name);
-      setDescription(res?.data?.description);
-      let data = {
-        name: res?.data?.name,
-        description: res?.data?.description,
-      };
-      reset(data);
-    } catch (error) {
-      toast.error("Error getting category");
-    }
-  };
 
   let userSchema = object({
     name: string().required(t("form.required")).max(50, "Tối Đa 30 kí tự"),
@@ -47,6 +36,7 @@ function UpdateCategory({ handleCloseModal, id, onUpdateCate, onDeleteCate }) {
       .required(t("form.required"))
       .max(220, "Tối Đa 220 kí tự"),
   });
+  
   const {
     register,
     handleSubmit,
@@ -55,6 +45,12 @@ function UpdateCategory({ handleCloseModal, id, onUpdateCate, onDeleteCate }) {
   } = useForm({
     resolver: yupResolver(userSchema),
   });
+
+  useEffect(() => {
+    if (valueEdit) {
+      reset(valueEdit);
+    }
+  }, [reset, valueEdit]);
 
   const _onSubmit = (values) => {
     if (!id) toast.error("Not found category");
@@ -76,8 +72,6 @@ function UpdateCategory({ handleCloseModal, id, onUpdateCate, onDeleteCate }) {
             label="Tên danh mục"
             variant="standard"
             {...register("name")}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
           />
 
           {errors?.name && (
@@ -101,8 +95,6 @@ function UpdateCategory({ handleCloseModal, id, onUpdateCate, onDeleteCate }) {
             variant="standard"
             maxRows={4}
             {...register("description")}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
           />
 
           {errors?.description && (

@@ -11,5 +11,9 @@
             "onhand" : "Tồn Kho",
             "status" : "Trạng Thái"
         }
+    },
+    "status" : {
+        "active" : "Đang hoạt động",
+        "inactive" : "Ngừng hoạt động"
     }
 }

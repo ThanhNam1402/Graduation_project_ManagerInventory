@@ -1,0 +1,19 @@
+{
+    "title" : "Purchase receipt",
+    "table" : {
+        "tableHead" : {
+            "code" : "Purchase receipt code",
+            "time" : "Time",
+            "name" : "Supplier",
+            "price" : "Price",
+            "sale_price" : "Sale Price",
+            "category" : "Category",
+            "onhand" : "Onhand",
+            "status" : "Status"
+        }
+    },
+    "status" : {
+        "active" : "Actice",
+        "inactive" : "Inactive"
+    }
+}

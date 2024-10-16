@@ -6,11 +6,11 @@ import { NavLink } from "react-router-dom";
 import "./NavBar.scss";
 
 import { useTranslation } from "react-i18next";
+import Proptypes from "prop-types";
 
-function NavbarSubMenu(props) {
+function NavbarSubMenu({ item }) {
   const { t } = useTranslation("navbar");
 
-  const { item } = props;
   return (
     <Paper sx={{ width: 220 }} className="sub_menu">
       <MenuList>
@@ -30,5 +30,9 @@ function NavbarSubMenu(props) {
     </Paper>
   );
 }
+
+NavbarSubMenu.propTypes = {
+  item: Proptypes.array,
+};
 
 export default NavbarSubMenu;

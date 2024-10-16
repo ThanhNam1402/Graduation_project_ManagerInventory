@@ -1,4 +1,4 @@
-// func filterRadio : default value = 0,
+// func filterRadio : default value = '',
 // need : data, keyFilter, funcGetvalue,
 // data need : {"titleFilter", data[]}
 // const { handleGetValue, keyFilter, data } = props;
@@ -18,10 +18,17 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import { useTranslation } from "react-i18next";
+import Proptypes from "prop-types";
 
-function FilterRadio(props) {
+FilterRadio.propTypes = {
+  handleGetValue: Proptypes.func,
+  keyFilter: Proptypes.string,
+  data: Proptypes.object,
+  defaultValue: Proptypes.string || Proptypes.number,
+};
+
+function FilterRadio({ handleGetValue, keyFilter, data, defaultValue }) {
   const { t } = useTranslation("filter");
-  const { handleGetValue, keyFilter, data } = props;
 
   return (
     <Paper elevation={2} sx={{ width: "100%", mb: 2 }}>
@@ -40,11 +47,9 @@ function FilterRadio(props) {
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="0"
+              defaultValue={defaultValue}
               name="radio-buttons-group"
-              onChange={(e) =>
-                handleGetValue(Number(e.target.value), keyFilter)
-              }
+              onChange={(e) => handleGetValue(e.target.value, keyFilter)}
             >
               {data &&
                 data.data.length > 0 &&

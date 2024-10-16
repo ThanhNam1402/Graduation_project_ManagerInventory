@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Button,
@@ -18,13 +18,16 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import UploadFileOutlinedIcon from "@mui/icons-material/UploadFileOutlined";
 
-import { delay } from "../../../utils/func";
 import SearchProduct from "../../../components/filters/SearchProduct";
 import { fileService } from "../../../services/file.service";
 
-function ActionProduct(props) {
+import PropTypes from "prop-types";
+
+const ActionProduct = memo(function ActionProduct({
+  handleSearch,
+  handleOpenModal,
+}) {
   const { t } = useTranslation("action");
-  let { handleSearch, handleOpenModal } = props;
 
   const [bannerOpen, setBannerOpen] = useState(false);
   const [exportFileName, setExportFileName] = useState(null);
@@ -46,16 +49,13 @@ function ActionProduct(props) {
 
   const handleExportAll = async () => {
     try {
-      setOpenBackDrop(true);
-      await delay(2000);
       let res = await fileService.handleExportAll("products");
       if (res) {
         setExportFileName(res.data);
         setBannerOpen(true);
       }
-      setOpenBackDrop(false);
     } catch (error) {
-      setOpenBackDrop(false);
+      console.log(error);
     }
   };
 
@@ -211,6 +211,11 @@ function ActionProduct(props) {
       </Fade>
     </Stack>
   );
-}
+});
+
+ActionProduct.propTypes = {
+  handleSearch: PropTypes.func,
+  handleOpenModal: PropTypes.func,
+};
 
 export default ActionProduct;

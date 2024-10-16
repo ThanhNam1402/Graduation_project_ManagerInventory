@@ -1,27 +1,26 @@
-import React from "react";
-
-import {
-  Box,
-  Container,
-  Link as LinkMui,
-  MenuList,
-  MenuItem,
-  IconButton,
-} from "@mui/material";
+import { Box, Container, MenuList, MenuItem, Button } from "@mui/material";
 
 import { ListMenu } from "./NavbarItem";
 
 import { NavLink } from "react-router-dom";
 import NavbarSubMenu from "./NavBarSubMenu";
 import { useTranslation } from "react-i18next";
+import StorefrontIcon from "@mui/icons-material/Storefront";
 
-function NavBarMenu(props) {
+function NavBarMenu() {
   const { t } = useTranslation("navbar");
 
   return (
     <>
       <Box sx={{ bgcolor: "primary.main" }}>
-        <Container maxWidth="xl" sx={{ display: "flex" }}>
+        <Container
+          maxWidth="xl"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <MenuList className="menu" sx={{ p: 0 }}>
             {ListMenu.map((item, index) => {
               return (
@@ -41,6 +40,15 @@ function NavBarMenu(props) {
               );
             })}
           </MenuList>
+          <Button
+            component={NavLink}
+            to="Online"
+            startIcon={<StorefrontIcon />}
+            variant="contained"
+            color="warning"
+          >
+            Bán online
+          </Button>
         </Container>
       </Box>
     </>

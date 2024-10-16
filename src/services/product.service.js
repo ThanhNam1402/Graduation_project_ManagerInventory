@@ -7,34 +7,25 @@ export const productService = {
     handleGetAllProduct(filter) {
         return api.get(`/api/products?${filter}`)
     },
-    handleGetOneProduct(id) {
-        return api.get(`/api/products/${id}`)
+    handleGetOneProduct(id, idSku) {
+        return api.get(`/api/product/${id}/${idSku}`)
     },
-    handleNewProducts(data) {
 
-        console.log(data);
-        return api.post(`/api/products/new`, {
+    handleNewProducts(data) {
+        return api.post(`/api/product/create`, {
             ...data
-        }, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
         })
     },
 
-    handleUpdateProducts(data, id) {
+    handleUpdateProduct(id, idSku, data) {
         console.log(data);
-        return api.put(`/api/products/${id}`, {
+        return api.put(`/api/product/update/${id}/${idSku}`, {
             ...data
-        }, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
         })
     },
 
     handleDelProducts(id) {
-        return api.delete(`/api/products/${id}`)
+        return api.delete(`/api/product/delete/${id}`)
     },
 
     handleDelListProducts(ids) {

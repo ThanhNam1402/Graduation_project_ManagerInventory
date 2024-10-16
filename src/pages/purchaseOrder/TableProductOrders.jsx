@@ -3,56 +3,22 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  Paper,
   TableRow,
   TableHead,
 } from "@mui/material";
 
-import { purchaseOrderService } from "../../services/purchaseOrder.service";
-
-import { useEffect, useState, useRef } from "react";
 import { handleformat } from "../../utils/format";
+import PropTypes from "prop-types";
 
-const TAX_RATE = 0.07;
-
-function priceRow(qty, price, sale_price) {
-  return qty * price - sale_price;
-}
-
-export default function TableProductOrders(props) {
-  const [data, setData] = useState([]);
-  const isMounted = useRef(false);
-
-  let { idPurchaseOrder } = props;
-
-  console.log(props);
-
-  useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-      fetchData();
-    }
-  }, []);
-
-  const fetchData = async () => {
-    let res = await purchaseOrderService.handleGetOrderProducts(
-      idPurchaseOrder
-    );
-
-    console.log("res", res);
-
-    if (res && res.success === true) {
-      setData(res?.data?.Products);
-    }
-  };
+function TableProductOrders({ tableProducts }) {
+  console.log(tableProducts);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer sx={{ border: 1, borderRadius: 2 }}>
       <Table sx={{ minWidth: 700 }} aria-label="spanning table">
         <TableHead>
           <TableRow>
-            <TableCell>Mã hàng</TableCell>
-            <TableCell align="right">Tên hàng</TableCell>
+            <TableCell>Tên hàng</TableCell>
             <TableCell align="right">Số lượng</TableCell>
             <TableCell align="right">Giá</TableCell>
             <TableCell align="right">Giá Giảm</TableCell>
@@ -60,31 +26,30 @@ export default function TableProductOrders(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data &&
-            data.length > 0 &&
-            data.map((row, index) => (
+          {tableProducts &&
+            tableProducts.length > 0 &&
+            tableProducts.map((row, index) => (
               <TableRow key={index}>
-                <TableCell>{row?.code}</TableCell>
-                <TableCell align="right">{row?.name}</TableCell>
+                <TableCell>
+                  {row.product.option_value.length > 0
+                    ? row?.product?.product?.name.concat(
+                        " - ",
+                        row.product.option_value
+                          .map((item) => item.name)
+                          .join(" - ")
+                      )
+                    : row?.product?.product?.name}
+                </TableCell>
+
+                <TableCell align="right">{row?.qty}</TableCell>
                 <TableCell align="right">
-                  {row?.PurchaseOrder_Detail?.qty}
+                  {handleformat.formatPrice(row?.price)}
                 </TableCell>
                 <TableCell align="right">
-                  {handleformat.formatPrice(row?.PurchaseOrder_Detail?.price)}
+                  {handleformat.formatPrice(row?.discount)}
                 </TableCell>
                 <TableCell align="right">
-                  {handleformat.formatPrice(
-                    row?.PurchaseOrder_Detail?.sale_price
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {handleformat.formatPrice(
-                    priceRow(
-                      row?.PurchaseOrder_Detail?.price,
-                      row?.PurchaseOrder_Detail?.qty,
-                      row?.PurchaseOrder_Detail?.sale_price
-                    )
-                  )}
+                  {handleformat.formatPrice(row?.total_price)}
                 </TableCell>
               </TableRow>
             ))}
@@ -93,3 +58,9 @@ export default function TableProductOrders(props) {
     </TableContainer>
   );
 }
+
+TableProductOrders.propTypes = {
+  tableProducts: PropTypes.array,
+};
+
+export default TableProductOrders;

@@ -1,27 +1,69 @@
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
-import { Stack, Typography, Button } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 
 import TableProductOrders from "./TableProductOrders";
 import { handleformat } from "../../utils/format";
+import PropTypes from "prop-types";
+import ButtonUpdate from "../../components/Button/ButtonUpdate";
 
-function TabInfomation(props) {
-  let { item } = props;
-
+function TabInfomation({ item }) {
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={6}>
-        <div>
+    <>
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <div>
+            <Stack mt={2} direction="row">
+              <Typography
+                sx={{ width: "110px" }}
+                variant="subtitle2"
+                component={"p"}
+              >
+                Mã nhập hàng
+              </Typography>
+              <p>{item.code}</p>
+            </Stack>
+            <Stack mt={2} direction="row">
+              <Typography
+                sx={{ width: "110px" }}
+                variant="subtitle2"
+                component={"p"}
+              >
+                Thời gian
+              </Typography>
+              <p>{handleformat.formatDate(item.created_at)}</p>
+            </Stack>
+            <Stack mt={2} direction="row">
+              <Typography
+                sx={{ width: "110px" }}
+                variant="subtitle2"
+                component={"p"}
+              >
+                Nhà cung cấp
+              </Typography>
+              <p>{item?.supplier?.name}</p>
+            </Stack>
+            <Stack mt={2} direction="row">
+              <Typography
+                sx={{ width: "110px" }}
+                variant="subtitle2"
+                component={"p"}
+              >
+                Người tạo
+              </Typography>
+              <p>ThanhNam</p>
+            </Stack>
+          </div>
+        </Grid>
+        <Grid item xs={6}>
           <Stack mt={2} direction="row">
             <Typography
               sx={{ width: "110px" }}
               variant="subtitle2"
               component={"p"}
             >
-              Mã nhập hàng
+              Trạng thái
             </Typography>
-            <p>{item.code}</p>
+            <p>{item?.status === 1 ? "Đã Nhập Hàng" : "Phiếu Tạm"}</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -29,9 +71,9 @@ function TabInfomation(props) {
               variant="subtitle2"
               component={"p"}
             >
-              Thời gian
+              Chi nhánh
             </Typography>
-            <p>{handleformat.formatDate(item.createdAt)}</p>
+            <p>Chi nhánh trung tâm</p>
           </Stack>
           <Stack mt={2} direction="row">
             <Typography
@@ -39,67 +81,24 @@ function TabInfomation(props) {
               variant="subtitle2"
               component={"p"}
             >
-              Nhà cung cấp
-            </Typography>
-            <p>{item?.Supplier?.name}</p>
-          </Stack>
-          <Stack mt={2} direction="row">
-            <Typography
-              sx={{ width: "110px" }}
-              variant="subtitle2"
-              component={"p"}
-            >
-              Người tạo
+              Người nhập
             </Typography>
             <p>ThanhNam</p>
           </Stack>
-        </div>
+        </Grid>
+        <Grid item xs={12}>
+          <TableProductOrders tableProducts={item.detail_import_goods} />
+        </Grid>
       </Grid>
-      <Grid item xs={6}>
-        <Stack mt={2} direction="row">
-          <Typography
-            sx={{ width: "110px" }}
-            variant="subtitle2"
-            component={"p"}
-          >
-            Trạng thái
-          </Typography>
-          <p>{item?.status === 1 ? "Phiếu Tạm" : "Đã Nhập Hàng"}</p>
-        </Stack>
-        <Stack mt={2} direction="row">
-          <Typography
-            sx={{ width: "110px" }}
-            variant="subtitle2"
-            component={"p"}
-          >
-            Chi nhánh
-          </Typography>
-          <p>Chi nhánh trung tâm</p>
-        </Stack>
-        <Stack mt={2} direction="row">
-          <Typography
-            sx={{ width: "110px" }}
-            variant="subtitle2"
-            component={"p"}
-          >
-            Người nhập
-          </Typography>
-          <p>ThanhNam</p>
-        </Stack>
-      </Grid>
-      <Grid item xs={12}>
-        <TableProductOrders idPurchaseOrder={item.id} />
-      </Grid>
-      <Grid item xs={12}>
-        <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
-          {/* <Button variant="contained">Cập Nhật</Button> */}
-          {/* <Button variant="contained" color="error">
-            Xóa
-          </Button> */}
-        </Stack>
-      </Grid>
-    </Grid>
+      <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
+        <ButtonUpdate />
+      </Stack>
+    </>
   );
 }
+
+TabInfomation.propTypes = {
+  item: PropTypes.object,
+};
 
 export default TabInfomation;

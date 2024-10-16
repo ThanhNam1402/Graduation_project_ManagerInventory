@@ -1,0 +1,15 @@
+{
+    "title" : "Danh sách khách hàng",
+    "table" : {
+        "tableHead" : {
+            "name" : "Tên khách hàng",
+            "email" : "Email",
+            "phone" : "Số điện thoại",
+            "status" : "Trạng thái"
+        }
+    },
+    "status" : {
+        "active" : "Đang hoạt động",
+        "inactive" : "Ngừng hoạt động"
+    }
+}

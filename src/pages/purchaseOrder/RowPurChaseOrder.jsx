@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Checkbox,
   Collapse,
@@ -17,15 +17,10 @@ import TabPanelRow from "../../components/TabPanelRow";
 import TabInfomation from "./TabInfomatoin";
 import { handleformat } from "../../utils/format";
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+import { a11yProps } from "../../utils/func";
+import Proptypes from "prop-types";
 
-function RowProduct(props) {
-  const { row, isItemSelected, handleClick, labelId } = props;
+function RowProduct({ row, isItemSelected, handleClick, labelId }) {
   const [open, setOpen] = useState(false);
 
   const [value, setValue] = useState(0);
@@ -64,14 +59,20 @@ function RowProduct(props) {
           {row.code}
         </TableCell>
         <TableCell align="right">
-          {handleformat.formatDate(row?.createdAt)}
+          {handleformat.formatDate(row?.created_at)}
         </TableCell>
-        <TableCell align="right">{row?.Supplier?.name}</TableCell>
+        <TableCell align="right">{row?.supplier?.name}</TableCell>
         <TableCell align="right">
-          {handleformat.formatPrice(row?.total)}
+          {handleformat.formatPrice(row?.supplier_payments)}
         </TableCell>
         <TableCell align="right">
-          {row?.status === 1 ? "Phiếu Nhập" : "Đã Nhập Hàng"}
+          {handleformat.formatPrice(row?.total_goods)}
+        </TableCell>
+        <TableCell align="right">
+          {handleformat.formatPrice(row?.total_goods - row?.supplier_payments)}
+        </TableCell>
+        <TableCell align="right">
+          {row?.status === 1 ? "Đã Nhập Hàng" : "Chưa"}
         </TableCell>
       </TableRow>
 
@@ -100,5 +101,12 @@ function RowProduct(props) {
     </>
   );
 }
+
+RowProduct.propTypes = {
+  isItemSelected: Proptypes.bool,
+  labelId: Proptypes.string,
+  handleClick: Proptypes.func,
+  row: Proptypes.object,
+};
 
 export default RowProduct;

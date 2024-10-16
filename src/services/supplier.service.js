@@ -9,7 +9,8 @@ export const supplierService = {
     },
 
     handleGetComplete(keyWord) {
-        return api.get(`/api/suppliers/autocomplete?keyword=${keyWord}`)
+        return api.get(`/api/suppliers?keyword=${keyWord}`)
+
     },
     handleAddSupplier(data) {
         return api.post(`/api/suppliers`, {

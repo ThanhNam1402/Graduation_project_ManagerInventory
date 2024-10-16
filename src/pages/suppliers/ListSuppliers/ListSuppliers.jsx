@@ -1,82 +1,91 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { Paper, Table, TableBody, TableContainer } from "@mui/material";
 
 import CsPagination from "../../../components/CsPagination";
 import RowSupplier from "./RowSupplier";
-import { EnhancedTableHead } from "./HeadListSupplier";
-import EnhancedTableToolbar from "./HeadListSupplier";
-import UpdateSpllier from "../UpdateSupplier/UpdateSupplier";
+import EnhancedTableToolbar, { EnhancedTableHead } from "./HeadListSupplier";
 import { supplierService } from "../../../services/supplier.service";
 import ModalContent from "../../../components/modalContent/modalContent";
 import { toast } from "react-toastify";
+import Proptypes from "prop-types";
+import csUseQueryString from "../../../hook/csUseQueryString";
+import ActionSupplier from "../ActionSupplier/ActionSupplier";
+import AddSupplier from "../AddSupplier/AddSuppier";
+import TableRowNoData from "../../../components/TableRowNoData/TableRowNoData";
 
-export default function ListSuppliers(props) {
-  let {
-    data,
-    total,
-    order,
-    orderBy,
-    pagination,
-    handleChangePage,
-    handleChangeRowsPerPage,
-    handleRequestSort,
-    onResetListSupplier,
-  } = props;
+function ListSuppliers({
+  filters,
+  order,
+  onSetPage,
+  orderBy,
+  pagination,
+  handleChangePage,
+  handleChangeRowsPerPage,
+  handleRequestSort,
+}) {
   const [selected, setSelected] = useState([]);
 
-  const idRefUpdate = useRef("");
-  const [valueEdit, setValueEdit] = useState();
-  const [openModalUpdate, setOpenModalUpdate] = useState(false);
+  const [data, setData] = useState([]);
+  const [lastPage, setLastPage] = useState();
 
-  // open modal Update
-  const handleOpenModalUpdate = (id) => {
-    idRefUpdate.current = id;
-    handleGetOneSupplier();
-  };
+  const [keyword, setKeyword] = useState("");
 
-  // handel update supplier
-  const handleUpdateSupplier = async (data) => {
+  const [openModalAdd, setOpenModalAdd] = useState(false);
+
+  const handleSearch = useCallback(
+    (value) => {
+      onSetPage(1);
+      setKeyword(value);
+    },
+    [onSetPage]
+  );
+
+  // handle get all suppliers
+  const handleGetAllSuppliers = useCallback(async () => {
     try {
-      let res = await supplierService.handleUpdateSupplier(
-        idRefUpdate.current,
-        data
+      let filterParmas = csUseQueryString({
+        ...filters,
+        ...pagination,
+        keyword,
+      });
+      const response = await supplierService.handleGetAllSuppliers(
+        filterParmas
       );
-      toast.success(res?.message || "Add supplier success");
-      setOpenModalUpdate(false);
-      onResetListSupplier();
-    } catch (error) {
-      console.log(error);
-      toast.error("Update supplier Failded");
+
+      console.log(response);
+
+      if (response && response?.status) {
+        setData(response.data?.data);
+        setLastPage(response?.data?.last_page);
+      }
+    } catch (err) {
+      console.log(err);
     }
-  };
+  }, [filters, pagination, keyword]);
 
-  // handle delete supplier
-  const handelDeleteSupplier = async (id) => {
+  useEffect(() => {
+    handleGetAllSuppliers();
+  }, [handleGetAllSuppliers]);
+
+  // SET MODAL ADD SUPPLIER
+  const handleSetModalAdd = useCallback(() => {
+    setOpenModalAdd(!openModalAdd);
+  }, [openModalAdd]);
+
+  // handle add supplier
+  const handleAddSupplier = async (data) => {
     try {
-      let res = await supplierService.handleDeleteSupplier(id);
-      console.log(res);
-      toast.success("Delete supplier Successful");
-      setOpenModalUpdate(false);
-      onResetListSupplier();
+      let res = await supplierService.handleAddSupplier(data);
+      if (res && res.status) {
+        toast.success(res?.message || "Add supplier success");
+        setOpenModalAdd(false);
+        handleGetAllSuppliers(data);
+      } else {
+        toast.error(res?.message || "Add supplier failed");
+      }
     } catch (error) {
-      toast.error("Delete supplier Failded");
-    }
-  };
-
-  // handle close modal Update
-  const handleClodeModalUpdate = () => {
-    setOpenModalUpdate(false);
-  };
-
-  // handle get one supplier
-  const handleGetOneSupplier = async () => {
-    try {
-      let res = await supplierService.handleGetOneSupplier(idRefUpdate.current);
-      setValueEdit(res?.data);
-      setOpenModalUpdate(!openModalUpdate);
-    } catch (error) {
-      toast.error("Find supplier failed");
+      toast.error(error?.message || "Add supplier failed");
     }
   };
 
@@ -113,24 +122,27 @@ export default function ListSuppliers(props) {
 
   return (
     <>
-      {/* modal update supplier */}
+      {/* Modal Add  */}
       <ModalContent
         size="md"
-        isOpen={openModalUpdate}
-        onCloseModal={handleClodeModalUpdate}
-        title="Cập Nhật Nhà Cung Cấp"
+        isOpen={openModalAdd}
+        onCloseModal={handleSetModalAdd}
+        title="Thêm Nhà Cung Cấp"
       >
-        <UpdateSpllier
-          id={idRefUpdate.current}
-          value={valueEdit}
-          onCloseModal={handleClodeModalUpdate}
-          onUpdateSupplier={handleUpdateSupplier}
-          onDeleteSupplier={handelDeleteSupplier}
+        <AddSupplier
+          onCloseModalAdd={handleSetModalAdd}
+          onAddSupplier={handleAddSupplier}
         />
       </ModalContent>
 
+      <ActionSupplier
+        handleSearch={handleSearch}
+        handleOpenModal={handleSetModalAdd}
+      />
+
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
+
         <TableContainer sx={{ maxHeight: "60vh" }}>
           <Table
             stickyHeader
@@ -148,8 +160,7 @@ export default function ListSuppliers(props) {
             />
 
             <TableBody sx={{ width: "100%" }}>
-              {data &&
-                data.length > 0 &&
+              {data && data.length > 0 ? (
                 data.map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -159,24 +170,42 @@ export default function ListSuppliers(props) {
                       labelId={labelId}
                       key={index}
                       row={row}
-                      handleOpenModalUpdate={handleOpenModalUpdate}
                       handleClick={handleSelectRow}
                       isItemSelected={isItemSelected}
+                      onResetListSupplier={handleGetAllSuppliers}
                     />
                   );
-                })}
+                })
+              ) : (
+                <TableRowNoData colSpan={9} />
+              )}
             </TableBody>
           </Table>
         </TableContainer>
 
-        <CsPagination
-          totalPage={total}
-          limitPage={pagination.limit}
-          page={pagination.page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        {data && data.length > 0 && (
+          <CsPagination
+            totalPage={lastPage}
+            limitPage={pagination.limit}
+            page={pagination.page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        )}
       </Paper>
     </>
   );
 }
+
+ListSuppliers.propTypes = {
+  onSetPage: Proptypes.func,
+  filters: Proptypes.object,
+  order: Proptypes.string,
+  orderBy: Proptypes.string,
+  pagination: Proptypes.object,
+  handleChangePage: Proptypes.func,
+  handleChangeRowsPerPage: Proptypes.func,
+  handleRequestSort: Proptypes.func,
+  onResetListSupplier: Proptypes.func,
+};
+export default ListSuppliers;

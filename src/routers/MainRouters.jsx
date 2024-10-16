@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Container } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
 
@@ -27,7 +25,7 @@ import Paysheet from "../pages/paysheet";
 
 import TestCpm from "../components/testCpm";
 
-function MainRouters(props) {
+function MainRouters() {
   return (
     <div>
       <Header />

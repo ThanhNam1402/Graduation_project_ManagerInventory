@@ -31,26 +31,26 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: false,
-    label: "Tên Khách Hàng",
+    label: "name",
   },
 
   {
     id: "email",
     numeric: true,
     disablePadding: false,
-    label: "Email",
+    label: "email",
   },
   {
     id: "phone",
     numeric: true,
     disablePadding: false,
-    label: "Điện Thoại",
+    label: "phone",
   },
   {
     id: "status",
     numeric: true,
     disablePadding: false,
-    label: "Trạng Thái",
+    label: "status",
   },
 ];
 
@@ -62,6 +62,8 @@ function EnhancedTableHead({
   rowCount,
   onRequestSort,
 }) {
+  const { t } = useTranslation("customer");
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -93,7 +95,7 @@ function EnhancedTableHead({
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              {t("table.tableHead." + headCell.label)}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -116,12 +118,8 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
-function EnhancedTableToolbar(props) {
-  const { t } = useTranslation("product");
+const EnhancedTableToolbar = memo(function EnhancedTableToolbar(props) {
+  const { t } = useTranslation("customer");
   const tAction = useTranslation("action").t;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -163,7 +161,7 @@ function EnhancedTableToolbar(props) {
         </Typography>
       ) : (
         <Typography variant="h6" id="tableTitle" component="div">
-          Danh Sách Khách Hàng
+          {t("title")}
         </Typography>
       )}
 
@@ -214,8 +212,11 @@ function EnhancedTableToolbar(props) {
       )}
     </Toolbar>
   );
-}
+});
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+};
 
 export { EnhancedTableHead };
 
-export default memo(EnhancedTableToolbar);
+export default EnhancedTableToolbar;

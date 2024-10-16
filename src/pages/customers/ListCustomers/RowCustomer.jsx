@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import {
   Checkbox,
   Collapse,
@@ -14,19 +14,15 @@ import {
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { toast } from "react-toastify";
+import PropTypes from "prop-types";
 
 import TabPanelRow from "../../../components/TabPanelRow";
 import TabInfomation from "./TabInfomatoin";
 import { customerService } from "../../../services/customer.service";
+import { useTranslation } from "react-i18next";
+import { a11yProps } from "../../../utils/func";
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
-function RowCustomer({
+const RowCustomer = memo(function RowCustomer({
   row,
   isItemSelected,
   handleClick,
@@ -34,6 +30,8 @@ function RowCustomer({
   onOpenModalUpdate,
   onResetListCustomers,
 }) {
+  let { t } = useTranslation("customer");
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
 
@@ -85,10 +83,23 @@ function RowCustomer({
         <TableCell align="right">{row?.email}</TableCell>
         <TableCell align="right">{row?.phone}</TableCell>
         <TableCell align="right">
-          {row?.status === "0" ? (
-            <Chip label="Đang hoạt động" color="primary" />
-          ) : (
-            <Chip label="Ngừng hoạt động" color="error" />
+          {row?.status == 1 && (
+            <Chip
+              sx={{
+                minWidth: "117px",
+              }}
+              label={t("status.active")}
+              color="primary"
+            />
+          )}
+          {row?.status == 2 && (
+            <Chip
+              sx={{
+                minWidth: "117px",
+              }}
+              color="error"
+              label={t("status.inactive")}
+            />
           )}
         </TableCell>
       </TableRow>
@@ -121,6 +132,15 @@ function RowCustomer({
       </TableRow>
     </>
   );
-}
+});
+
+RowCustomer.propTypes = {
+  row: PropTypes.object.isRequired,
+  isItemSelected: PropTypes.bool,
+  handleClick: PropTypes.func,
+  labelId: PropTypes.string,
+  onOpenModalUpdate: PropTypes.func,
+  onResetListCustomers: PropTypes.func,
+};
 
 export default RowCustomer;

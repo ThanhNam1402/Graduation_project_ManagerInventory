@@ -12,13 +12,13 @@ TabInfomation.propTypes = {
 function TabInfomation({ item, onOpenModalUpdate, onDeleteCustomer }) {
   return (
     <Grid container spacing={2}>
-      <Grid item xs={3}>
+      <Grid item xs={2}>
         <img
           src="https://i.pinimg.com/564x/b0/91/5f/b0915f3c86472ea1ad3d1472cebd6c15.jpg"
           width="100%"
         />
       </Grid>
-      <Grid item xs={9}>
+      <Grid item xs={10}>
         <div>
           <Typography variant="h6" component={"h6"}></Typography>
 

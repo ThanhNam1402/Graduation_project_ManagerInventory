@@ -4,8 +4,8 @@ import api from "../config/axios"
 
 export const purchaseOrderService = {
 
-    handleGetAllPurchaseorders() {
-        return api.get(`/api/import-goods`)
+    handleGetAllPurchaseorders(filterParmas) {
+        return api.get(`/api/import-goods?${filterParmas}`)
     },
 
     handleGetOnePurchaseorders(id) {

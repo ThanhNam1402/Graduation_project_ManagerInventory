@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Button, Stack, Paper } from "@mui/material";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
@@ -9,7 +7,6 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import PrintIcon from "@mui/icons-material/Print";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 function TestCpm() {
   return (
@@ -38,25 +35,6 @@ function TestCpm() {
             Hủy
           </Button>
 
-          {/* BUTTON DELETE
-        |
-        |
-        */}
-
-          <Button
-            variant="contained"
-            startIcon={<DeleteOutlineIcon />}
-            color="error"
-            sx={{ boxShadow: 0 }}
-          >
-            Xóa
-          </Button>
-
-          {/* BUTTON COPPY
-        |
-        |
-        */}
-
           <Button
             variant="contained"
             startIcon={<ContentCopyIcon />}
@@ -66,11 +44,6 @@ function TestCpm() {
             Sao Chép
           </Button>
 
-          {/* BUTTON UPDATE
-        |
-        |
-        */}
-
           <Button
             variant="contained"
             startIcon={<ChangeCircleIcon />}
@@ -79,11 +52,6 @@ function TestCpm() {
           >
             Cập nhật
           </Button>
-
-          {/* BUTTON ADD NEW
-        |
-        |
-        */}
 
           <Button
             variant="contained"

@@ -13,7 +13,7 @@ function Suppliers() {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("name");
   const [filters, setFilters] = useState({
-    status: "",
+    status: "1",
   });
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
@@ -58,6 +58,7 @@ function Suppliers() {
 
             {/* Status */}
             <FilterRadio
+              defaultValue={"1"}
               data={ListStatus}
               handleGetValue={handleSetFilter}
               keyFilter={"status"}

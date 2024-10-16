@@ -11,7 +11,7 @@ import { ListStatusPurchaseOrder } from "../../utils/constain";
 import CsUsePagination from "../../hook/CsUsePagination";
 
 function PurchaseOrder() {
-  const { t } = useTranslation("product");
+  const { t } = useTranslation("purchaseOrder");
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
     CsUsePagination(1, 10);
@@ -27,14 +27,11 @@ function PurchaseOrder() {
   const [keyWord, setKeyWord] = useState("");
 
   const handleSearch = (value) => {
-    console.log("value", value);
     setPage(1);
-
     setKeyWord(value);
   };
   const handleSetFilter = (value, id) => {
     setPage(1);
-
     switch (id) {
       case "status":
         setFilters((state) => ({
@@ -75,6 +72,7 @@ function PurchaseOrder() {
             {/* Status */}
 
             <FilterRadio
+              defaultValue={""}
               data={ListStatusPurchaseOrder}
               handleGetValue={handleSetFilter}
               keyFilter={"status"}

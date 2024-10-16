@@ -3,7 +3,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  Paper,
   TableRow,
   TableHead,
 } from "@mui/material";
@@ -15,7 +14,7 @@ function TableProductOrders({ tableProducts }) {
   console.log(tableProducts);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer sx={{ border: 1, borderRadius: 2 }}>
       <Table sx={{ minWidth: 700 }} aria-label="spanning table">
         <TableHead>
           <TableRow>

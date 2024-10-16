@@ -14,16 +14,19 @@ import { supplierService } from "../../../services/supplier.service";
 import { purchaseOrderService } from "../../../services/purchaseOrder.service";
 import { useNavigate, useParams } from "react-router-dom";
 // import { useAppContext } from "../../../context/AppContent";
+import { useTranslation } from "react-i18next";
 
 import PropTypes from "prop-types";
 
 function AddDetail({ total, data }) {
   let { id } = useParams();
   // const appContext = useAppContext();
+  let tNoti = useTranslation("notification").t;
 
   const navigate = useNavigate();
   const [note, setNote] = useState("");
   const [code, setCode] = useState("");
+  const [supplierPayments, setSupplierPayments] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [finalTotal, setFinalTotal] = useState(0);
 
@@ -86,16 +89,17 @@ function AddDetail({ total, data }) {
       status: status,
       total_goods: finalTotal,
       discount: discount,
-      supplier_payments: 200000,
+      supplier_payments: supplierPayments,
       description: note,
       detail_import_goods: data,
     };
 
-    let res = await purchaseOrderService.handleAddPurChaseOrder(newData);
-
-    if (res && res.success === true) {
-      toast.success(res?.message);
+    try {
+      await purchaseOrderService.handleAddPurChaseOrder(newData);
+      toast.success(tNoti("action_success"));
       navigate("/system/purchaseOrder/");
+    } catch (error) {
+      toast.success(tNoti("action_success"));
     }
   };
 
@@ -163,10 +167,9 @@ function AddDetail({ total, data }) {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography>Nhà Cung Cấp</Typography>
+        <Typography>Nhà cung cấp</Typography>
         <Typography>{supplier?.name}</Typography>
       </Stack>
-      <hr />
 
       <Stack
         my={2}
@@ -174,10 +177,9 @@ function AddDetail({ total, data }) {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography>Tổng Tiền Hàng</Typography>
+        <Typography>Tổng tiền sản phẩm</Typography>
         <Typography>{total}</Typography>
       </Stack>
-      <hr />
 
       <Stack
         my={2}
@@ -185,7 +187,7 @@ function AddDetail({ total, data }) {
         alignItems="flex-end"
         justifyContent="space-between"
       >
-        <Typography>Tiền Giảm</Typography>
+        <Typography>Tiền giảm</Typography>
         <TextField
           id="standard-basic"
           hiddenLabel
@@ -196,7 +198,22 @@ function AddDetail({ total, data }) {
         />
       </Stack>
 
-      <hr />
+      <Stack
+        my={2}
+        direction="row"
+        alignItems="flex-end"
+        justifyContent="space-between"
+      >
+        <Typography>Tiền trả NCC</Typography>
+        <TextField
+          id="standard-basic"
+          hiddenLabel
+          variant="standard"
+          value={supplierPayments}
+          type="number"
+          onChange={(e) => setSupplierPayments(Number(e.target.value))}
+        />
+      </Stack>
 
       <Stack
         my={2}
@@ -204,11 +221,9 @@ function AddDetail({ total, data }) {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography>Tiền Cần Thanh Toán</Typography>
+        <Typography>Tiền cần thanh toán</Typography>
         <Typography>{finalTotal}</Typography>
       </Stack>
-
-      <hr />
 
       <TextField
         id="outlined-multiline-static"

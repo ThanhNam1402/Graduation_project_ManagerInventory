@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import { Paper, Table, TableBody, TableContainer } from "@mui/material";
 
@@ -53,12 +53,7 @@ function ListPurchaseOrders({
     }
     setSelected(newSelected);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [filters, pagination?.page, pagination?.rowsPerPage, keyWord, sort]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       let filterParmas = csUseQueryString({
         ...filters,
@@ -67,19 +62,19 @@ function ListPurchaseOrders({
         keyWord,
       });
 
-      console.log(filterParmas);
-
       const response = await purchaseOrderService.handleGetAllPurchaseorders(
         filterParmas
       );
-      if (response) {
-        setData(response.data);
-        setTotalPage(response?.last_page);
-      }
+      setData(response.data);
+      setTotalPage(response?.last_page);
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [filters, keyWord, pagination, sort]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
 
@@ -141,6 +136,7 @@ ListPurchaseOrders.propTypes = {
   filters: PropTypes.object,
   pagination: PropTypes.object,
   onSetPage: PropTypes.func,
+  keyWord: PropTypes.string,
   handleRequestSort: PropTypes.func,
   handleChangePage: PropTypes.func,
   handleChangeRowsPerPage: PropTypes.func,

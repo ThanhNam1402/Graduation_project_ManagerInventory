@@ -69,7 +69,7 @@ export const ListStatus = {
 export const ListStatusPurchaseOrder = {
     title: "filter.status",
     data: [
-        { value: 0, name: "All" },
+        { value: "", name: "All" },
         { value: 1, name: "Phiếu tạm" },
         { value: 2, name: "Đã nhập hàng" }
     ]

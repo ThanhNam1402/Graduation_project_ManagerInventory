@@ -62,12 +62,39 @@ function AddPurChaseOrder() {
     }
   };
 
+  // handle add item in array table
   let handleChangeValue = (e, value) => {
     setValue(value);
+    const newData = [...dataTable];
+
+    let checkID = newData.find((item) => item.product_id === value.product_id);
+    if (checkID) {
+      const index = newData.findIndex(
+        (item) => item.product_id === checkID.product_id
+      );
+      newData[index].qty = newData[index].qty + 1;
+    } else {
+      value.qty = 1;
+      newData.push(value);
+    }
+    setDataTable(newData);
+    console.log(value);
   };
 
-  const getTableProducts = (data) => {
-    setDataTable(data);
+  // handle set value feild input
+  const handleEditFeild = (index, newPrice, field) => {
+    const newData = [...dataTable];
+    newData[index][field] = Number(newPrice);
+    newData[index].total_price =
+      newData[index].price * newData[index].qty - newData[index].discount;
+    setDataTable(newData);
+  };
+
+  // handle delete item in data table
+  const handelDelItems = (id) => {
+    const newData = [...dataTable];
+    let a = newData.filter((item) => item.product_id !== id);
+    setDataTable(a);
   };
 
   useEffect(() => {
@@ -145,7 +172,11 @@ function AddPurChaseOrder() {
         </Stack>
 
         <Paper elevation={2} sx={{ mt: 2 }}>
-          <TableAddProducts value={value} getTableProducts={getTableProducts} />
+          <TableAddProducts
+            dataTable={dataTable}
+            onDelItems={handelDelItems}
+            onEditFeild={handleEditFeild}
+          />
         </Paper>
       </Grid>
       <Grid item xs={4}>

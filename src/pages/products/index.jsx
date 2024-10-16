@@ -111,6 +111,7 @@ function Products() {
         >
           <ListProducts
             sort={sort}
+            onSetPage={setPage}
             filters={filters}
             pagination={pagination}
             handleRequestSort={handleRequestSort}

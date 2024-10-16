@@ -16,6 +16,6 @@ const AppProvider = ({ children }) => {
 
 const useAppContext = () => useContext(AppContent);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { useAppContext };
-
 export default AppProvider;

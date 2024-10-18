@@ -6,7 +6,12 @@
             "tax_code" : "Mã số thuế",
             "email" : "Email",
             "phone" : "Số điện thoại",
-            "status" : "Trạng thái"
+            "status" : "Trạng thái",
+            "address" : "Địa chỉ",
+            "note" : "Ghi chú",
+            "create_at" : "Ngày tạo"
+
+
         }
     },
     "status" : {

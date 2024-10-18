@@ -56,12 +56,13 @@ function MainRouters() {
           <Route path="invoices" element={<Invoices />} />
           <Route path="purchaseOrder" element={<PurchaseOrder />} />
           <Route path="purchaseOrder/new" element={<AddPurChaseOrder />} />
-          <Route path="purchaseOrder/:id" element={<AddPurChaseOrder />} />
-
+          <Route
+            path="purchaseOrder/update/:id"
+            element={<AddPurChaseOrder />}
+          />
 
           <Route path="employee" element={<Employee />} />
           <Route path="paysheet" element={<Paysheet />} />
-          
 
           <Route path="testcmp" element={<TestCpm />} />
         </Routes>

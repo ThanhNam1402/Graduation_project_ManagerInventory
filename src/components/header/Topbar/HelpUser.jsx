@@ -1,9 +1,7 @@
-import React from "react";
-
 import { IconButton, Badge } from "@mui/material";
 import { Mail } from "@mui/icons-material";
 
-function HelpUser(props) {
+function HelpUser() {
   return (
     <div>
       <IconButton>

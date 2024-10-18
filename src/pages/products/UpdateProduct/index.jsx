@@ -26,19 +26,21 @@ import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
 import Previews from "../PreviewImages";
-import { productService } from "../../../services/product.service";
-import { delay } from "../../../utils/func";
+// import { delay } from "../../../utils/func";
 
-import VariantProduct from "../AddProduct/VariantProduct";
+import EditVariant from "../AddProduct/VariantProduct/ListOption/EditVariant";
 import FormGroup from "../../../components/FormGroup/FormGroup";
 import { supplierService } from "../../../services/supplier.service";
 import { categoryService } from "../../../services/category.service";
+import { optionService } from "../../../services/option.service";
 
 function UpdateProduct({
   openModal,
+  idSku,
   onCloseModal,
   valueEdit,
   onUpdateProduct,
+  onUploadFiles,
 }) {
   const { t } = useTranslation("notification");
   let userSchema = object({
@@ -62,6 +64,9 @@ function UpdateProduct({
   const [variants, setVariants] = useState([]);
   const [supliers, setSuplier] = useState([]);
   const [cate, setCate] = useState([]);
+  const [files, setFiles] = useState([]);
+
+  const [listOption, setListOption] = useState([]);
 
   const {
     register,
@@ -79,8 +84,20 @@ function UpdateProduct({
 
   useEffect(() => {
     if (valueEdit) {
-      let covertCateId = valueEdit.category_id;
-      console.log(covertCateId.toString());
+      console.log(valueEdit);
+
+      let a = valueEdit.product_sku[0].option_value?.map((item) => {
+        console.log(item);
+
+        return {
+          id: item.option.id,
+          value: [item.name],
+        };
+      });
+
+      console.log(a);
+
+      setVariants(a);
 
       reset({
         price: valueEdit.product_sku[0].price,
@@ -100,14 +117,13 @@ function UpdateProduct({
     try {
       console.log(data);
       onUpdateProduct(data);
+      if (files && files.length > 0) {
+        onUploadFiles(idSku, files);
+      }
     } catch (error) {
       console.log(error);
       toast.error("Error from server");
     }
-  };
-
-  const handleGetVariants = (data) => {
-    setVariants(data);
   };
 
   const handleGetAllSuppliers = async () => {
@@ -135,6 +151,30 @@ function UpdateProduct({
     }
   };
 
+  const handleEditVariant = (option) => {
+    // let checkOption = rawListVariant.find((item) => item.id === option.id);
+
+    console.log(option);
+  };
+
+  const handleGetFiles = (files) => {
+    console.log(files, idSku);
+    setFiles(files);
+  };
+
+  const handleGetAllOptions = async () => {
+    try {
+      let res = await optionService.handleGetAllOption();
+      setListOption(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetAllOptions();
+  }, []);
+
   return (
     <>
       <Dialog fullWidth maxWidth="md" open={openModal}>
@@ -150,7 +190,7 @@ function UpdateProduct({
                 alignItems="center"
                 justifyContent={"space-between"}
               >
-                <Typography variant="h6">Thêm Mới Sản Phẩm</Typography>
+                <Typography variant="h6">Chỉnh sửa sản phẩm</Typography>
               </Stack>
             </div>
 
@@ -249,7 +289,7 @@ function UpdateProduct({
                 </FormControl>
               </Stack>
 
-              <Previews />
+              <Previews onGetFile={handleGetFiles} />
 
               <Stack mt={2} direction="row" alignItems="center">
                 <TextField
@@ -281,7 +321,20 @@ function UpdateProduct({
                   Thuộc Tính
                 </AccordionSummary>
                 <AccordionDetails>
-                  <VariantProduct onGetVariants={handleGetVariants} />
+                  {variants &&
+                    variants.length > 0 &&
+                    variants.map((item, index) => {
+                      return (
+                        <Stack alignItems="center" direction="row" key={index}>
+                          <EditVariant
+                            listSelectOptions={listOption}
+                            defaultIdSelect={item.id}
+                            defaultTags={item?.value}
+                            onEditOption={handleEditVariant}
+                          />
+                        </Stack>
+                      );
+                    })}
                 </AccordionDetails>
               </Accordion>
             </Box>
@@ -312,6 +365,8 @@ UpdateProduct.propTypes = {
   onCloseModal: PropTypes.func,
   valueEdit: PropTypes.object,
   onUpdateProduct: PropTypes.func,
+  onUploadFiles: PropTypes.func,
+  idSku: PropTypes.string,
 };
 
 export default UpdateProduct;

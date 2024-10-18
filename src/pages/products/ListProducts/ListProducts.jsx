@@ -73,8 +73,6 @@ function ListProducts({
     setOpenModal(!openModal);
   };
 
- 
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = data.map((n) => n.id);
@@ -107,7 +105,13 @@ function ListProducts({
 
   return (
     <>
-      <AddProduct openModal={openModal} handleOpenModal={handleOpenModal} />
+      {openModal && (
+        <AddProduct
+          openModal={openModal}
+          handleOpenModal={handleOpenModal}
+          onResetListProducts={handleGetAllProduct}
+        />
+      )}
 
       <ActionProduct
         handleOpenModal={handleOpenModal}

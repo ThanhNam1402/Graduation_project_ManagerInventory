@@ -1,6 +1,3 @@
-import { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
-
 import {
   Table,
   TableBody,
@@ -15,38 +12,9 @@ import {
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import PropTypes from "prop-types";
-import { purchaseOrderService } from "../../../services/purchaseOrder.service";
 import TableRowNoData from "../../../components/TableRowNoData/TableRowNoData";
 
 function TableAddProducts({ dataTable, onDelItems, onEditFeild }) {
-  let { id } = useParams();
-
-  const fetchOneData = useCallback(async () => {
-    let res = await purchaseOrderService.handleGetOrderProducts(id);
-
-    let data = res?.data;
-    let products = data.Products;
-
-    const flattenedData = {
-      Products: products.map((product) => ({
-        ...product,
-        ...product.PurchaseOrder_Detail,
-      })),
-    };
-
-    flattenedData?.Products.map((product, index) => {
-      delete flattenedData?.Products[index].PurchaseOrder_Detail;
-    });
-
-    setData(flattenedData?.Products);
-  }, [id]);
-
-  useEffect(() => {
-    if (id) {
-      fetchOneData();
-    }
-  }, [fetchOneData, id]);
-
   return (
     <div>
       <TableContainer component={Paper}>

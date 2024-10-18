@@ -5,6 +5,7 @@ import TableProductOrders from "./TableProductOrders";
 import { handleformat } from "../../utils/format";
 import PropTypes from "prop-types";
 import ButtonUpdate from "../../components/Button/ButtonUpdate";
+import { Link } from "react-router-dom";
 
 function TabInfomation({ item }) {
   return (
@@ -91,7 +92,10 @@ function TabInfomation({ item }) {
         </Grid>
       </Grid>
       <Stack justifyContent="flex-end" direction="row" spacing={2} mt={2}>
-        <ButtonUpdate />
+        <ButtonUpdate
+          component={Link}
+          to={`/system/purchaseOrder/update/${item.id}`}
+        />
       </Stack>
     </>
   );

@@ -51,9 +51,8 @@ export const ListCustomersType = {
 export const ListStatusCustomer = {
     title: "filter.status",
     data: [
-        { value: 0, name: "Tất cả" },
         { value: 1, name: "Đang hoạt động" },
-        { value: 2, name: "Ngừng hoạt Động" }
+        { value: 0, name: "Ngừng hoạt Động" }
     ]
 }
 
@@ -69,9 +68,8 @@ export const ListStatus = {
 export const ListStatusPurchaseOrder = {
     title: "filter.status",
     data: [
-        { value: "", name: "All" },
-        { value: 1, name: "Phiếu tạm" },
-        { value: 2, name: "Đã nhập hàng" }
+        { value: 2, name: "Phiếu tạm" },
+        { value: 1, name: "Đã nhập hàng" }
     ]
 }
 

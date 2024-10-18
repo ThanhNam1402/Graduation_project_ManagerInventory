@@ -42,8 +42,6 @@ const AddVariant = memo(function AddVariant({
     }));
   };
 
-  console.log("opton", option);
-
   // handle add variant ui
   const handleAddVariant = () => {
     onAddOption(option);
@@ -78,12 +76,12 @@ const AddVariant = memo(function AddVariant({
 
   const handleAddOption = async (name) => {
     try {
-      await optionService.handleNewOption(name);
+      let res = await optionService.handleNewOption(name);
       onResetListOptions();
-      setValueSelect("");
+      setValueSelect(res?.data?.id);
       setOption((prevState) => ({
         ...prevState,
-        id: "",
+        id: res?.data?.id,
       }));
       toast.success(t("action_success"));
       handleClodeModalAdd();

@@ -9,10 +9,9 @@ import {
 import { useState, memo, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import ClearIcon from "@mui/icons-material/Clear";
+import PropTypes from "prop-types";
 
 import InputTags from "../../InputTags";
-
-import PropTypes from "prop-types";
 
 const EditVariant = memo(function EditVariant({
   listSelectOptions,

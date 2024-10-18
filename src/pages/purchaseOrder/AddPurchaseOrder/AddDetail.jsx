@@ -5,7 +5,6 @@ import {
   Button,
   Box,
   Autocomplete,
-  FormControl,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -18,14 +17,20 @@ import { useTranslation } from "react-i18next";
 
 import PropTypes from "prop-types";
 
-function AddDetail({ total, data }) {
+function AddDetail({
+  total,
+  data,
+  discountDefault,
+  supplierPayDefault,
+  codeDefault,
+  supllierDefault,
+}) {
   let { id } = useParams();
   // const appContext = useAppContext();
   let tNoti = useTranslation("notification").t;
 
   const navigate = useNavigate();
   const [note, setNote] = useState("");
-  const [code, setCode] = useState("");
   const [supplierPayments, setSupplierPayments] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [finalTotal, setFinalTotal] = useState(0);
@@ -33,35 +38,22 @@ function AddDetail({ total, data }) {
   const [options, setOption] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
-  const [supplier, setSupplier] = useState(null);
+  const [supplier, setSupplier] = useState({});
 
   useEffect(() => {
-    console.log(total, discount);
-
     if (total !== 0) {
       let finalTotal = total - discount;
       setFinalTotal(finalTotal);
     }
   }, [discount, total]);
-
   useEffect(() => {
     if (id) {
-      fetchOneData();
+      console.log("supllierDefault", supllierDefault);
+      setDiscount(discountDefault);
+      setSupplier(supllierDefault);
+      setSupplierPayments(supplierPayDefault);
     }
-  }, []);
-
-  const fetchOneData = async () => {
-    console.log("call api");
-    if (id) {
-      let res = await purchaseOrderService.handleGetOnePurchaseorders(id);
-
-      if (res && res.success && res.data) {
-        setSupplier(res?.data?.Supplier);
-        setCode(res?.data?.code);
-      }
-      console.log(res);
-    }
-  };
+  }, [discountDefault, id, supllierDefault, supplierPayDefault]);
 
   const handleOnChange = async (value) => {
     setInputValue(value);
@@ -74,6 +66,8 @@ function AddDetail({ total, data }) {
   };
 
   let handleChangeValue = (e, value) => {
+    console.log(value);
+
     setSupplier(value);
   };
 
@@ -83,23 +77,46 @@ function AddDetail({ total, data }) {
       return;
     }
 
-    let newData = {
-      supplier_id: supplier?.id,
-      code: code,
-      status: status,
-      total_goods: finalTotal,
-      discount: discount,
-      supplier_payments: supplierPayments,
-      description: note,
-      detail_import_goods: data,
-    };
+    if (!id) {
+      let newData = {
+        supplier_id: supplier?.id,
+        status: status,
+        total_goods: finalTotal,
+        discount: discount,
+        supplier_payments: supplierPayments,
+        description: note,
+        detail_import_goods: data,
+      };
+      try {
+        await purchaseOrderService.handleAddPurChaseOrder(newData);
+        toast.success(tNoti("action_success"));
+        navigate("/system/purchaseOrder/");
+      } catch (error) {
+        toast.error(tNoti("action_fail"));
+      }
+    } else {
+      let newData = {
+        supplier_id: supplier?.id,
+        status: status,
+        total_goods: finalTotal,
+        discount: discount,
+        supplier_payments: supplierPayments,
+        description: note,
+        detail_import_goods: data,
+        code: codeDefault,
+      };
+      try {
+        let a = await purchaseOrderService.handleUpdatePurChaseOrder(
+          id,
+          newData
+        );
+        console.log(a);
 
-    try {
-      await purchaseOrderService.handleAddPurChaseOrder(newData);
-      toast.success(tNoti("action_success"));
-      navigate("/system/purchaseOrder/");
-    } catch (error) {
-      toast.success(tNoti("action_success"));
+        toast.success(tNoti("action_success"));
+        navigate("/system/purchaseOrder/");
+      } catch (error) {
+        toast.error(tNoti("action_fail"));
+      }
     }
   };
 
@@ -148,19 +165,6 @@ function AddDetail({ total, data }) {
         )}
       />
 
-      <FormControl fullWidth>
-        <TextField
-          hiddenLabel
-          fullWidth
-          id="code"
-          margin="normal"
-          variant="standard"
-          placeholder="Mã Nhập Hàng"
-          size="small"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-        />
-      </FormControl>
       <Stack
         my={2}
         direction="row"
@@ -255,6 +259,10 @@ function AddDetail({ total, data }) {
 
 AddDetail.propTypes = {
   total: PropTypes.number,
+  discountDefault: PropTypes.number,
+  supplierPayDefault: PropTypes.number,
+  supllierDefault: PropTypes.object,
+  codeDefault: PropTypes.string,
   data: PropTypes.array,
 };
 

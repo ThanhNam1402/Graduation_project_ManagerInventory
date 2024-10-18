@@ -1,10 +1,9 @@
-import React from "react";
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { useColorScheme } from "@mui/material/styles";
 
 import { LightMode, DarkMode } from "@mui/icons-material";
 
-function ChangeMode(props) {
+function ChangeMode() {
   const { mode, setMode } = useColorScheme();
 
   return (

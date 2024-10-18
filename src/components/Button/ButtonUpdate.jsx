@@ -4,12 +4,16 @@ import PropTypes from "prop-types";
 
 ButtonUpdate.propTypes = {
   onClick: PropTypes.func,
+  component: PropTypes.any,
+  to: PropTypes.any,
 };
 
-function ButtonUpdate({ onClick }) {
+function ButtonUpdate({ onClick, component, to }) {
   return (
     <>
       <Button
+        component={component}
+        to={to}
         onClick={onClick}
         variant="contained"
         startIcon={<ChangeCircleIcon />}

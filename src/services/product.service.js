@@ -16,6 +16,16 @@ export const productService = {
             ...data
         })
     },
+    handleUploadFile(idSku, file) {
+        return api.post(`/api/upload-file`, {
+            sku_id: idSku,
+            file: file
+        }, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+    },
 
     handleUpdateProduct(id, idSku, data) {
         console.log(data);

@@ -40,8 +40,6 @@ const DynamicForm = ({
     }
   }, [reset, valueEdit]);
 
-  console.log(errors);
-
   return (
     <>
       <div className="row">

@@ -1,24 +1,41 @@
-import { Stack, Typography, Grid } from "@mui/material";
+import { Stack, Box, Typography } from "@mui/material";
 
 import PropTypes from "prop-types";
+import { handleformat } from "../../../utils/format";
+import { REACT_APP_BACKEND_URL } from "../../../config/config";
 
 function TabInfomation({ item, nameProductVariant }) {
+  console.log(item);
+
   return (
     <>
-      <Grid
-        container
-        spacing={4}
+      <Box
         sx={{
-          my: 1,
+          display: "flex",
+          alignItems: "flex-start",
         }}
       >
-        <Grid item xs={3}>
+        <Box
+          sx={{
+            mr: 3,
+          }}
+        >
           <img
-            src="https://biahoihanoi.vn/upload/product/thiet-ke-chua-co-ten-1-6911.png"
-            width="100%"
+            src={`${REACT_APP_BACKEND_URL}/storage/${
+              item?.photo[item?.photo?.length - 1]?.url
+            }`}
+            style={{
+              width: "220px",
+              display: "block",
+            }}
           />
-        </Grid>
-        <Grid item xs={9}>
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            p: 2,
+          }}
+        >
           <div>
             <Typography variant="h6" component={"h6"}>
               {nameProductVariant}
@@ -44,15 +61,16 @@ function TabInfomation({ item, nameProductVariant }) {
                     Mã vạch
                   </Typography>
                 </Stack>
+
                 <Stack mt={2} direction="row">
                   <Typography
                     sx={{ width: "110px" }}
                     variant="subtitle2"
                     component={"p"}
                   >
-                    Danh Mục
+                    Tồn kho
                   </Typography>
-                  <p>{item?.category_id}</p>
+                  <p>{item?.inventory}</p>
                 </Stack>
                 <Stack mt={2} direction="row">
                   <Typography
@@ -62,7 +80,7 @@ function TabInfomation({ item, nameProductVariant }) {
                   >
                     Giá bán
                   </Typography>
-                  <p>{item?.sale_price}</p>
+                  <p>{handleformat.formatPrice(item?.sale_price)}</p>
                 </Stack>
                 <Stack mt={2} direction="row">
                   <Typography
@@ -72,7 +90,7 @@ function TabInfomation({ item, nameProductVariant }) {
                   >
                     Giá vốn
                   </Typography>
-                  <p>{item?.price}</p>
+                  <p>{handleformat.formatPrice(item?.price)}</p>
                 </Stack>
                 <Stack mt={2} direction="row">
                   <Typography
@@ -99,8 +117,8 @@ function TabInfomation({ item, nameProductVariant }) {
               </div>
             </Stack>
           </div>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </>
   );
 }

@@ -85,6 +85,7 @@ const RowCustomer = memo(function RowCustomer({
         <TableCell align="right">
           {row?.status == 1 && (
             <Chip
+              size="small"
               sx={{
                 minWidth: "117px",
               }}
@@ -92,8 +93,9 @@ const RowCustomer = memo(function RowCustomer({
               color="primary"
             />
           )}
-          {row?.status == 2 && (
+          {row?.status == 0 && (
             <Chip
+              size="small"
               sx={{
                 minWidth: "117px",
               }}

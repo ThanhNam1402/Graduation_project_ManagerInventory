@@ -83,7 +83,7 @@ function UpdateCustomer({ value, onCloseModal, onUpdateCustomer }) {
       labelName: "Trạng Thái",
       options: [
         { value: 1, label: "Đang hoạt động" },
-        { value: 2, label: "Ngừng hoạt động" },
+        { value: 0, label: "Ngừng hoạt động" },
       ],
     },
     {

@@ -25,7 +25,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import PropTypes from "prop-types";
 
-import Previews from "../PreviewImages";
 import { productService } from "../../../services/product.service";
 import { delay } from "../../../utils/func";
 
@@ -34,7 +33,7 @@ import FormGroup from "../../../components/FormGroup/FormGroup";
 import { supplierService } from "../../../services/supplier.service";
 import { categoryService } from "../../../services/category.service";
 
-function AddProduct({ openModal, handleOpenModal }) {
+function AddProduct({ openModal, handleOpenModal, onResetListProducts }) {
   const { t } = useTranslation("notification");
   let userSchema = object({
     name: string().required(t("form.required")),
@@ -56,7 +55,8 @@ function AddProduct({ openModal, handleOpenModal }) {
       .required(t("form.required")),
     supplier_id: number()
       .transform((value) => (Number.isNaN(value) ? null : value))
-      .nullable(),
+      .nullable()
+      .required(t("form.required")),
     description: string().max(220, "Tối Đa 220 kí tự"),
   });
 
@@ -78,16 +78,10 @@ function AddProduct({ openModal, handleOpenModal }) {
       let locations = [1, 2];
       let newData = { ...data, locations, variants };
 
-      console.log(data);
-      console.log(newData);
-
       let res = await productService.handleNewProducts({ ...newData });
-
-      if (res && res.success) {
-        toast.success(res?.message);
-      } else {
-        toast.warning(res?.message);
-      }
+      toast.success(res?.message);
+      onResetListProducts();
+      handleOpenModal();
     } catch (error) {
       console.log(error);
       toast.error("Error from server");
@@ -116,9 +110,7 @@ function AddProduct({ openModal, handleOpenModal }) {
   const handleGetAllCate = async () => {
     try {
       let res = await categoryService.handleGetAllCate();
-      if (res && res?.status) {
-        setCate(res?.data?.data);
-      }
+      setCate(res?.data?.data);
     } catch (error) {
       toast.error("Error getting all categories");
       console.log("error category");
@@ -205,8 +197,8 @@ function AddProduct({ openModal, handleOpenModal }) {
                     inputProps={{ "aria-label": "Without label" }}
                     {...register("category_id")}
                   >
-                    <MenuItem value="">
-                      <em>None</em>
+                    <MenuItem value="" disabled>
+                      <em>Chọn nhóm hàng</em>
                     </MenuItem>
 
                     {cate &&
@@ -236,8 +228,8 @@ function AddProduct({ openModal, handleOpenModal }) {
                     inputProps={{ "aria-label": "Without label" }}
                     {...register("supplier_id")}
                   >
-                    <MenuItem value="">
-                      <em>None</em>
+                    <MenuItem value="" disabled>
+                      <em>Chọn Nhà cung cấp</em>
                     </MenuItem>
 
                     {supliers &&
@@ -258,8 +250,6 @@ function AddProduct({ openModal, handleOpenModal }) {
                   )}
                 </FormControl>
               </Stack>
-
-              <Previews />
 
               <Stack mt={2} direction="row" alignItems="center">
                 <TextField
@@ -324,6 +314,7 @@ function AddProduct({ openModal, handleOpenModal }) {
 AddProduct.propTypes = {
   openModal: PropTypes.bool,
   handleOpenModal: PropTypes.func,
+  onResetListProducts: PropTypes.func,
 };
 
 export default AddProduct;

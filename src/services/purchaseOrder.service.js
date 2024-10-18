@@ -13,7 +13,7 @@ export const purchaseOrderService = {
     },
 
     handleGetOrderProducts(id) {
-        return api.get(`/api/purchaseorders/detail/${id}`)
+        return api.get(`/api/import-goods/${id}`)
     },
 
     handleGetAllProduct(keyword) {
@@ -22,6 +22,11 @@ export const purchaseOrderService = {
 
     handleAddPurChaseOrder(data) {
         return api.post(`/api/import-goods`, {
+            ...data
+        })
+    },
+    handleUpdatePurChaseOrder(id, data) {
+        return api.put(`/api/import-goods/${id}`, {
             ...data
         })
     }

@@ -2,7 +2,7 @@ import { Grid, Box, Typography, Badge } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
-function Previews(props) {
+function Previews({ onGetFile }) {
   const [files, setFiles] = useState([]);
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -50,6 +50,9 @@ function Previews(props) {
     </Grid>
   ));
 
+  useEffect(() => {
+    onGetFile(files);
+  }, [files, onGetFile]);
   useEffect(() => {
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
   }, []);

@@ -12,7 +12,6 @@ function CsSearch({ handleSearch }) {
   return (
     <div>
       <Paper
-        component="form"
         sx={{
           p: "2px 4px",
           display: "flex",

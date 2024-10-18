@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, Fragment } from "react";
 import {
   Checkbox,
   Collapse,
   Box,
+  Tab,
+  Tabs,
   IconButton,
   TableRow,
   TableCell,
@@ -10,6 +12,7 @@ import {
   Table,
   TableContainer,
   Stack,
+  Typography,
 } from "@mui/material";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -27,6 +30,10 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import ButtonUpdate from "../../../components/Button/ButtonUpdate";
 import ButtonDelete from "../../../components/Button/ButtonDelete";
+import { a11yProps } from "../../../utils/func";
+import TabPanelRow from "../../../components/TabPanelRow";
+
+import { REACT_APP_BACKEND_URL } from "../../../config/config";
 
 function RowProduct({
   row,
@@ -41,6 +48,8 @@ function RowProduct({
   const [valueEdit, setValueEdit] = useState();
   const idRefProduct = useRef("");
   const idRefSku = useRef("");
+
+  const [value, setValue] = useState(0);
 
   const handleDeleteProduct = async (id) => {
     console.log(id);
@@ -88,8 +97,24 @@ function RowProduct({
     }
   };
 
+  const handleUploadFiles = async (idSku, files) => {
+    console.log(files);
+
+    try {
+      let res = await productService.handleUploadFile(idSku, files);
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSetModalUpdate = () => {
     setOpenModalUpdate(!openModalUpdate);
+  };
+
+  const handleChangeTab = (_, newValue) => {
+    setValue(newValue);
   };
 
   return (
@@ -99,8 +124,9 @@ function RowProduct({
         valueEdit={valueEdit}
         onCloseModal={handleSetModalUpdate}
         onUpdateProduct={handleUpdateProduct}
+        onUploadFiles={handleUploadFiles}
+        idSku={idRefSku.current}
       />
-      {/* openModal={openModalUpdate} handleOpenModal={handleOpenModal}  */}
 
       <TableRow
         hover
@@ -127,9 +153,18 @@ function RowProduct({
           />
         </TableCell>
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          {row?.name}
+          <Stack direction={"row"} alignItems={"center"} spacing={2}>
+            <Typography>{row?.name}</Typography>
+
+            <img
+              width={"40px"}
+              height={"40px"}
+              src={`${REACT_APP_BACKEND_URL}/storage/${row?.product_sku[0]?.photo[0]?.url}`}
+              alt=""
+            />
+          </Stack>
         </TableCell>
-        <TableCell align="right">{row?.Category?.name}</TableCell>
+        <TableCell align="right">{row?.category?.name}</TableCell>
         <TableCell align="right">
           {averagePrice(row.product_sku, "inventory")}
         </TableCell>
@@ -147,64 +182,85 @@ function RowProduct({
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ paddingBottom: 2 }}>
-              <TableContainer>
-                <Table
-                  stickyHeader
-                  sx={{ width: "100%" }}
-                  aria-labelledby="tableTitle"
-                  size={"medium"}
-                >
-                  <TableBody>
-                    {row.product_sku && row.product_sku.length > 1
-                      ? row.product_sku.map((item) => {
-                          return (
-                            <ItemVariantProduct
-                              key={item.id}
+              {/* table variant  */}
+              {row.product_sku && row.product_sku.length > 1 && (
+                <>
+                  <TableContainer>
+                    <Table
+                      stickyHeader
+                      sx={{ width: "100%" }}
+                      aria-labelledby="tableTitle"
+                      size={"medium"}
+                    >
+                      <TableBody>
+                        {row.product_sku &&
+                          row.product_sku.length > 1 &&
+                          row.product_sku.map((item) => {
+                            return (
+                              <ItemVariantProduct
+                                key={item.id}
+                                item={item}
+                                nameProduct={row.name}
+                                onOpenModalUpdate={handleOpenModalUpdate}
+                                onDeleteProduct={handleDeleteProduct}
+                              />
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </>
+              )}
+
+              {/* no variant */}
+              {row.product_sku &&
+                row.product_sku.length <= 1 &&
+                row.product_sku.map((item, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <Box>
+                        <Box sx={{ width: "100%" }}>
+                          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                            <Tabs
+                              value={value}
+                              onChange={handleChangeTab}
+                              aria-label="basic tabs"
+                            >
+                              <Tab label="Thông tin" {...a11yProps(0)} />
+                              <Tab label="Thông tin" {...a11yProps(1)} />
+                            </Tabs>
+                          </Box>
+                          <TabPanelRow value={value} index={0}>
+                            <TabInfomation
+                              nameProductVariant={row?.name}
                               item={item}
-                              nameProduct={row.name}
-                              onOpenModalUpdate={handleOpenModalUpdate}
                               onDeleteProduct={handleDeleteProduct}
                             />
-                          );
-                        })
-                      : row.product_sku.map((item) => {
-                          return (
-                            <TableRow key={item.id}>
-                              <TableCell
-                                style={{ paddingBottom: 0, paddingTop: 0 }}
-                                colSpan={10}
-                              >
-                                <TabInfomation
-                                  nameProductVariant={row?.name}
-                                  item={item}
-                                  onDeleteProduct={handleDeleteProduct}
-                                />
 
-                                <Stack
-                                  justifyContent="flex-end"
-                                  direction="row"
-                                  spacing={2}
-                                  my={3}
-                                >
-                                  <ButtonUpdate
-                                    onClick={() =>
-                                      handleOpenModalUpdate(
-                                        item?.product_id,
-                                        item?.id
-                                      )
-                                    }
-                                  />
-                                  <ButtonDelete
-                                    onClick={() => handleDeleteProduct(item.id)}
-                                  />
-                                </Stack>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                            <Stack
+                              justifyContent="flex-end"
+                              direction="row"
+                              spacing={2}
+                              my={3}
+                            >
+                              <ButtonUpdate
+                                onClick={() =>
+                                  handleOpenModalUpdate(
+                                    item?.product_id,
+                                    item?.id
+                                  )
+                                }
+                              />
+                              <ButtonDelete
+                                onClick={() => handleDeleteProduct(item.id)}
+                              />
+                            </Stack>
+                          </TabPanelRow>
+                        </Box>
+                      </Box>
+                    </Fragment>
+                  );
+                })}
             </Box>
           </Collapse>
         </TableCell>

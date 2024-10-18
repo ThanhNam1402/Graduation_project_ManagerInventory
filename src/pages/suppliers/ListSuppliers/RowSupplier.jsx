@@ -150,6 +150,7 @@ function RowSupplier({
           {row?.status == 1 && (
             <Chip
               color="primary"
+              size="small"
               label={t("status.active")}
               sx={{
                 minWidth: "117px",
@@ -159,6 +160,7 @@ function RowSupplier({
           {row?.status == 2 && (
             <Chip
               color="error"
+              size="small"
               label={t("status.inactive")}
               sx={{
                 minWidth: "117px",

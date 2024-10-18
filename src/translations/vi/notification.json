@@ -1,7 +1,7 @@
 {
     "nodata" : "Không có dữ liệu",
     "form" : {
-        "required" : "Bắt buộc"
+        "required" : "Không được để trống"
     },
     "action_success" : "Thao tác thành công",
     "action_fail" : "Thao tác thất bại"

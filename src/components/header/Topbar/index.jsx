@@ -1,5 +1,3 @@
-import React from "react";
-
 import ChangeMode from "./ChangeMode";
 import ChangeLanguage from "./ChangeLanguage";
 import Profile from "./Profile";
@@ -7,7 +5,7 @@ import HelpUser from "./HelpUser";
 
 import { Box, Stack, Container } from "@mui/material";
 
-function TopBar(props) {
+function TopBar() {
   return (
     <Box>
       <Container maxWidth="xl">
@@ -18,7 +16,11 @@ function TopBar(props) {
           spacing={2}
         >
           <Box>
-            <img width="30" src="https://i.pinimg.com/564x/9f/93/ae/9f93ae8f39417cd575e735bf5f1b1505.jpg" alt="" />
+            <img
+              width="30"
+              src="https://i.pinimg.com/564x/9f/93/ae/9f93ae8f39417cd575e735bf5f1b1505.jpg"
+              alt=""
+            />
           </Box>
           <Stack direction="row" alignItems="center" spacing={1}>
             <ChangeLanguage />

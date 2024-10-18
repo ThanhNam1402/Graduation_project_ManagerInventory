@@ -6,7 +6,12 @@
             "tax_code" : "Tax code",
             "email" : "Email",
             "phone" : "Phone number",
-            "status" : "Status"
+            "status" : "Status",
+            "address" : "Address",
+            "note" : "Note",
+            "create_at" : "Created date"
+            
+
         }
     },
     "status" : {

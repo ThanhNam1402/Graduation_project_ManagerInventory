@@ -1,8 +1,6 @@
-import React from "react";
-
 import { useState } from "react";
 import { Box, Typography, Stack } from "@mui/material";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 
 import ListPurchaseOrders from "./ListPurchaseOrders";
 import ActionProduct from "./ActionProduct";
@@ -11,13 +9,13 @@ import { ListStatusPurchaseOrder } from "../../utils/constain";
 import CsUsePagination from "../../hook/CsUsePagination";
 
 function PurchaseOrder() {
-  const { t } = useTranslation("purchaseOrder");
+  // const { t } = useTranslation("purchaseOrder");
 
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
     CsUsePagination(1, 10);
 
   const [filters, setFilters] = useState({
-    status: 0,
+    status: 1,
   });
   const [sort, setSort] = useState({
     order: "asc",
@@ -72,7 +70,7 @@ function PurchaseOrder() {
             {/* Status */}
 
             <FilterRadio
-              defaultValue={""}
+              defaultValue={1}
               data={ListStatusPurchaseOrder}
               handleGetValue={handleSetFilter}
               keyFilter={"status"}

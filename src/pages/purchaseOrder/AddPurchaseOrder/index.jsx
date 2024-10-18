@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
   Paper,
   Grid,
@@ -9,7 +9,7 @@ import {
   Stack,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import AddDetail from "./AddDetail";
 import TableAddProducts from "./TableAddProducts";
@@ -18,10 +18,17 @@ import { REACT_APP_BACKEND_URL } from "../../../config/config";
 import { TotalPrice } from "../../../utils/func";
 
 function AddPurChaseOrder() {
+  let { id } = useParams();
+
   const [options, setOption] = useState([]);
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
   const [dataTable, setDataTable] = useState([]);
+
+  const refDiscount = useRef(0);
+  const refSupplierPay = useRef(0);
+  const refCode = useRef("");
+  const refSupplier = useRef({});
 
   const [total, setTotal] = useState(0);
 
@@ -56,6 +63,7 @@ function AddPurChaseOrder() {
       const newArray = newData.reduce((accumulator, currentValue) => {
         return accumulator.concat(currentValue);
       }, []);
+
       setOption(newArray);
     } else {
       setOption([]);
@@ -101,6 +109,45 @@ function AddPurChaseOrder() {
     let a = TotalPrice(dataTable);
     setTotal(a);
   }, [dataTable]);
+
+  const fetchOneData = useCallback(async () => {
+    let res = await purchaseOrderService.handleGetOrderProducts(id);
+
+    console.log(res);
+
+    refCode.current = res.code;
+    refDiscount.current = res.discount;
+    refSupplier.current = res.supplier;
+    refSupplierPay.current = res.supplier_payments;
+
+    let a = res.detail_import_goods.map((item) => {
+      let nameProduct = item.product.product.name;
+      return {
+        name:
+          item.product.option_value.length > 0
+            ? nameProduct.concat(
+                " - ",
+                item.product.option_value.map((item) => item.name).join(" - ")
+              )
+            : nameProduct,
+        price: item.price,
+        qty: item.qty,
+        discount: item.discount,
+        product_id: item.product.id,
+        total_price: item.total_price,
+      };
+    });
+
+    console.log(a);
+
+    setDataTable(a);
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchOneData();
+    }
+  }, [fetchOneData, id]);
 
   return (
     <Grid container spacing={2}>
@@ -158,15 +205,17 @@ function AddPurChaseOrder() {
               );
             }}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                hiddenLabel
-                placeholder="Tìm kiếm sản phẩm"
-                inputProps={{
-                  ...params.inputProps,
-                  autoComplete: "new-password",
-                }}
-              />
+              <Paper>
+                <TextField
+                  {...params}
+                  hiddenLabel
+                  placeholder="Tìm kiếm sản phẩm"
+                  inputProps={{
+                    ...params.inputProps,
+                    autoComplete: "new-password",
+                  }}
+                />
+              </Paper>
             )}
           />
         </Stack>
@@ -181,7 +230,14 @@ function AddPurChaseOrder() {
       </Grid>
       <Grid item xs={4}>
         <Paper elevation={2} sx={{ p: 3 }}>
-          <AddDetail total={total} data={dataTable} />
+          <AddDetail
+            total={total}
+            data={dataTable}
+            discountDefault={refDiscount?.current}
+            codeDefault={refCode.current}
+            supllierDefault={refSupplier.current}
+            supplierPayDefault={refSupplierPay?.current}
+          />
         </Paper>
       </Grid>
     </Grid>

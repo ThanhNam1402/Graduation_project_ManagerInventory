@@ -2,12 +2,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { localLng } from "../../../i18n";
 
-import { Button, Menu, MenuItem, Typography, Box, Stack } from "@mui/material";
+import { Button, Menu, MenuItem, Box } from "@mui/material";
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-function ChangeLanguage(props) {
-  const { i18n } = useTranslation('home');
+function ChangeLanguage() {
+  const { i18n } = useTranslation("home");
 
   const handleChangeLng = (lng) => {
     i18n.changeLanguage(lng);

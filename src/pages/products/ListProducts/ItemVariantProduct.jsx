@@ -85,7 +85,10 @@ function ItemVariantProduct({
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+        <TableCell
+          style={{ paddingBottom: 0, paddingTop: 0, mb: 2 }}
+          colSpan={10}
+        >
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box>
               <Box sx={{ width: "100%" }}>
@@ -104,7 +107,6 @@ function ItemVariantProduct({
                   <TabInfomation
                     nameProductVariant={nameProductVariant}
                     item={item}
-                    // handleDelProduct={handleDelProduct}
                   />
 
                   <Stack
@@ -113,25 +115,6 @@ function ItemVariantProduct({
                     spacing={2}
                     mt={3}
                   >
-                    {/* <Button
-                      variant="contained"
-                      startIcon={<ContentCopyIcon />}
-                      color="primary"
-                      sx={{ boxShadow: 0 }}
-                    >
-                      Sao Chép
-                    </Button>
-
-                    <Button
-                      sx={{
-                        boxShadow: 0,
-                      }}
-                      variant="contained"
-                      color="error"
-                    >
-                      Khôi Phục
-                    </Button> */}
-
                     <ButtonUpdate
                       onClick={() =>
                         onOpenModalUpdate(item?.product_id, item?.id)

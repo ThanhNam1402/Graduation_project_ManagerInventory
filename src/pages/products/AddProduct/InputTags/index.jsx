@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 import ClearIcon from "@mui/icons-material/Clear";
 import "./InputTags.scss";
-import { getRandomColor } from "../../../../utils/func";
 
 const Tags = ({ data, handleDelete, isEdit }) => {
   return (
@@ -13,7 +12,7 @@ const Tags = ({ data, handleDelete, isEdit }) => {
         margin: "0.5rem 0.5rem 0.5rem  0",
         display: "flex",
         alignItems: "center",
-        backgroundColor: getRandomColor(),
+        backgroundColor: "primary.light",
         py: 0.5,
         px: 1.5,
         color: "#fff",

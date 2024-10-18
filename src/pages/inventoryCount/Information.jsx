@@ -20,7 +20,12 @@ function Information({ row }) {
             </Grid>
             <Grid item xs={6}>
               <Typography sx={{ p: 1 }}>
-                Trạng thái: {row.status === 0 ? "Đã cân bằng" : "Chưa cân bằng"}
+                Trạng thái: {""}
+                {row.status === 2
+                  ? "Đã cân bằng"
+                  : row.status === 1
+                  ? "Chưa cân bằng"
+                  : "Đã Hủy"}
               </Typography>
               <Divider />
               <Typography sx={{ p: 1 }}>Người tạo: ThanhNam</Typography>

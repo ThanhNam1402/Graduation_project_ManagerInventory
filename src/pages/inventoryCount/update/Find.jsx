@@ -2,7 +2,7 @@ import { Box, Avatar, Typography, TextField } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useState } from "react"; // Import useState
 
-function Find({ value, handleAutocompleteChange, options }) {
+function Find_Update({ value, options }) {
   const [inputValue, setInputValue] = useState(""); // State để quản lý giá trị ô input
 
   const handleChange = (event, newValue) => {
@@ -53,4 +53,4 @@ function Find({ value, handleAutocompleteChange, options }) {
   );
 }
 
-export default Find;
+export default Find_Update;

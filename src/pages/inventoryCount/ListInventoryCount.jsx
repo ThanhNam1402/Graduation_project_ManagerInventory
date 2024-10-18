@@ -13,12 +13,12 @@ import {
   IconButton,
   Collapse,
   Grid,
+  Divider,
 } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import CircularProgress from "@mui/material/CircularProgress"; // Import CircularProgress
+import CircularProgress from "@mui/material/CircularProgress";
 
-import csUseQueryString from "../../hook/csUseQueryString";
 import { invertoryService } from "./../../services/invertory.service";
 import { toast } from "react-toastify";
 import { handleformat } from "../../utils/format";
@@ -34,7 +34,9 @@ import Print_Footer from "../../utils/print/Footer";
 
 import Pagination from "./pagination";
 
+
 function ListInventoryCount(props) {
+  
   const { t } = useTranslation("inventorycount");
 
   const [selectedRowId, setSelectedRowId] = useState(null);
@@ -46,9 +48,10 @@ function ListInventoryCount(props) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(5);
 
   const { componentRef, handlePrint } = usePrint();
-  let { filters, keyword, pagination } = props;
+  console.log("CHECK PROPS", props.filters);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -58,35 +61,95 @@ function ListInventoryCount(props) {
   }, []);
 
   useEffect(() => {
-    fetchData(page);
-  }, [page, rowsPerPage]);
+    fetchData(page, limit);
+  }, [page, rowsPerPage, limit, props.filters]);
 
-  const fetchData = async (page) => {
+  const fetchData = async (page, limit) => {
     setLoading(true); // Bắt đầu loading
     try {
-      const res = await invertoryService.handleGetAll(page);
-      let data = res.data;
-      console.log("Check data call API", res);
-      setData(data);
+      const res = await invertoryService.handleGetAll(
+        page,
+        limit,
+        props.filters
+      );
+      const data = res.data;
+
+      console.log("Check data trả về", data);
+
+      const formattedData = data.map((item) => {
+        console.log("Check detail_stock", item.detail_stock);
+
+        // Định dạng chi tiết sản phẩm SKU
+        const productSkuFormatted = item.detail_stock.map((sku) => {
+          const productName = sku.product_sku.product.name; // Lấy tên sản phẩm từ product_sku.product
+          console.log("Check product", productName);
+
+          const formattedOptions = sku.product_sku.option_value.map(
+            (option) => ({
+              optionValue: option.name,
+            })
+          );
+
+          console.log("Check formattedOptions", formattedOptions);
+
+          console.log("Check formattedOptions", formattedOptions);
+
+          return {
+            ...sku,
+            formattedOptions,
+            productName, // Thêm productName để sử dụng trong result
+          };
+        });
+
+        // Định dạng lại dữ liệu kết quả
+        const result = productSkuFormatted.flatMap((sku) => {
+          if (sku.formattedOptions.length > 0) {
+            return sku.formattedOptions.map((option) => ({
+              product: sku.productName, // Lấy tên sản phẩm
+              optionValue: option.optionValue,
+            }));
+          }
+          return [
+            {
+              product: sku.productName, // Nếu không có options, trả về No options
+              optionValue: "No options",
+            },
+          ];
+        });
+
+        return {
+          ...item,
+          product_sku: productSkuFormatted,
+          result,
+        };
+      });
+
+      console.log("Check data call API (formattedData)", formattedData);
+      setData(formattedData);
       setPage(res.current_page);
       setLastPage(res.last_page);
-      setTotalPages(res.total); // Tổng số bản ghi
+      setTotalPages(res.total);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false); // Kết thúc loading
     }
   };
 
   const handleDelInvertory = async (id) => {
+    setLoading(true); // Bắt đầu loading
     try {
       let res = await invertoryService.handleDelInvertory(id);
       if (res) {
-        toast.success(res.messges);
-        fetchData(page + 1);
+        console.log("Check data delete", res);
+        toast.success(res.message);
+        fetchData(page, limit);
       }
     } catch (error) {
       console.log(error);
+      toast.error(error.message);
+    } finally {
+      setLoading(false); // Kết thúc loading
     }
   };
 
@@ -110,15 +173,34 @@ function ListInventoryCount(props) {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(1); // Quay về trang 1 khi thay đổi số bản ghi trên mỗi trang
-    fetchData(1); // Gọi API để cập nhật dữ liệu
+    const newLimit = parseInt(event.target.value, 10);
+    setRowsPerPage(newLimit); // Cập nhật rowsPerPage
+    setLimit(newLimit); // Cập nhật limit và gọi API mới
+    setPage(1); // Reset page về 1 khi thay đổi số bản ghi mỗi trang
   };
 
   return (
     <>
       <Box sx={{ mt: 2 }}>
         <TableContainer component={Paper}>
+          <Typography
+            sx={{
+              flex: "1 1 100%",
+              paddingLeft: "16px",
+              paddingRight: "8px",
+              display: "flex",
+              alignItems: "center", // Căn giữa theo chiều dọc
+              margin: "20px 0px",
+              fontSize: "1.25rem",
+              fontWeight: 500,
+            }}
+            variant="h5"
+            id="tableTitle"
+            component="div"
+          >
+            Danh sách kiểm kho
+          </Typography>
+          <Divider />
           <Table>
             <TableHead>
               <TableRow>
@@ -158,6 +240,8 @@ function ListInventoryCount(props) {
                   {/* {t("inventorycount.table.tableHead.status")} */}
                   Tổng chênh lệch
                 </TableCell>
+                <TableCell>SL lệch tăng</TableCell>
+                <TableCell>SL lệch giảm</TableCell>
                 <TableCell>
                   {t("inventorycount.table.tableHead.status")}
                 </TableCell>
@@ -199,10 +283,18 @@ function ListInventoryCount(props) {
                         {handleformat.formatDate(row.created_at)}
                       </TableCell>
                       <TableCell>{row.ac_number}</TableCell>
-                      <TableCell>{row.ac_total}</TableCell>
-                      <TableCell>{row.total_difference}</TableCell>
                       <TableCell>
-                        {row.status === 0 ? "Đã cân bằng" : "Chưa cân bằng"}
+                        {handleformat.formatPrice(row.ac_total)}
+                      </TableCell>
+                      <TableCell>{row.total_difference}</TableCell>
+                      <TableCell>{row.qty_increased}</TableCell>
+                      <TableCell>{row.qty_decreased}</TableCell>
+                      <TableCell>
+                        {row.status === 2
+                          ? "Đã cân bằng"
+                          : row.status === 1
+                          ? "Chưa cân bằng"
+                          : "Đã Hủy"}
                       </TableCell>
                     </TableRow>
                     {selectedRowId === row.id && (
@@ -262,9 +354,16 @@ function ListInventoryCount(props) {
                                   Thông tin sản phẩm
                                 </Typography>
                               </Box>
-                              <TableContainer component={Paper} sx={{ mt: 3 }}>
-                                <Product_details row={row.detail_stock} />
+
+                              <TableContainer component={Paper} sx={{ my: 3 }}>
+                                <Product_details
+                                  row={row.detail_stock}
+                                  result={row.result}
+                                />
                               </TableContainer>
+                              <Box>
+                                <Payment_summary row={row} />
+                              </Box>
 
                               <Grid
                                 container
@@ -279,7 +378,7 @@ function ListInventoryCount(props) {
                                     sx={{ mb: 2 }}
                                   >
                                     <Action
-                                     handlePrint={handlePrint}
+                                      handlePrint={handlePrint}
                                       row={row}
                                       handleDelInvertory={handleDelInvertory}
                                       fetchData={fetchData}
@@ -287,7 +386,7 @@ function ListInventoryCount(props) {
                                   </Box>
                                 </Grid>
                               </Grid>
-                              <Print_Footer row={row} user={user}/>
+                              <Print_Footer row={row} user={user} />
                             </Box>
                           </Collapse>
                         </TableCell>
@@ -299,7 +398,7 @@ function ListInventoryCount(props) {
             </TableBody>
           </Table>
           <Pagination
-            page={page - 1} // Page từ API thường bắt đầu từ 1, nhưng MUI Pagination bắt đầu từ 0
+            page={page - 1}
             rowsPerPage={rowsPerPage}
             handleChangePage={handleChangePage}
             handleChangeRowsPerPage={handleChangeRowsPerPage}

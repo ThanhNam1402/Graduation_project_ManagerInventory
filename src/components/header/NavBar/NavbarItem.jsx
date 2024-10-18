@@ -6,11 +6,14 @@ import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import AddCardOutlinedIcon from "@mui/icons-material/AddCardOutlined";
 import LoyaltyIcon from "@mui/icons-material/Loyalty";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
-import GroupIcon from '@mui/icons-material/Group';
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-
-
+import GroupIcon from "@mui/icons-material/Group";
+import EditCalendarIcon from "@mui/icons-material/EditCalendar";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import FaceRetouchingNaturalIcon from "@mui/icons-material/FaceRetouchingNatural";
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import InventoryIcon from '@mui/icons-material/Inventory';
 export const ListMenu = [
   {
     title: "navbar.dashboard",
@@ -24,17 +27,17 @@ export const ListMenu = [
       {
         title: "navbar.list-products",
         link: path.SYSTEM + "/products",
-        icon: "",
+        icon: <ReceiptLongIcon/>,
       },
       {
         title: "navbar.price-products",
         link: path.SYSTEM + "/pricebook",
-        icon: "",
+        icon: <LocalOfferIcon/>,
       },
       {
         title: "navbar.inventory-count",
         link: path.SYSTEM + "/inventorycount",
-        icon: "",
+        icon: <InventoryIcon/>,
       },
     ],
   },
@@ -45,12 +48,12 @@ export const ListMenu = [
     children: [
       {
         title: "navbar.customer",
-        icon: <HandshakeIcon />,
+        icon: <FaceRetouchingNaturalIcon />,
         link: path.SYSTEM + "/customers",
       },
       {
         title: "navbar.supplier",
-        icon: <HandshakeIcon />,
+        icon: <HomeWorkIcon />,
         link: path.SYSTEM + "/suppliers",
       },
     ],
@@ -88,7 +91,7 @@ export const ListMenu = [
       },
       {
         title: "navbar.calender",
-        icon: <CalendarMonthIcon/>,
+        icon: <CalendarMonthIcon />,
         link: path.SYSTEM + "/timeSheet",
       },
       {

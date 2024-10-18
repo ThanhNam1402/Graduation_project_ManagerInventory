@@ -4,7 +4,7 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  IconButton,
+  Box,
   Button,
   TextField,
   TableContainer,
@@ -22,21 +22,50 @@ function Product_information({
     <>
       <TableContainer
         component={Paper}
-        sx={{ width: 800, mt: 2, boxShadow: 3 }}
+        sx={{
+          width: 800,
+          mt: 2,
+          boxShadow: 3,
+          maxHeight: selectedProducts.length > 5 ? 400 : "auto",
+        }}
       >
-        <Table>
+        <Table stickyHeader>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#2196f3" }}>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
+            <TableRow>
+              <TableCell
+                sx={{ color: "#fff", fontWeight: "bold", bgcolor: "#2196f3" }}
+              >
                 Kiểm gần đây
               </TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
-                Số lượng
-              </TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
+              <TableCell
+                sx={{ color: "#fff", fontWeight: "bold", bgcolor: "#2196f3" }}
+              >
                 Giá bán
               </TableCell>
-              <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
+              <TableCell
+                sx={{ color: "#fff", fontWeight: "bold", bgcolor: "#2196f3" }}
+              >
+                Tồn kho
+              </TableCell>
+              <TableCell
+                sx={{ color: "#fff", fontWeight: "bold", bgcolor: "#2196f3" }}
+              >
+                Thực tế
+              </TableCell>
+              <TableCell
+                sx={{ color: "#fff", fontWeight: "bold", bgcolor: "#2196f3" }}
+              >
+                SL lệch
+              </TableCell>
+
+              <TableCell
+                sx={{ color: "#fff", fontWeight: "bold", bgcolor: "#2196f3" }}
+              >
+                Giá trị lệch
+              </TableCell>
+              <TableCell
+                sx={{ color: "#fff", fontWeight: "bold", bgcolor: "#2196f3" }}
+              >
                 Thao tác
               </TableCell>
             </TableRow>
@@ -53,15 +82,29 @@ function Product_information({
                   }}
                 >
                   <TableCell sx={{ fontSize: "1rem", fontWeight: "500" }}>
-                    {product.name}
+                    {product.fullDisplayName}
                   </TableCell>
+
+                  <TableCell>
+                    {product.sale_price ? (
+                      handleformat.formatPrice(product.sale_price)
+                    ) : (
+                      <Box sx={{ color: "#757575", fontStyle: "italic" }}>
+                        Không có giá hoặc giá bằng 0
+                      </Box>
+                    )}
+                  </TableCell>
+                  <TableCell sx={{ fontSize: "1rem", fontWeight: "500" }}>
+                    {product.inventory}
+                  </TableCell>
+
                   <TableCell>
                     <TextField
                       size="small"
                       type="number"
                       value={product.qty}
-                      onChange={(e) =>
-                        handleQtyChange(product.id, e.target.value)
+                      onChange={
+                        (e) => handleQtyChange(product.sku_id, e.target.value) // Sử dụng sku_id thay vì id
                       }
                       inputProps={{ min: 1 }}
                       sx={{
@@ -71,25 +114,24 @@ function Product_information({
                       }}
                     />
                   </TableCell>
-                  <TableCell>
-                    {product.product_sku.length > 0 ? (
-                      product.product_sku.map((product_sku, index) => (
-                        <div key={index}>
-                          {product_sku.sale_price
-                            ? handleformat.formatPrice(product_sku.sale_price)
-                            : "No data"}
-                        </div>
-                      ))
-                    ) : (
-                      <div>No data</div>
-                    )}
+
+                  <TableCell sx={{ fontSize: "1rem", fontWeight: "500" }}>
+                    {product.qty - product.inventory}
+                  </TableCell>
+
+                  <TableCell sx={{ fontSize: "1rem", fontWeight: "500" }}>
+                    {product.sale_price && product.qty && product.inventory
+                      ? handleformat.formatPrice(
+                          product.sale_price * (product.qty - product.inventory)
+                        )
+                      : "0 đ"}
                   </TableCell>
                   <TableCell>
                     <Button
                       variant="contained"
                       color="error"
                       startIcon={<DeleteIcon />}
-                      onClick={() => handleDelete(product.id)}
+                      onClick={() => handleDelete(product.sku_id)} // Sử dụng sku_id thay vì id
                       sx={{ textTransform: "none" }}
                     >
                       Xóa

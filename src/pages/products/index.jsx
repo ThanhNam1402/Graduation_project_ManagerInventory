@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, Typography, Stack } from "@mui/material";
 
 import ListProducts from "./ListProducts/ListProducts";
-import Categories from "../caterory";
+import Categories from "../Caterory";
 import { useTranslation } from "react-i18next";
 import CsUsePagination from "../../hook/CsUsePagination";
 import { ListDisplayOption, ListOnHands } from "../../utils/constain";

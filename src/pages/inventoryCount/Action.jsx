@@ -4,6 +4,7 @@ import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
 import LocalPrintshopOutlinedIcon from "@mui/icons-material/LocalPrintshopOutlined";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import { Link } from "react-router-dom";
 
 import PropTypes from "prop-types";
 
@@ -28,12 +29,14 @@ function Action({ handlePrint, handleDelInvertory, handleUpdateStatus, row }) {
         {/* Hiển thị nút "Cập nhật trạng thái" nếu chưa cân bằng */}
         {row.status === 1 && (
           <Button
+            component={Link}
+            to={`/system/inventorycount/update/${row.id}`}
             variant="contained"
             color="primary"
             sx={{ mr: 1 }}
-            onClick={() => handleUpdateStatus(row.id)}
+            onClick={() => handleUpdateStatus(row)}
           >
-            Cập nhật trạng thái
+            Cập nhật
           </Button>
         )}
         <Button

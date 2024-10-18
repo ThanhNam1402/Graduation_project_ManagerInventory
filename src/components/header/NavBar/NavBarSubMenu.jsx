@@ -21,6 +21,7 @@ function NavbarSubMenu({ item }) {
               sx={{ width: "100%", p: 0, color: "primary.dark" }}
             >
               <NavLink className="menu_link" to={item.link}>
+                {item.icon}
                 {t(item.title)}
               </NavLink>
             </MenuItem>

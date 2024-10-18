@@ -1,8 +1,9 @@
 import api from "../config/axios";
 
 export const invertoryService = {
-  handleGetAll(page) {
-    return api.get(`/api/checkstock?page=${page}`);
+  handleGetAll(page, limit, status) {
+    const query = status ? `status=${status}` : `status=`;
+    return api.get(`/api/checkstock?page=${page}&limit=${limit}&${query}`);
   },
   handleGetOne(id) {
     return api.get(`/api/checkstock/${id}`);
@@ -12,13 +13,12 @@ export const invertoryService = {
       ...data,
     });
   },
-
   handleDelInvertory(id) {
-    return api.delete(`/api/invertory/${id}`);
+    return api.delete(`/api/checkstock/delete/${id}`);
   },
 
-  handleCreatInventoryDetail(data) {
-    return api.post(`/api/invertorydetail`, {
+  handleUpdate(id, data) {
+    return api.put(`/api/checkstock/update/${id}`, {
       ...data,
     });
   },

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import ListTransaction from "./ListTransaction";
-import Time from "../../components/filters/Time";
 import ActionTransaction from "./ActionTransaction";
 import DeliveryTime from "../../components/filters/DeliveryTime";
 import Pay from "../../components/filters/Pay";
@@ -14,10 +13,10 @@ function Transaction() {
   const [selectedCount, setSelectedCount] = useState(0);
   const [keyWord, setKeyWord] = useState("");
   const [filters, setFilters] = useState({
-    status: '',
+    status: "",
   });
   const { pagination, setPage, handleChangePage, handleChangeRowsPerPage } =
-  CsUsePagination(0, 5);
+    CsUsePagination(0, 5);
 
   const handleSetFilter = (value, id) => {
     console.log(id, value, typeof value);
@@ -43,10 +42,9 @@ function Transaction() {
               mr: 3,
             }}
           >
-            <Typography sx={{ mb: 2 }} variant="h5" component={"h5"}>
-            {t("orders.title")}
+            <Typography sx={{ mb: 2, m: 2 }} variant="h5" component={"h5"}>
+              {t("orders.title")}
             </Typography>
-            <Time />
             <Pay />
             <DeliveryTime />
           </Box>
@@ -56,11 +54,12 @@ function Transaction() {
             }}
           >
             <ActionTransaction selectedCount={selectedCount} />
-            <ListTransaction 
-             keyWord={keyWord}
-             filters={filters}
-             pagination={pagination}
-            onSelectionChange={setSelectedCount} />
+            <ListTransaction
+              keyWord={keyWord}
+              filters={filters}
+              pagination={pagination}
+              onSelectionChange={setSelectedCount}
+            />
           </Box>
         </Box>
       </Box>

@@ -1,13 +1,13 @@
 import {
   Box,
   Typography,
-  TextField,
   Table,
   TableHead,
   TableRow,
   TableBody,
   TableCell,
   Button,
+  TableContainer,
 } from "@mui/material";
 import PrintIcon from "@mui/icons-material/Print";
 import CheckIcon from "@mui/icons-material/Check";
@@ -15,20 +15,16 @@ import { useState, useEffect } from "react";
 import { handleformat } from "../../../utils/format";
 
 function Inventory_check_sheet({
-  status,
   totalPrice,
   selectedProducts,
   AddInventory,
+  setStatus,
 }) {
   const [productPrices, setProductPrices] = useState([]);
 
   useEffect(() => {
-    // Tính tổng giá của từng sản phẩm dựa vào qty và sale_price
     const updatedPrices = selectedProducts.map((product) => {
-      const totalSalePriceForProduct = product.product_sku.reduce(
-        (skuAcc, sku) => skuAcc + (sku.sale_price || 0),
-        0
-      );
+      const totalSalePriceForProduct = product.sale_price || 0;
       return {
         ...product,
         totalProductPrice: product.qty * totalSalePriceForProduct,
@@ -37,128 +33,145 @@ function Inventory_check_sheet({
     setProductPrices(updatedPrices);
   }, [selectedProducts]);
 
-  console.log("Check selectedProducts", selectedProducts);
-
   return (
-    <>
-      <Box sx={{ p: 2, border: 1 }}>
-        <Typography variant="h6">Người tạo: ThanhNam</Typography>
-        <Typography>Mã kiểm kho: Mã phiếu tự động</Typography>
-        <Typography>
-          Tổng số lượng nhập:
+    <Box
+      sx={{
+        p: 3,
+        border: "1px solid #e0e0e0",
+        borderRadius: "12px",
+        backgroundColor: "#fafafa",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+        Người tạo: ThanhNam
+      </Typography>
+      <Typography sx={{ mb: 1 }}>Mã kiểm kho: Mã phiếu tự động</Typography>
+      <Typography sx={{ mb: 1 }}>
+        Tổng số lượng thực tế:{" "}
+        <span style={{ fontWeight: "bold", color: "#3f51b5" }}>
           {selectedProducts.reduce((acc, item) => acc + item.qty, 0)}
-        </Typography>
-        <Typography variant="p">
-          Tổng giá nhập hàng: {handleformat.formatPrice(totalPrice) || 0}
-        </Typography>
-        <TextField
-          label="Ghi chú"
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={3}
-          sx={{ my: 2 }}
-        />
-
-        <Box>
-          <Table
-            sx={{
-              border: "1px solid #2196f3",
-              borderRadius: "8px",
-              overflow: "hidden",
-              boxShadow: 3,
-            }}
-          >
-            <TableHead>
-              <TableRow sx={{ backgroundColor: "#2196f3" }}>
+        </span>
+      </Typography>
+      <TableContainer
+        sx={{ maxHeight: selectedProducts.length > 5 ? 300 : "auto" }}
+      >
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow sx={{ backgroundColor: "red" }}>
+              {[
+                "Kiểm gần đây",
+                "Số lượng thực tế",
+                "Số lượng lệch",
+                "Giá trị lệch",
+              ].map((header) => (
                 <TableCell
-                  sx={{ color: "#fff", fontWeight: "bold", fontSize: "0.8rem" }}
+                  key={header}
+                  sx={{
+                    color: "#fff",
+                    fontWeight: "bold",
+                    fontSize: "0.9rem",
+                    bgcolor: "#2196f3",
+                  }}
                 >
-                  Kiểm gần đây
+                  {header}
                 </TableCell>
-                <TableCell
-                  sx={{ color: "#fff", fontWeight: "bold", fontSize: "0.8rem" }}
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {productPrices.length > 0 ? (
+              productPrices.map((product, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    backgroundColor: index % 2 === 0 ? "#f1f1f1" : "#fff",
+                    "&:hover": {
+                      backgroundColor: "#e3f2fd",
+                    },
+                  }}
                 >
-                  Số lượng
-                </TableCell>
-                <TableCell
-                  sx={{ color: "#fff", fontWeight: "bold", fontSize: "0.8rem" }}
-                >
-                  Giá bán
-                </TableCell>
-                <TableCell
-                  sx={{ color: "#fff", fontWeight: "bold", fontSize: "0.8rem" }}
-                >
-                  Tổng giá sản phẩm
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {productPrices.length > 0 ? (
-                productPrices.map((product, index) => (
-                  <TableRow
-                    key={index}
+                  <TableCell sx={{ fontSize: "1rem", fontWeight: "500" }}>
+                    {product.fullDisplayName}
+                  </TableCell>
+                  <TableCell
                     sx={{
-                      backgroundColor: index % 2 === 0 ? "#f9f9f9" : "#ffffff", // Màu nền hàng chẵn và lẻ
-                      "&:hover": {
-                        backgroundColor: "#e3f2fd", // Màu khi hover
-                      },
+                      fontSize: "1rem",
+                      fontWeight: "500",
+                      textAlign: "center",
                     }}
                   >
-                    <TableCell sx={{ fontSize: "1rem", fontWeight: "500" }}>
-                      {product.name}
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "1rem", fontWeight: "500" }}>
-                      {product.qty}
-                    </TableCell>
-                    <TableCell>
-                      {product.product_sku.length > 0 ? (
-                        product.product_sku.map((product_sku, skuIndex) => (
-                          <Box key={skuIndex} sx={{ marginBottom: "4px" }}>
-                            {handleformat.formatPrice(product_sku.sale_price)}
-                          </Box>
-                        ))
-                      ) : (
-                        <Box sx={{ color: "#757575", fontStyle: "italic" }}>
-                          Không có dữ liệu
-                        </Box>
-                      )}
-                    </TableCell>
-                    <TableCell sx={{ fontSize: "1rem", fontWeight: "500" }}>
-                      {handleformat.formatPrice(product.totalProductPrice)}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
+                    {product.qty}
+                  </TableCell>
                   <TableCell
-                    colSpan={4}
-                    align="center"
-                    sx={{ fontStyle: "italic", color: "#757575" }}
+                    sx={{
+                      textAlign: "center",
+                      color: product.sale_price ? "#000" : "#757575",
+                    }}
                   >
-                    Không có sản phẩm
+                    {product.sale_price ? (
+                      product.qty - product.inventory
+                    ) : (
+                      <Box sx={{ fontStyle: "italic" }}>Không có dữ liệu</Box>
+                    )}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontSize: "1rem",
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
+                    {product.sale_price && product.qty && product.inventory
+                      ? handleformat.formatPrice(
+                          product.sale_price * (product.qty - product.inventory)
+                        )
+                      : "0 đ"}
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </Box>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={4}
+                  align="center"
+                  sx={{ fontStyle: "italic", color: "#757575" }}
+                >
+                  Không có sản phẩm
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-        <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
-          <Button variant="contained" color="primary" startIcon={<PrintIcon />}>
-            Lưu tạm (Chưa cân bằng)
-          </Button>
-          <Button
-            variant="contained"
-            color="success"
-            startIcon={<CheckIcon />}
-            onClick={() => AddInventory()}
-          >
-            Hoàn tất (Cân bằng kho)
-          </Button>
-        </Box>
+      <Box sx={{ mt: 3, display: "flex", justifyContent: "space-between" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<PrintIcon />}
+          onClick={() => {
+            setStatus(1);
+            AddInventory(1);
+          }}
+          sx={{ fontSize: "0.9rem", fontWeight: "bold", py: 1.5, px: 3 }}
+        >
+          Lưu tạm (Chưa cân bằng)
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          startIcon={<CheckIcon />}
+          onClick={() => {
+            setStatus(2);
+            AddInventory(2);
+          }}
+          sx={{ fontSize: "0.9rem", fontWeight: "bold", py: 1.5, px: 3 }}
+        >
+          Hoàn tất (Cân bằng kho)
+        </Button>
       </Box>
-    </>
+    </Box>
   );
 }
 

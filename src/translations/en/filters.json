@@ -11,8 +11,9 @@
         "time" : "Time",
         "month": "Month",
         "options": "Options",
-        "provisional": "Provisional Ballot",
+        "all": "All",
         "balanced": "Has Been Balanced",
+        "notbalanced": "Not balanced yet",
         "canceled": "Canceled",
         "pay": "Pay",
         "delivery": "Delivery Time"

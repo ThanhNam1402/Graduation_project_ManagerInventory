@@ -10,6 +10,7 @@ import AddProduct from "../pages/products/AddProduct";
 import PriceBook from "../pages/priceBook";
 import InventoryCount from "../pages/inventoryCount";
 import AddInventoryCount from "../pages/inventoryCount/addinventoryCount";
+import Update_InventoryCount from "../pages/inventoryCount/update";
 import Transaction from "../pages/transaction";
 import AddTransaction from "../pages/transaction/AddTransaction";
 
@@ -47,6 +48,9 @@ function MainRouters() {
 
           <Route path="inventorycount" element={<InventoryCount />} />
           <Route path="/inventorycount/add" element={<AddInventoryCount />} />
+          <Route path="/inventorycount/update/:id" element={<Update_InventoryCount />} />
+
+
 
           <Route path="/orders" element={<Transaction />} />
           <Route path="/orders/add" element={<AddTransaction />} />

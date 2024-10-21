@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -17,14 +17,9 @@ import {
 } from "@mui/icons-material";
 
 import { useForm } from "react-hook-form";
-import { useAppContext } from "../context/AppContent";
 import "./login.scss";
 
 function Login() {
-  const appContext = useAppContext();
-
-  console.log(appContext);
-
   const navigate = useNavigate();
 
   const {

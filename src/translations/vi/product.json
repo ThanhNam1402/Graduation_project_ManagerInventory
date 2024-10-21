@@ -8,6 +8,8 @@
             "price" : "Giá",
             "sale_price" : "Giá Giảm",
             "category" : "Nhóm Hàng",
+            "supplier" : "Nhà Cung Cấp",
+
             "onhand" : "Tồn Kho",
             "status" : "Trạng Thái"
         }

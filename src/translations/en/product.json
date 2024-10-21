@@ -8,6 +8,7 @@
             "price" : "Price",
             "sale_price" : "Sale Price",
             "category" : "Category",
+            "supplier" : "Supplier",
             "onhand" : "Onhand",
             "status" : "Status"
         }

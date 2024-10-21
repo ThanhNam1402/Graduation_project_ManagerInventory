@@ -1,0 +1,76 @@
+@import './mixin';
+@import './variables';
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+
+html {
+  font-family: "Quicksand", sans-serif;
+  font-size: $base-size;
+  font-weight: 500;
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  button {
+    text-transform: capitalize !important;
+  }
+
+  hr {
+    margin: 0;
+  }
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(128, 165, 230);
+  border-radius: 10px;
+}
+
+
+
+.print-text {
+  display: none;
+}
+
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+
+  .screen-text {
+    display: none;
+  }
+
+  .print-text {
+    display: block;
+  }
+}
+
+TableCell {
+  color: wheat;
+}

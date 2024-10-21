@@ -1,7 +1,8 @@
 export const path = {
     LOGIN: '/login',
     REGISTER: '/register',
-    SYSTEM: '/system'
+    SYSTEM: '/system',
+    CLIENT: '/',
 };
 
 export const ListProductTypes = {

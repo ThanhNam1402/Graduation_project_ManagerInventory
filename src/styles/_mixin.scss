@@ -1,0 +1,87 @@
+$mobile-breakpoint: 300px;
+$tablet-breakpoint: 768px;
+$max-tablet-breakpoint: 1024px;
+$min-lap-top-breakpoint: 1200px;    
+
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+@mixin responsive($breakpoint) {
+    @if $breakpoint ==sm {
+        @media (max-width: $sm) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==md {
+        @media (min-width: $sm) and (max-width: calc(#{$lg} - 1px)) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==lg {
+        @media (min-width: $md) and (max-width: calc(#{$xl} - 1px)) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==xl {
+        @media (min-width: $xl) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==sm-md {
+        @media (max-width: calc(#{$lg} - 1px)) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==sm-md-lg {
+        @media (max-width: calc(#{$xl} - 1px)) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==md-lg {
+        @media (min-width: $sm) and (max-width: calc(#{$xl} - 1px)) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint ==lg-xl {
+        @media (min-width: $md) {
+            @content;
+        }
+    }
+}
+
+// Center
+@mixin center($direction: 'both') {
+    @if $direction =='both' {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @else if $direction =='hor' {
+        display: flex;
+        justify-content: center;
+    }
+
+    @else if $direction =='ver' {
+        display: flex;
+        align-items: center;
+    }
+}
+
+//Line clamp
+@mixin clamp($line) {
+    display: -webkit-box;
+    -webkit-line-clamp: $line;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-emphasis: ellipsis;
+}

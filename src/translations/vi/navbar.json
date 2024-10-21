@@ -1,20 +1,20 @@
 {
     "navbar" : {
-        "dashboard" : "Tổng Quan",
-        "products" : "Sản Phẩm",
-        "list-products" : "Danh Sách Hàng Hóa",
-        "price-products" : "Thiết Lập Giá",
-        "inventory-count" : "Kiểm Kho",
-        "partner" : "Đối Tác",
+        "dashboard" : "Tổng quan",
+        "products" : "Sản phẩm",
+        "list-products" : "Danh sách hàng hóa",
+        "price-products" : "Thiết lập giá",
+        "inventory-count" : "Kiểm kho",
+        "partner" : "Đối tác",
         "customer" : "Khách hàng",
-        "supplier" : "Nhà Cung Cấp",
-        "orders": "Đơn Hàng",
-        "transaction" : "Giao Dịch",
-        "invoices" : "Hóa Đơn",
-        "purchase-order" : "Đặt Hàng",
-        "employee": "Nhân Viên",
-        "calender": "Lịch Làm Việc",
-        "timeSheet": "Chấm Công",
-        "payroll": "Bảng Tính Lương"
+        "supplier" : "Nhà cung cấp",
+        "orders": "Đơn hàng",
+        "transaction" : "Diao dịch",
+        "invoices" : "Hóa đơn",
+        "purchase-order" : "Đặt hàng",
+        "employee": "Nhân viên",
+        "calender": "Lịch làm việc",
+        "timeSheet": "Chấm công",
+        "payroll": "Bảng tính lương"
     }
 }

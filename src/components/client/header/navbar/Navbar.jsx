@@ -16,7 +16,7 @@ function Navbar() {
             <i width="120px" className="ri-search-line"></i>
             <input placeholder="Tim kiem..." type="text" />
 
-            <div className="search_content"></div>
+            {/* <div className="search_content"></div> */}
           </div>
         </div>
 
@@ -46,6 +46,9 @@ function Navbar() {
                   <a href="">Danh mục 5</a>
                 </li>
               </ul>
+            </li>
+            <li className="menu_item">
+              <NavLink to="/products">Sản phẩm</NavLink>
             </li>
             <li className="menu_item">
               <NavLink to="/category">Thương hiệu</NavLink>

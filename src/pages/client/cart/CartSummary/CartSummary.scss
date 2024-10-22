@@ -1,0 +1,72 @@
+.cart-summary {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Đổi hướng thành cột */
+    align-items: stretch; /* Căn chỉnh các phần tử cho rộng bằng container */
+
+    h2 {
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+        color: #333;
+        text-align: center; /* Căn giữa tiêu đề */
+    }
+
+    .summary-details {
+        margin-bottom: 15px;
+        p {
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between; /* Căn giữa các mục */
+            span {
+                color: #333; /* Màu cho giá */
+            }
+        }
+    }
+
+    .discount-code {
+        display: flex; /* Sử dụng flexbox cho input và button */
+        margin-bottom: 15px;
+
+        input {
+            flex-grow: 1; /* Chiếm hết không gian có thể */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px; /* Khoảng cách giữa input và button */
+        }
+
+        button {
+            background-color: #00b300;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &:hover {
+                background-color: #009900;
+            }
+        }
+    }
+
+    .checkout-btn {
+        background-color: #00b300;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: #009900;
+        }
+    }
+}

@@ -1,0 +1,22 @@
+@import '@/styles/_variables.scss';
+.products-container {
+    display: grid;
+    grid-template-columns: 2fr 10fr; /* 3/12 và 9/12 */
+    gap: 20px; /* Khoảng cách giữa 2 cột */
+    margin-top: 145px;
+    padding: 0 20px; /* Khoảng cách padding cho container */
+  }
+  
+  .filter-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Khoảng cách giữa CategoryFilter và Filter */
+  }
+  
+  .product-grid-column {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  

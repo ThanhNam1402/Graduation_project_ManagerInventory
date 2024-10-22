@@ -1,0 +1,51 @@
+@import '@/styles/_mixin.scss';
+@import '@/styles/_variables';
+
+.wrap {
+
+    border-radius: 1000px;
+    cursor: pointer;
+    transition: all 0.125s;
+    font-size: 1.2rem;
+
+}
+
+.see-more {
+    @include center();
+    height: 42px;
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    background-color: $green-1;
+    color: $white;
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    i {
+        margin-left: 8px;
+    }
+}
+
+.spin {
+
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-left-color: $white;
+    border-radius: 50%;
+    animation: spin 0.5s linear infinite;
+
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,13 +1,10 @@
-import Topbar from "./topbar/Topbar";
 import Navbar from "./navbar/Navbar";
+import "./header.scss";
 
 function Header() {
   return (
-    <div>
-      <Topbar />
+    <div className="header">
       <Navbar />
-
-      
     </div>
   );
 }

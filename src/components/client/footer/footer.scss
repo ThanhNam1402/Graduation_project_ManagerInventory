@@ -1,0 +1,25 @@
+.footer {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+    min-height: 200px;
+    width: 100%;
+    padding-top: 80px;
+    padding-bottom: 20px;
+
+    .ft_item {
+        h6 {
+            margin: 18px 0;
+            font-size: 16px;
+
+        }
+
+        p {
+            margin-bottom: 12px;
+
+            i {
+                margin-right: 6px;
+            }
+        }
+    }
+
+
+}

@@ -1,0 +1,99 @@
+@import '@/styles/_variables.scss';
+
+.p_product {
+
+    padding-bottom: 100px;
+
+    .p_product-title {
+        font-size: 20px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+
+
+        &::after {
+            width: 120%;
+            position: absolute;
+            height: 4px;
+            content: "";
+            background: $colormain;
+            bottom: -30%;
+            left: 20%;
+            border-radius: 4px;
+        }
+    }
+
+    .p_product-content {
+
+        .list_product {
+
+            .list_item {
+                display: block;
+                text-align: center;
+                border-radius: 12px;
+                margin-bottom: 12px;
+                box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+
+                .thumbnail {
+                    position: relative;
+
+                    .persent {
+                        position: absolute;
+                        padding: 6px;
+                        bottom: 0;
+                        background: $colorsub;
+                        color: $white;
+                    }
+                }
+
+
+                img {
+                    border-radius: 12px 12px 0 0;
+                    width: 100%;
+                    display: block;
+                }
+
+                .info {
+                    padding: 12px;
+
+                    p {
+                        margin-top: 6px
+                    }
+
+                    .name {
+                        margin-top: 12px;
+                        text-overflow: ellipsis;
+                        font-weight: 700;
+                        overflow: hidden;
+                        text-align: left;
+                        line-clamp: 2;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        display: -webkit-box;
+                    }
+
+                    .price {
+                        text-decoration: line-through;
+                    }
+
+                    .sale_price {
+                        color: red
+                    }
+                }
+
+
+            }
+        }
+
+
+        .btn-more {
+            width: 100%;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+    }
+}

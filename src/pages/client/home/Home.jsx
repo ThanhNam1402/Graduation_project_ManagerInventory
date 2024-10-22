@@ -1,5 +1,8 @@
 import TopSlice from "./topSlice/TopSlice";
 import TopCategories from "./topCategory/TopCategories";
+import PopularProducts from "./popularProducts/PopularProducts";
+import ForyouProducts from "./foryouProducts/PopularProducts";
+import BannerBottom from "./bannerbottom/BannerBottom";
 
 function Home() {
   return (
@@ -7,14 +10,11 @@ function Home() {
       <TopSlice />
       <TopCategories />
 
-      <div
-        className=""
-        style={{
-          minWidth: "100%",
-          minHeight: "100vh",
-          backgroundColor: "aqua",
-        }}
-      ></div>
+      <ForyouProducts />
+
+      <PopularProducts />
+
+      <BannerBottom />
     </div>
   );
 }
